@@ -36,6 +36,11 @@ function Back.apply_to_run(arg_56_0)
 					end
 				end
 
+				-- Add Even Steven Joker
+				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_even_steven', nil)
+                        card:add_to_deck()
+                        G.jokers:emplace(card)
+
 				return true
 			end
 		}))
