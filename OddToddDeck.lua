@@ -1,8 +1,8 @@
 --- STEAMODDED HEADER
---- MOD_NAME: Even Steven's Deck
---- MOD_ID: Stevendeck
+--- MOD_NAME: Odd Todd's Deck
+--- MOD_ID: Todddeck
 --- MOD_AUTHOR: [Mikadoe]
---- MOD_DESCRIPTION: Adds a deck with only even cards that starts with the Even Steven joker
+--- MOD_DESCRIPTION: Adds a deck with only odd cards, that starts with the Odd Todd joker
 
 ----------------------------------------------
 ------------MOD CODE -------------------------
@@ -12,7 +12,7 @@ local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(arg_56_0)
 	Backapply_to_runRef(arg_56_0)
 
-	if arg_56_0.effect.config.only_evens then
+	if arg_56_0.effect.config.only_odds then
 		G.E_MANAGER:add_event(Event({
 			func = function()
 
@@ -20,24 +20,26 @@ function Back.apply_to_run(arg_56_0)
 				for iter_57_0 = #G.playing_cards, 1, -1 do
 					
 					-- Check if value is even
-					local function isEven(val)
+					local function isOdd(val)
 						local value = tonumber(val)
 
 						if value then
-							return value % 2 == 0
+							return value % 2 ~= 0
+						elseif val == "Ace" then
+							return true
 						else
 							return false
 						end
 					end
 					
-					-- Remove non even cards
-					if not isEven(G.playing_cards[iter_57_0].base.value) then
+					-- Remove even cards
+					if not isOdd(G.playing_cards[iter_57_0].base.value) then
 						G.playing_cards[iter_57_0]:start_dissolve(nil, true)
 					end
 				end
 
 				-- Add Even Steven Joker
-				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_even_steven', nil)
+				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_odd_todd', nil)
                         card:add_to_deck()
                         G.jokers:emplace(card)
 
@@ -49,17 +51,17 @@ end
 
 -- Create Deck
 local loc_def = {
-	["name"]="Even Steven's Deck",
+	["name"]="Odd Todd's Deck",
 	["text"]={
 		[1]="Start run with",
-		[2]="only {C:attention}Even{} cards and",
-		[3]="the {C:attention}Even Steven{} joker"
+		[2]="only {C:attention}Odd{} cards and",
+		[3]="the {C:attention}Odd Todd{} joker"
 	},
 }
 
 -- Initialize Deck
-local evenStevenDeck = SMODS.Deck:new("Even Steven's Deck", "stevendeck", {only_evens = true}, {x = 5, y = 2}, loc_def)
-evenStevenDeck:register()
+local oddToddDeck = SMODS.Deck:new("Odd Todd's Deck", "todddeck", {only_odds = true}, {x = 5, y = 2}, loc_def)
+oddToddDeck:register()
 
 ----------------------------------------------
 ------------MOD CODE END----------------------
