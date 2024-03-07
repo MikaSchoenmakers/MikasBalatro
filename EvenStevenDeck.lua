@@ -1,8 +1,8 @@
 --- STEAMODDED HEADER
---- MOD_NAME: Stevens Dream
---- MOD_ID: Stevensdream
+--- MOD_NAME: Even Steven's Deck
+--- MOD_ID: Stevensdeck
 --- MOD_AUTHOR: [Mikadoe]
---- MOD_DESCRIPTION: Adds a deck with only even cards
+--- MOD_DESCRIPTION: Adds a deck with only even cards that starts with the Even Steven joker
 
 ----------------------------------------------
 ------------MOD CODE -------------------------
@@ -49,15 +49,17 @@ end
 
 -- Create Deck
 local loc_def = {
-	["name"]="Stevens Dream",
+	["name"]="Even Steven's Deck",
 	["text"]={
-		[1]="A deck with only even cards!",
+		[1]="Start with a Deck",
+		[2]="with only {C:attention}Even{} cards and",
+		[3]="the {C:attention}Even Steven{} joker"
 	},
 }
 
 -- Initialize Deck
-local stevensDream = SMODS.Deck:new("Stevens Dream", "stevensdream", {only_evens = true}, {x = 0, y = 0}, loc_def)
-stevensDream:register()
+local evenStevenDeck = SMODS.Deck:new("Even Steven's Deck", "stevensdeck", {only_evens = true}, {x = 5, y = 2}, loc_def)
+evenStevenDeck:register()
 
 ----------------------------------------------
 ------------MOD CODE END----------------------
