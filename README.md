@@ -6,4 +6,4 @@ Adds a deck with only even cards and starts with the Even Steven joker
 
 ## Installation
 - This mod requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
-- For more information, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
+- For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
