@@ -10,7 +10,10 @@ Adds a deck with only even cards, that starts with the **_Even Steven_** joker
 Adds a deck with only odd cards, that starts with the **_Odd Todd_** joker
 
 ### Fibonacci Deck
-Adds a deck with only the cards form the Fibonacci Sequence **_(Ace, 2, 3, 5, 8)_**, that starts with the **_Fibonacci_** joker
+Adds a deck with only the cards from the Fibonacci Sequence _(Ace, 2, 3, 5, 8)_, that starts with the **_Fibonacci_** joker
+
+### Midas's Deck
+Adds a deck with only the Gold Face cards, that starts with the **_Midas Mask_** joker
 
 ## Installation
 - This mod requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
