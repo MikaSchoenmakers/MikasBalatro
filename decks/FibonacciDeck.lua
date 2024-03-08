@@ -7,6 +7,14 @@
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
+-- Local functions
+
+-- Check if value is in the fibonacci sequence
+local function isFibo(card)
+	local id = card:get_id()
+	return id == 2 or id == 3 or id == 5 or id == 8 or id == 14
+end
+
 -- Add custom effect to config
 local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(arg_56_0)
@@ -18,20 +26,13 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Loop over all cards
 				for iter_57_0 = #G.playing_cards, 1, -1 do
-					
-					-- Check if value is in the fibonacci sequence
-					local function isFibo(val)
-						local value = tonumber(val)
-						return value == 2 or value == 3 or value == 5 or value == 8 or val == "Ace"
-					end
-					
 					-- Remove non fibonacci cards
-					if not isFibo(G.playing_cards[iter_57_0].base.value) then
+					if not isFibo(G.playing_cards[iter_57_0]) then
 						G.playing_cards[iter_57_0]:start_dissolve(nil, true)
 					end
 				end
 
-				-- Add Even Steven Joker
+				-- Add Fibonacci Joker
 				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_fibonacci', nil)
                         card:add_to_deck()
                         G.jokers:emplace(card)
@@ -46,8 +47,8 @@ end
 local loc_def = {
 	["name"]="Fibonacci Deck",
 	["text"]={
-		[1]="Start run with",
-		[2]="only {C:attention}Fibonacci{} cards and",
+		[1]="Start run with only",
+		[2]="{C:attention}Fibonacci cards{} and",
 		[3]="the {C:attention}Fibonacci{} joker"
 	},
 }

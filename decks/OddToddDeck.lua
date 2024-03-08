@@ -7,6 +7,14 @@
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
+-- Local functions
+
+-- Check if value is odd
+local function isOdd(card)
+	local id = card:get_id()
+	return (id % 2 ~= 0 and id < 10) or id == 14
+end
+
 -- Add custom effect to config
 local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(arg_56_0)
@@ -18,27 +26,13 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Loop over all cards
 				for iter_57_0 = #G.playing_cards, 1, -1 do
-					
-					-- Check if value is even
-					local function isOdd(val)
-						local value = tonumber(val)
-
-						if value then
-							return value % 2 ~= 0
-						elseif val == "Ace" then
-							return true
-						else
-							return false
-						end
-					end
-					
 					-- Remove even cards
-					if not isOdd(G.playing_cards[iter_57_0].base.value) then
+					if not isOdd(G.playing_cards[iter_57_0]) then
 						G.playing_cards[iter_57_0]:start_dissolve(nil, true)
 					end
 				end
 
-				-- Add Even Steven Joker
+				-- Add Odd Todd Joker
 				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_odd_todd', nil)
                         card:add_to_deck()
                         G.jokers:emplace(card)
@@ -54,7 +48,7 @@ local loc_def = {
 	["name"]="Odd Todd's Deck",
 	["text"]={
 		[1]="Start run with",
-		[2]="only {C:attention}Odd{} cards and",
+		[2]="only {C:attention}odd cards{} and",
 		[3]="the {C:attention}Odd Todd{} joker"
 	},
 }

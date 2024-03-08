@@ -7,6 +7,14 @@
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
+-- Helper functions
+
+-- Check if value is even
+local function isEven(card)
+	local id = card:get_id()
+	return id <= 10 and id % 2 == 0
+end
+
 -- Add custom effect to config
 local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(arg_56_0)
@@ -18,20 +26,8 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Loop over all cards
 				for iter_57_0 = #G.playing_cards, 1, -1 do
-					
-					-- Check if value is even
-					local function isEven(val)
-						local value = tonumber(val)
-
-						if value then
-							return value % 2 == 0
-						else
-							return false
-						end
-					end
-					
-					-- Remove non even cards
-					if not isEven(G.playing_cards[iter_57_0].base.value) then
+					-- Remove odd cards
+					if not isEven(G.playing_cards[iter_57_0]) then
 						G.playing_cards[iter_57_0]:start_dissolve(nil, true)
 					end
 				end
@@ -52,7 +48,7 @@ local loc_def = {
 	["name"]="Even Steven's Deck",
 	["text"]={
 		[1]="Start run with",
-		[2]="only {C:attention}Even{} cards and",
+		[2]="only {C:attention}even cards{} and",
 		[3]="the {C:attention}Even Steven{} joker"
 	},
 }
