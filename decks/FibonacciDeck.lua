@@ -2,7 +2,7 @@
 --- MOD_NAME: Fibonacci Deck
 --- MOD_ID: Fibodeck
 --- MOD_AUTHOR: [Mikadoe]
---- MOD_DESCRIPTION: Adds a deck with only the cards form the Fibonacci Sequence (Ace, 2, 3, 5, 8), that starts with the Fibonacci joker
+--- MOD_DESCRIPTION: Adds a deck with only the cards from the Fibonacci Sequence (Ace, 2, 3, 5, 8), that starts with the Fibonacci joker
 
 ----------------------------------------------
 ------------MOD CODE -------------------------
