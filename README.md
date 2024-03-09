@@ -14,7 +14,7 @@ Adds a deck with only the cards from the Fibonacci Sequence _(Ace, 2, 3, 5, 8)_,
 
 ### Prime Deck
 Adds a deck with only prime cards _(2, 3, 5, 7, Ace)_, that starts with the **_Prime_** joker\
-`Note: This requires the Prime joker to run, otherwise it will crash`
+_Note: This requires the [Prime joker](#prime-joker) to run, otherwise it will crash_
 
 ### Midas's Deck
 Adds a deck with only Gold Face cards, that starts with the **_Midas Mask_** joker
