@@ -360,6 +360,7 @@ if config.straightNateJoker or config.jokersForHireDeck then
 
 			-- Jokers for Hire
 			if self.ability.set == 'Joker' then
+				for_hire_counter = for_hire_counter + 1
 			end
 		end
 	end
@@ -375,6 +376,7 @@ if config.straightNateJoker or config.jokersForHireDeck then
 
 			-- Jokers for Hire
 			if self.ability.set == 'Joker' then
+				for_hire_counter = for_hire_counter + 1
 			end
 		end
 	end
