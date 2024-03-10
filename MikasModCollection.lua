@@ -360,9 +360,6 @@ if config.straightNateJoker or config.jokersForHireDeck then
 
 			-- Jokers for Hire
 			if self.ability.set == 'Joker' then
-				sendDebugMessage("Added")
-				for_hire_counter = for_hire_counter + 1
-				sendDebugMessage(for_hire_counter)
 			end
 		end
 	end
@@ -378,9 +375,6 @@ if config.straightNateJoker or config.jokersForHireDeck then
 
 			-- Jokers for Hire
 			if self.ability.set == 'Joker' then
-				sendDebugMessage("Removed")
-				for_hire_counter = for_hire_counter - 1
-				sendDebugMessage(for_hire_counter)
 			end
 		end
 	end
@@ -390,9 +384,6 @@ end
 local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
-	if self.ability.name ~= nil then
-		sendDebugMessage(self.ability.name)
-	end
     if G.GAME.starting_params.for_hire and (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
         self.cost = self.cost * 2^for_hire_counter
     end
