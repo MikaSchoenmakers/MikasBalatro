@@ -25,7 +25,7 @@ Adds a deck with only Gold Face cards, that starts with the **_Midas Mask_** jok
 Adds the Prime joker, that gives each played prime number _(2, 3, 5, 7, Ace)_ a 1.2x multiplier when scored
 
 ### Straight Nate
-Adds Straight Nate, that gives a x4 multiplier if the hand contains a straight and you have both the **Odd Todd** and **Even Steven** jokers. Also gives 1 extra joker slot
+Adds Straight Nate, that gives a x4 multiplier if the hand contains a straight and you have both the _Odd Todd_ and _Even Steven_ jokers. Also gives 1 extra joker slot
 
 ## Installation
 - All mods require [Steamodded](https://github.com/Steamopollys/Steamodded/).
