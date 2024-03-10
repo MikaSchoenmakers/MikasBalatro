@@ -45,6 +45,9 @@ local function isFace(card)
 	return id == 11 or id == 12 or id == 13
 end
 
+-- Local variables
+local for_hire_counter = 0
+
 -- Initialize deck effect
 local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(arg_56_0)
@@ -162,7 +165,11 @@ function Back.apply_to_run(arg_56_0)
 	if arg_56_0.effect.config.for_hire then
 		G.E_MANAGER:add_event(Event({
 			func = function()
+				-- Increase joker limit
 				G.jokers.config.card_limit = 9999
+				
+				-- Add effect to starting params
+				G.GAME.starting_params.for_hire = true
 				return true
 			end
 		}))
@@ -208,15 +215,16 @@ local locs = {
 		text = {
 			"Start run with only",
 			"{C:attention}Gold Face cards{} and",
-			"the {C:attention}Midas Mask{} joker",
+			"the {C:attention}Midas Mask{} joker"
 		},
 	},
 	jokersForHireDeck = {
-		name = "Jokers for Hire",
+		name = "\"Jokers for Hire\" Deck",
 		text = {
 			"Start run with {C:dark_edition}9999{}",
-			"Joker slots. Price of jokers",
-			"increase {C:attention}exponentially",
+			"Joker slots. Price of Jokers",
+			"and Buffoon Packs",
+			"increase {C:attention}exponentially"
 		},
 	},
 	primeJoker = {
@@ -337,26 +345,54 @@ function SMODS.INIT.MikasModCollection()
 end
 
 -- Handle card addition/removing
-if config.straightNateJoker then
+if config.straightNateJoker or config.jokersForHireDeck then
 	function Card:add_to_deck(from_debuff)
+		-- Straight Nate
 		if not self.added_to_deck then
 			self.added_to_deck = true
 			if self.ability.name == 'Straight Nate' then
 				-- Add joker slot
 				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
 			end
+
+			-- Jokers for Hire
+			if self.ability.set == 'Joker' then
+				sendDebugMessage("Added")
+				for_hire_counter = for_hire_counter + 1
+				sendDebugMessage(for_hire_counter)
+			end
 		end
 	end
 
 	function Card:remove_from_deck(from_debuff)
+		-- Straight Nate
 		if self.added_to_deck then
 			self.added_to_deck = false
 			if self.ability.name == 'Straight Nate' then
 				-- Remove joker slot
 				G.jokers.config.card_limit = G.jokers.config.card_limit - 1
 			end
+
+			-- Jokers for Hire
+			if self.ability.set == 'Joker' then
+				sendDebugMessage("Removed")
+				for_hire_counter = for_hire_counter - 1
+				sendDebugMessage(for_hire_counter)
+			end
 		end
 	end
+end
+
+-- Handle cost increase
+local set_costref = Card.set_cost
+function Card.set_cost(self)
+    set_costref(self)
+	if self.ability.name ~= nil then
+		sendDebugMessage(self.ability.name)
+	end
+    if G.GAME.starting_params.for_hire and (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
+        self.cost = self.cost * 2^for_hire_counter
+    end
 end
 
 ----------------------------------------------
