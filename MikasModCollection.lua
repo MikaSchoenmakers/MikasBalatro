@@ -2,20 +2,18 @@
 --- MOD_NAME: Mika's Mod Collection
 --- MOD_ID: Mikasmods
 --- MOD_AUTHOR: [Mikadoe]
---- MOD_DESCRIPTION: A collection of Mika's Mods. Check the mod description for more information :)
+--- MOD_DESCRIPTION: A collection of Mika's Mods. Check the mod description on GitHub for more information :)
 
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
 -- Config: DISABLE UNWANTED MODS HERE
 local config = {
-	-- Decks
 	evenStevenDeck = true,
 	oddToddDeck = true,
 	fibonacciDeck = true,
-	primeDeck = true,
+	primeDeck = true, -- Do not enable without primeJoker
 	midasDeck = true,
-	-- Jokers
 	primeJoker = true,
 	straightNateJoker = true
 }
@@ -65,8 +63,8 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Add Even Steven Joker
 				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_even_steven', nil)
-                        card:add_to_deck()
-                        G.jokers:emplace(card)
+				card:add_to_deck()
+				G.jokers:emplace(card)
 				return true
 			end
 		}))
@@ -86,8 +84,8 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Add Odd Todd Joker
 				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_odd_todd', nil)
-                        card:add_to_deck()
-                        G.jokers:emplace(card)
+				card:add_to_deck()
+				G.jokers:emplace(card)
 				return true
 			end
 		}))
@@ -97,7 +95,6 @@ function Back.apply_to_run(arg_56_0)
 	if arg_56_0.effect.config.only_fibo then
 		G.E_MANAGER:add_event(Event({
 			func = function()
-
 				-- Loop over all cards
 				for i = #G.playing_cards, 1, -1 do
 					-- Remove non fibonacci cards
@@ -108,8 +105,8 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Add Fibonacci Joker
 				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_fibonacci', nil)
-                        card:add_to_deck()
-                        G.jokers:emplace(card)
+				card:add_to_deck()
+				G.jokers:emplace(card)
 				return true
 			end
 		}))
@@ -128,9 +125,9 @@ function Back.apply_to_run(arg_56_0)
 				end
 
 				-- Add Prime Joker
-				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_prime', nil)
-                        card:add_to_deck()
-                        G.jokers:emplace(card)
+				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_prime', nil)
+				card:add_to_deck()
+				G.jokers:emplace(card)
 				return true
 			end
 		}))
@@ -140,7 +137,6 @@ function Back.apply_to_run(arg_56_0)
 	if arg_56_0.effect.config.gold then
 		G.E_MANAGER:add_event(Event({
 			func = function()
-
 				-- Loop over all cards
 				for i = #G.playing_cards, 1, -1 do
 					if not isFace(G.playing_cards[i]) then
@@ -154,8 +150,8 @@ function Back.apply_to_run(arg_56_0)
 
 				-- Add Midas Mask Joker
 				local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_midas_mask', nil)
-                        card:add_to_deck()
-                        G.jokers:emplace(card)
+				card:add_to_deck()
+				G.jokers:emplace(card)
 				return true
 			end
 		}))
@@ -163,158 +159,184 @@ function Back.apply_to_run(arg_56_0)
 end
 
 -- Create Localization
-local loc_def_steven = {
-	["name"]="Even Steven's Deck",
-	["text"]={
-		[1]="Start run with",
-		[2]="only {C:attention}even cards{} and",
-		[3]="the {C:attention}Even Steven{} joker"
+local locs = {
+	evenStevenDeck = {
+		name = "Even Steven's Deck",
+		text = {
+			"Start run with only",
+			"{C:attention}even cards{} and",
+			"the {C:attention}Even Steven{} joker"
+		}
 	},
-}
-
-local loc_def_todd = {
-	["name"]="Odd Todd's Deck",
-	["text"]={
-		[1]="Start run with",
-		[2]="only {C:attention}odd cards{} and",
-		[3]="the {C:attention}Odd Todd{} joker"
+	oddToddDeck = {
+		name = "Odd Todd's Deck",
+		text = {
+			"Start run with only",
+			"{C:attention}odd cards{} and",
+			"the {C:attention}Odd Todd{} joker"
+		}
 	},
-}
-
-local loc_def_fibo = {
-	["name"]="Fibonacci Deck",
-	["text"]={
-		[1]="Start run with only",
-		[2]="{C:attention}Fibonacci cards{} and",
-		[3]="the {C:attention}Fibonacci{} joker"
+	fibonacciDeck = {
+		name = "Fibonacci Deck",
+		text = {
+			"Start run with only",
+			"{C:attention}Fibonacci cards{} and",
+			"the {C:attention}Fibonacci{} joker"
+		}
 	},
-}
-
-local loc_def_prime_deck = {
-	["name"]="Prime Deck",
-	["text"]={
-		[1]="Start run with",
-		[2]="only {C:attention}prime cards{} and",
-		[3]="the {C:attention}Prime{} joker"
+	primeDeck = {
+		name = "Prime Deck",
+		text = {
+			"Start run with",
+			"only {C:attention}prime cards{} and",
+			"the {C:attention}Prime{} joker"
+		}
 	},
-}
-
-local loc_def_midas = {
-	["name"]="Midas's Deck",
-	["text"]={
-		[1]="Start run with only",
-		[2]="{C:attention}Gold Face cards{} and",
-		[3]="the {C:attention}Midas Mask{} joker",
+	midasDeck = {
+		name = "Midas's Deck",
+		text = {
+			"Start run with only",
+			"{C:attention}Gold Face cards{} and",
+			"the {C:attention}Midas Mask{} joker",
+		},
 	},
+	primeJoker = {
+		name = "Prime Joker",
+		text = {
+			"Each played {C:attention}2{},",
+			"{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
+			"{X:mult,C:white} X1.2 {} Mult when scored"
+		}
+	},
+	straightNateJoker = {
+		name = "Straight Nate",
+		text = {
+			"{X:mult,C:white} X4 {} Mult if played hand",
+			"contains a {C:attention}Straight{} and you have",
+			"both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
+			"Also gives {C:dark_edition}+1{} Joker slot"
+		}
+	}
 }
 
-local loc_txt_prime_joker = {
-    name = "Prime Joker",
-    text = {
-        "Each played {C:attention}2{},",
-        "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
-        "{X:mult,C:white} X1.2 {} Mult when scored"
-    }
+-- Initialize Decks
+local decks = {
+	evenStevenDeck = { name = "Even Steven's Deck", config = { only_evens = true }, sprite = { x = 5, y = 2 } },
+	oddToddDeck = { name = "Odd Todd's Deck", config = { only_odds = true }, sprite = { x = 5, y = 2 } },
+	fibonacciDeck = { name = "Fibonacci Deck", config = { only_fibo = true }, sprite = { x = 5, y = 2 } },
+	primeDeck = { name = "Prime Deck", config = { only_prime = true }, sprite = { x = 5, y = 2 } },
+	midasDeck = { name = "Midas's Deck", config = { gold = true }, sprite = { x = 6, y = 0 } }
 }
 
-local loc_txt_nate = {
-    name = "Straight Nate",
-    text = {
-        "{X:mult,C:white} X4 {} Mult if played hand",
-        "contains a {C:attention}Straight{} and you have",
-        "both {C:attention}Odd Todd{} and {C:attention}Even Steven.",
-        "Also gives {C:dark_edition}+1{} Joker slot"
-    }
-}
-
--- Initialize
-local evenStevenDeck = SMODS.Deck:new("Even Steven's Deck", "stevendeck", {only_evens = true}, {x = 5, y = 2}, loc_def_steven)
-evenStevenDeck:register()
-
-local oddToddDeck = SMODS.Deck:new("Odd Todd's Deck", "todddeck", {only_odds = true}, {x = 5, y = 2}, loc_def_todd)
-oddToddDeck:register()
-
-local fibonacciDeck = SMODS.Deck:new("Fibonacci Deck", "fibodeck", {only_fibo = true}, {x = 5, y = 2}, loc_def_fibo)
-fibonacciDeck:register()
-
-local primeDeck = SMODS.Deck:new("Prime Deck", "primedeck", {only_prime = true}, {x = 5, y = 2}, loc_def_prime_deck)
-primeDeck:register()
-
-local midasDeck = SMODS.Deck:new("Midas's Deck", "midasdeck", {gold = true}, {x = 6, y = 0}, loc_def_midas)
-midasDeck:register()
-
-local primeJoker = SMODS.Joker:new("Prime Joker", "prime", { extra = { Xmult = 1.2 } }, { x = 0, y = 4 }, loc_txt_prime_joker, 1, 4, true, true, true, true)
-
-local straightNateJoker = SMODS.Joker:new("Straight Nate", "straight_nate", { extra = { Xmult = 4 } }, { x = 0, y = 0 }, loc_txt_nate,  3, 7, true, true, true, true)
-
-function SMODS.INIT.MikasModCollection()
-    primeJoker:register()
-
-    straightNateJoker:register()
-
-	-- Joker calculations
-	SMODS.Jokers.j_straight_nate.calculate = function(self, context)
-        if SMODS.end_calculate_context(context) then
-            if next(context.poker_hands["Straight"]) then
-                local todd = false;
-                local steven = false;
-                for k, v in pairs(G.jokers.cards) do
-                    if v.ability.name == "Odd Todd" then todd = true end
-                    if v.ability.name == "Even Steven" then steven = true end
-                end
-
-                if todd and steven then
-                    return {
-                        message = localize { type = 'variable', key = 'a_xmult', vars = { 4 } },
-                        Xmult_mod = 4
-                    }
-                end
-            end
-        end
-    end
+for key, value in pairs(decks) do
+	if config[key] then
+		local newDeck = SMODS.Deck:new(value.name, key, value.config, value.sprite, locs[key])
+		newDeck:register()
+	end
 end
 
-local card_calculate_joker_ref = Card.calculate_joker
-function Card.calculate_joker(self, context)
-    local calculate_joker_ref = card_calculate_joker_ref(self, context)
-    if context.individual then
-        if context.cardarea == G.play then
-            if self.ability.name == "Prime Joker" and (
-                context.other_card:get_id() == 2 or 
-                context.other_card:get_id() == 3 or 
-                context.other_card:get_id() == 5 or 
-                context.other_card:get_id() == 7 or 
-                context.other_card:get_id() == 14) then
-                    return {
-                        x_mult = self.ability.extra.Xmult,
-                        card = self
-                    }
-            end
-        end
-    end
+-- Create Jokers
+local jokers = {
+	primeJoker = {
+		ability_name = "Prime Joker",
+		slug = "mmc_prime",
+		ability = { extra = { Xmult = 1.2 } },
+		sprite = { x = 0, y = 4 },
+		rarity = 1,
+		cost = 4,
+		unlocked = true,
+		discovered = true,
+		blueprint_compat = true,
+		eternal_compat = true
+	},
+	straightNateJoker = {
+		ability_name = "Straight Nate",
+		slug = "mmc_straight_nate",
+		ability = { extra = { Xmult = 4 } },
+		sprite = { x = 0, y = 0 },
+		rarity = 3,
+		cost = 7,
+		unlocked = true,
+		discovered = true,
+		blueprint_compat = true,
+		eternal_compat = true
+	}
+}
 
-    return calculate_joker_ref
+function SMODS.INIT.MikasModCollection()
+	-- Initialize Jokers
+	for key, value in pairs(jokers) do
+		if config[key] then
+			local newJoker = SMODS.Joker:new(value.ability_name, value.slug, value.ability, value.sprite, locs[key],
+				value.rarity, value.cost, value.unlocked, value.discovered, value.blueprint_compat, value.eternal_compat)
+			newJoker:register()
+		end
+	end
+
+	-- Joker calculations
+	if config.primeJoker then
+		SMODS.Jokers.j_mmc_prime.calculate = function(self, context)
+			if context.individual then
+				if context.cardarea == G.play then
+					if (context.other_card:get_id() == 2 or
+							context.other_card:get_id() == 3 or
+							context.other_card:get_id() == 5 or
+							context.other_card:get_id() == 7 or
+							context.other_card:get_id() == 14) then
+						return {
+							x_mult = self.ability.extra.Xmult,
+							card = self
+						}
+					end
+				end
+			end
+		end
+	end
+
+	if config.straightNateJoker then
+		SMODS.Jokers.j_mmc_straight_nate.calculate = function(self, context)
+			if SMODS.end_calculate_context(context) then
+				if next(context.poker_hands["Straight"]) then
+					local todd = false;
+					local steven = false;
+					for _, v in pairs(G.jokers.cards) do
+						if v.ability.name == "Odd Todd" then todd = true end
+						if v.ability.name == "Even Steven" then steven = true end
+					end
+
+					if todd and steven then
+						return {
+							message = localize { type = 'variable', key = 'a_xmult', vars = { 4 } },
+							Xmult_mod = 4
+						}
+					end
+				end
+			end
+		end
+	end
 end
 
 -- Handle card addition/removing
-function Card:add_to_deck(from_debuff)
-    if not self.added_to_deck then
-        self.added_to_deck = true
-        if self.ability.name == 'Straight Nate' then
-			-- Add joker slot
-            G.jokers.config.card_limit = G.jokers.config.card_limit + 1
-        end
-    end
-end
+if config.straightNateJoker then
+	function Card:add_to_deck(from_debuff)
+		if not self.added_to_deck then
+			self.added_to_deck = true
+			if self.ability.name == 'Straight Nate' then
+				-- Add joker slot
+				G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+			end
+		end
+	end
 
-function Card:remove_from_deck(from_debuff)
-    if self.added_to_deck then
-        self.added_to_deck = false
-        if self.ability.name == 'Straight Nate' then
-			-- Remove joker slot
-            G.jokers.config.card_limit = G.jokers.config.card_limit - 1
-        end
-    end
+	function Card:remove_from_deck(from_debuff)
+		if self.added_to_deck then
+			self.added_to_deck = false
+			if self.ability.name == 'Straight Nate' then
+				-- Remove joker slot
+				G.jokers.config.card_limit = G.jokers.config.card_limit - 1
+			end
+		end
+	end
 end
 
 ----------------------------------------------
