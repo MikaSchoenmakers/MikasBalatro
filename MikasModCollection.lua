@@ -170,6 +170,9 @@ function Back.apply_to_run(arg_56_0)
 				
 				-- Add effect to starting params
 				G.GAME.starting_params.for_hire = true
+
+				-- Reset counter
+				for_hire_counter = 0
 				return true
 			end
 		}))
