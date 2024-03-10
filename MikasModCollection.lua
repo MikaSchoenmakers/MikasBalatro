@@ -14,6 +14,7 @@ local config = {
 	fibonacciDeck = true,
 	primeDeck = true, -- Do not enable without primeJoker
 	midasDeck = true,
+	jokersForHireDeck = true,
 	primeJoker = true,
 	straightNateJoker = true
 }
@@ -156,6 +157,16 @@ function Back.apply_to_run(arg_56_0)
 			end
 		}))
 	end
+
+	-- Jokers For Hire Deck
+	if arg_56_0.effect.config.for_hire then
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.jokers.config.card_limit = 9999
+				return true
+			end
+		}))
+	end
 end
 
 -- Create Localization
@@ -200,6 +211,14 @@ local locs = {
 			"the {C:attention}Midas Mask{} joker",
 		},
 	},
+	jokersForHireDeck = {
+		name = "Jokers for Hire",
+		text = {
+			"Start run with {C:dark_edition}9999{}",
+			"Joker slots. Price of jokers",
+			"increase {C:attention}exponentially",
+		},
+	},
 	primeJoker = {
 		name = "Prime Joker",
 		text = {
@@ -225,7 +244,8 @@ local decks = {
 	oddToddDeck = { name = "Odd Todd's Deck", config = { only_odds = true }, sprite = { x = 5, y = 2 } },
 	fibonacciDeck = { name = "Fibonacci Deck", config = { only_fibo = true }, sprite = { x = 5, y = 2 } },
 	primeDeck = { name = "Prime Deck", config = { only_prime = true }, sprite = { x = 5, y = 2 } },
-	midasDeck = { name = "Midas's Deck", config = { gold = true }, sprite = { x = 6, y = 0 } }
+	midasDeck = { name = "Midas's Deck", config = { gold = true }, sprite = { x = 6, y = 0 } },
+	jokersForHireDeck = { name = "Jokers for Hire", config = { for_hire = true }, sprite = { x = 6, y = 0 } }
 }
 
 for key, value in pairs(decks) do
