@@ -16,7 +16,8 @@ local config = {
     primeJoker = true,
     straightNateJoker = true,
     fishermanJoker = true,
-    impatientJoker = true
+    impatientJoker = true,
+    cultistJoker = true
 }
 
 -- Helper functions
@@ -263,6 +264,14 @@ local locs = {
             "Resets every round",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
+    },
+    cultistJoker = {
+        name = "Cultist",
+        text = {
+            "{X:mult,C:white}X#2#{} Mult per hand played",
+            "Resets every round",
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+        }
     }
 }
 
@@ -349,16 +358,25 @@ local jokers = {
     impatientJoker = {
         ability_name = "Impatient Joker",
         slug = "mmc_impatient",
-        ability = {
-            mult = 0,
-            extra = { mult_add = 2 }
-        },
+        ability = { mult = 0, extra = { mult_add = 2 } },
         sprite = { x = 3, y = 4 },
         rarity = 2,
         cost = 6,
         unlocked = true,
         discovered = true,
         blueprint_compat = false,
+        eternal_compat = true
+    },
+    cultistJoker = {
+        ability_name = "Cultist",
+        slug = "mmc_cultist",
+        ability = { extra = { Xmult = 1, Xmult_add = 1 } },
+        sprite = { x = 8, y = 10 },
+        rarity = 3,
+        cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
         eternal_compat = true
     }
 }
@@ -454,17 +472,22 @@ function SMODS.INIT.MikasModCollection()
 
     if config.impatientJoker then
         SMODS.Jokers.j_mmc_impatient.calculate = function(self, context)
-			-- Apply mult
+            -- Apply mult
             if SMODS.end_calculate_context(context) then
                 if self.ability.mult > 0 then
                     return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_mult',
+                            vars = { self.ability.mult }
+                        },
                         mult_mod = self.ability.mult,
                         card = self
                     }
                 end
             end
 
-			-- Increase mult for each discarded card
+            -- Increase mult for each discarded card
             if context.discard then
                 self.ability.mult = self.ability.mult + self.ability.extra.mult_add
                 return {
@@ -472,9 +495,36 @@ function SMODS.INIT.MikasModCollection()
                 }
             end
 
-			-- Reset mult
+            -- Reset mult
             if context.end_of_round then
                 self.ability.mult = 0
+            end
+        end
+    end
+
+    if config.cultistJoker then
+        SMODS.Jokers.j_mmc_cultist.calculate = function(self, context)
+            -- If hand played
+            if SMODS.end_calculate_context(context) then
+                -- Increment Xmult
+                self.ability.extra.Xmult_old = self.ability.extra.Xmult
+                self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
+
+                -- Apply xmult
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.Xmult_old }
+                    },
+                    mult_mod = self.ability.extra.Xmult_old,
+                    card = self
+                }
+            end
+
+            -- Reset mult
+            if context.end_of_round then
+                self.ability.extra.Xmult = 1
             end
         end
     end
@@ -503,6 +553,8 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.hand_size, self.ability.extra.hand_add }
         elseif self.ability.name == 'Impatient Joker' then
             loc_vars = { self.ability.mult, self.ability.extra.mult_add }
+        elseif self.ability.name == 'Cultist' then
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
         else
             customJoker = false
         end
