@@ -48,6 +48,7 @@ end
 
 -- Local variables
 local for_hire_counter = 0
+local fisherman_hand_size = 0
 
 -- Initialize deck effect
 local Backapply_to_runRef = Back.apply_to_run
@@ -251,9 +252,9 @@ local locs = {
 	fishermanJoker = {
 		name = "The Fisherman",
 		text = {
-			"{C:attention}+#1#{} hand size per discard",
-			"{C:attention}-#2#{} hand size per hand played",
-			"{C:inactive}(Currently {C:mult}+#3#{C:inactive} Mult)"
+			"{C:attention}+1{} hand size per discard",
+			"{C:attention}-1{} hand size per hand played",
+			"{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
 		}
 	}
 }
@@ -304,7 +305,7 @@ local jokers = {
 	fishermanJoker = {
 		ability_name = "The Fisherman",
 		slug = "mmc_fisherman",
-		ability = { extra = { hand_add = 1, discard_sub = 1 } },
+		ability = { extra = { hand_size = 0, hand_add = 1 } },
 		sprite = { x = 6, y = 10 },
 		rarity = 1,
 		cost = 5,
@@ -370,24 +371,79 @@ function SMODS.INIT.MikasModCollection()
 	if config.fishermanJoker then
 		SMODS.Jokers.j_mmc_fisherman.calculate = function(self, context)
 			if SMODS.end_calculate_context(context) then
-				sendDebugMessage("Something!")
-				if context.discard then
-					sendDebugMessage("Discarded!")
-					self.ability.hand_size = self.ability.hand_size + 1
-					deck.config.card_limit = self.ability.hand_size
+				self.ability.extra.hand_size = math.max(0, self.ability.extra.hand_size - 1)
+				if self.ability.extra.hand_size > 0 then
+					sendDebugMessage("Decrease!")
+					G.hand:change_size(-self.ability.extra.hand_add)
 				end
-				-- if context
-                -- self.ability.mult = math.max(0, self.ability.mult - self.ability.extra.discard_sub)
-                -- if self.ability.mult ~= prev_mult then 
-                --     return {
-                --         message = localize{type='variable',key='a_mult_minus',vars={self.ability.extra.discard_sub}},
-                --         colour = G.C.RED,
-                --         card = self
-                --     }
-                -- end
+			end
+
+			if context.pre_discard then
+				self.ability.extra.hand_size = self.ability.extra.hand_size + 1
+				G.hand:change_size(self.ability.extra.hand_add)
+				sendDebugMessage("Increase!")
 			end
 		end
 	end
+end
+
+-- Copied and modifed from LushMod
+local generate_UIBox_ability_tableref = Card.generate_UIBox_ability_table
+function Card.generate_UIBox_ability_table(self)
+    local card_type, hide_desc = self.ability.set or "None", nil
+    local loc_vars = nil
+    local main_start, main_end = nil, nil
+    local no_badge = nil
+
+    if self.config.center.unlocked == false and not self.bypass_lock then -- For everyting that is locked
+    elseif card_type == 'Undiscovered' and not self.bypass_discovery_ui then -- Any Joker or tarot/planet/voucher that is not yet discovered
+    elseif self.debuff then
+    elseif card_type == 'Default' or card_type == 'Enhanced' then
+    elseif self.ability.set == 'Joker' then
+        local customJoker = true
+
+		if self.ability.name == 'The Fisherman' then
+            loc_vars = {self.ability.extra.hand_size}
+        else
+            customJoker = false
+        end
+
+        if customJoker then
+            local badges = {}
+            if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
+                badges.card_type = card_type
+            end
+            if self.ability.set == 'Joker' and self.bypass_discovery_ui and (not no_badge) then
+                badges.force_rarity = true
+            end
+            if self.edition then
+                if self.edition.type == 'negative' and self.ability.consumeable then
+                    badges[#badges + 1] = 'negative_consumable'
+                else
+                    badges[#badges + 1] = (self.edition.type == 'holo' and 'holographic' or self.edition.type)
+                end
+            end
+            if self.seal then
+                badges[#badges + 1] = string.lower(self.seal) .. '_seal'
+            end
+            if self.ability.eternal then
+                badges[#badges + 1] = 'eternal'
+            end
+            if self.pinned then
+                badges[#badges + 1] = 'pinned_left'
+            end
+
+            if self.sticker then
+                loc_vars = loc_vars or {};
+                loc_vars.sticker = self.sticker
+            end
+
+            return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, hide_desc, main_start,
+                main_end)
+        end
+    end
+
+    return generate_UIBox_ability_tableref(self)
 end
 
 -- Handle card addition/removing
