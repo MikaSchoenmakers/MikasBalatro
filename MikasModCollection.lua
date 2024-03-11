@@ -382,6 +382,9 @@ local jokers = {
 }
 
 function SMODS.INIT.MikasModCollection()
+	-- Localization
+    init_localization()
+
     -- Initialize Jokers
     for key, value in pairs(jokers) do
         if config[key] then
