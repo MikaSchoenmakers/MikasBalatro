@@ -16,7 +16,8 @@ local config = {
 	midasDeck = true,
 	jokersForHireDeck = true,
 	primeJoker = true,
-	straightNateJoker = true
+	straightNateJoker = true,
+	fishermanJoker = true
 }
 
 -- Helper functions
@@ -246,6 +247,14 @@ local locs = {
 			"both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
 			"Also gives {C:dark_edition}+1{} Joker slot"
 		}
+	},
+	fishermanJoker = {
+		name = "The Fisherman",
+		text = {
+			"{C:attention}+#1#{} hand size per discard",
+			"{C:attention}-#2#{} hand size per hand played",
+			"{C:inactive}(Currently {C:mult}+#3#{C:inactive} Mult)"
+		}
 	}
 }
 
@@ -290,6 +299,18 @@ local jokers = {
 		unlocked = true,
 		discovered = true,
 		blueprint_compat = true,
+		eternal_compat = true
+	},
+	fishermanJoker = {
+		ability_name = "The Fisherman",
+		slug = "mmc_fisherman",
+		ability = { extra = { hand_add = 1, discard_sub = 1 } },
+		sprite = { x = 6, y = 10 },
+		rarity = 1,
+		cost = 5,
+		unlocked = true,
+		discovered = true,
+		blueprint_compat = false,
 		eternal_compat = true
 	}
 }
@@ -342,6 +363,28 @@ function SMODS.INIT.MikasModCollection()
 						}
 					end
 				end
+			end
+		end
+	end
+
+	if config.fishermanJoker then
+		SMODS.Jokers.j_mmc_fisherman.calculate = function(self, context)
+			if SMODS.end_calculate_context(context) then
+				sendDebugMessage("Something!")
+				if context.discard then
+					sendDebugMessage("Discarded!")
+					self.ability.hand_size = self.ability.hand_size + 1
+					deck.config.card_limit = self.ability.hand_size
+				end
+				-- if context
+                -- self.ability.mult = math.max(0, self.ability.mult - self.ability.extra.discard_sub)
+                -- if self.ability.mult ~= prev_mult then 
+                --     return {
+                --         message = localize{type='variable',key='a_mult_minus',vars={self.ability.extra.discard_sub}},
+                --         colour = G.C.RED,
+                --         card = self
+                --     }
+                -- end
 			end
 		end
 	end
