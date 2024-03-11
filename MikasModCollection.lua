@@ -15,7 +15,8 @@ local config = {
     jokersForHireDeck = true,
     primeJoker = true,
     straightNateJoker = true,
-    fishermanJoker = false -- UNRELEASED, DO NOT ENABLE
+    fishermanJoker = true,
+    impatientJoker = true
 }
 
 -- Helper functions
@@ -234,13 +235,13 @@ local locs = {
         text = {
             "Each played {C:attention}2{},",
             "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
-            "{X:mult,C:white} X1.2 {} Mult when scored"
+            "{X:mult,C:white} X#1# {} Mult when scored"
         }
     },
     straightNateJoker = {
         name = "Straight Nate",
         text = {
-            "{X:mult,C:white} X4 {} Mult if played hand",
+            "{X:mult,C:white} X#1# {} Mult if played hand",
             "contains a {C:attention}Straight{} and you have",
             "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
             "Also gives {C:dark_edition}+1{} Joker slot"
@@ -249,9 +250,18 @@ local locs = {
     fishermanJoker = {
         name = "The Fisherman",
         text = {
-            "{C:attention}+1{} hand size per discard",
-            "{C:attention}-1{} hand size per hand played",
+            "{C:attention}+#2#{} hand size per discard",
+            "{C:attention}-#2#{} hand size per hand played",
+            "Resets every round",
             "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
+        }
+    },
+    impatientJoker = {
+        name = "Impatient Joker",
+        text = {
+            "{C:mult}+#2#{} Mult per card discarded",
+            "Resets every round",
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
     }
 }
@@ -329,8 +339,23 @@ local jokers = {
         ability = {
             extra = { hand_size = 0, hand_add = 1 } },
         sprite = { x = 6, y = 10 },
-        rarity = 1,
-        cost = 5,
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    impatientJoker = {
+        ability_name = "Impatient Joker",
+        slug = "mmc_impatient",
+        ability = {
+            mult = 0,
+            extra = { mult_add = 2 }
+        },
+        sprite = { x = 3, y = 4 },
+        rarity = 2,
+        cost = 6,
         unlocked = true,
         discovered = true,
         blueprint_compat = false,
@@ -351,17 +376,21 @@ function SMODS.INIT.MikasModCollection()
     -- Joker calculations
     if config.primeJoker then
         SMODS.Jokers.j_mmc_prime.calculate = function(self, context)
-            if context.individual then
-                if context.cardarea == G.play then
-                    if (context.other_card:get_id() == 2 or context.other_card:get_id() == 3 or
-                            context.other_card:get_id() == 5 or context.other_card:get_id() == 7 or
-                            context.other_card:get_id() == 14) then
-                        return {
-                            x_mult = self.ability.extra.Xmult,
-                            card = self
-                        }
-                    end
-                end
+            -- For each played card, if card is prime, add xmult
+            if context.individual and context.cardarea == G.play and (context.other_card:get_id() == 2 or
+                    context.other_card:get_id() == 3 or
+                    context.other_card:get_id() == 5 or
+                    context.other_card:get_id() == 7 or
+                    context.other_card:get_id() == 14) then
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.Xmult }
+                    },
+                    x_mult = self.ability.extra.Xmult,
+                    card = self
+                }
             end
         end
     end
@@ -369,7 +398,9 @@ function SMODS.INIT.MikasModCollection()
     if config.straightNateJoker then
         SMODS.Jokers.j_mmc_straight_nate.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
+                -- If hand played is a straight
                 if next(context.poker_hands["Straight"]) then
+                    -- Check for Todd and Steven Jokers
                     local todd = false;
                     local steven = false;
                     for _, v in pairs(G.jokers.cards) do
@@ -381,14 +412,15 @@ function SMODS.INIT.MikasModCollection()
                         end
                     end
 
+                    -- Add xmult
                     if todd and steven then
                         return {
                             message = localize {
                                 type = 'variable',
                                 key = 'a_xmult',
-                                vars = { 4 }
+                                vars = { self.ability.extra.Xmult }
                             },
-                            Xmult_mod = 4
+                            Xmult_mod = self.ability.extra.Xmult
                         }
                     end
                 end
@@ -396,23 +428,56 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    -- if config.fishermanJoker then
-    -- 	SMODS.Jokers.j_mmc_fisherman.calculate = function(self, context)
-    -- 		if SMODS.end_calculate_context(context) then
-    -- 			self.ability.extra.hand_size = math.max(0, self.ability.extra.hand_size - 1)
-    -- 			if self.ability.extra.hand_size > 0 then
-    -- 				sendDebugMessage("Decrease!")
-    -- 				G.hand:change_size(-self.ability.extra.hand_add)
-    -- 			end
-    -- 		end
+    if config.fishermanJoker then
+        SMODS.Jokers.j_mmc_fisherman.calculate = function(self, context)
+            -- Decrease hand size
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.hand_size > 0 then
+                    self.ability.extra.hand_size = math.max(0, self.ability.extra.hand_size - 1)
+                    G.hand:change_size(-self.ability.extra.hand_add)
+                end
+            end
 
-    -- 		if context.pre_discard then
-    -- 			self.ability.extra.hand_size = self.ability.extra.hand_size + 1
-    -- 			G.hand:change_size(self.ability.extra.hand_add)
-    -- 			sendDebugMessage("Increase!")
-    -- 		end
-    -- 	end
-    -- end
+            -- Increase hand size
+            if context.pre_discard then
+                self.ability.extra.hand_size = self.ability.extra.hand_size + 1
+                G.hand:change_size(self.ability.extra.hand_add)
+            end
+
+            -- Reset hand size
+            if context.end_of_round then
+                G.hand:change_size(-self.ability.extra.hand_size)
+                self.ability.extra.hand_size = 0
+            end
+        end
+    end
+
+    if config.impatientJoker then
+        SMODS.Jokers.j_mmc_impatient.calculate = function(self, context)
+			-- Apply mult
+            if SMODS.end_calculate_context(context) then
+                if self.ability.mult > 0 then
+                    return {
+                        mult_mod = self.ability.mult,
+                        card = self
+                    }
+                end
+            end
+
+			-- Increase mult for each discarded card
+            if context.discard then
+                self.ability.mult = self.ability.mult + self.ability.extra.mult_add
+                return {
+                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult_add } }
+                }
+            end
+
+			-- Reset mult
+            if context.end_of_round then
+                self.ability.mult = 0
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -430,8 +495,14 @@ function Card.generate_UIBox_ability_table(self)
     elseif self.ability.set == 'Joker' then
         local customJoker = true
 
-        if self.ability.name == 'The Fisherman' then
-            loc_vars = { self.ability.extra.hand_size }
+        if self.ability.name == 'Prime Joker' then
+            loc_vars = { self.ability.extra.Xmult }
+        elseif self.ability.name == 'Straight Nate' then
+            loc_vars = { self.ability.extra.Xmult }
+        elseif self.ability.name == 'The Fisherman' then
+            loc_vars = { self.ability.extra.hand_size, self.ability.extra.hand_add }
+        elseif self.ability.name == 'Impatient Joker' then
+            loc_vars = { self.ability.mult, self.ability.extra.mult_add }
         else
             customJoker = false
         end
