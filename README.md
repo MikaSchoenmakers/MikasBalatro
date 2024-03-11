@@ -19,7 +19,7 @@ Adds a deck with only prime cards _(2, 3, 5, 7, Ace)_, that starts with the **_P
 Adds a deck with only Gold Face cards, that starts with the **_Midas Mask_** joker.
 
 ### "Jokers for Hire" Deck
-Start run with 9999 Joker slots, but the price of Jokers and Buffoon Packs increase **_exponentially_**
+All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**
 
 ## Jokers
 
