@@ -458,6 +458,11 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 if self.ability.mult > 0 then
                     return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_mult',
+                            vars = { self.ability.mult }
+                        },
                         mult_mod = self.ability.mult,
                         card = self
                     }
