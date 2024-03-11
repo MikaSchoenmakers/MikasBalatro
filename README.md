@@ -24,16 +24,19 @@ All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increas
 ## Jokers
 
 ### Prime Joker
-Gives each played prime number _(2, 3, 5, 7, Ace)_ a 1.2x multiplier when scored.
+Gives each played prime number _(2, 3, 5, 7, Ace)_ X1.2 mult when scored.
 
 ### Straight Nate
-Gives a x4 multiplier if the hand contains a straight and you have both the **_Odd Todd_** and **_Even Steven_** jokers. Also gives 1 extra joker slot.
+Gives X4 mult if the hand contains a straight and you have both the **_Odd Todd_** and **_Even Steven_** jokers. Also gives 1 extra joker slot.
 
 ### The Fisherman
 Gives +1 hand size per discard, -1 hand size per hand played _(but hand size effect can't be negative)_. Resets every round.
 
 ### Impatient Joker
 Gives +2 mult per discarded card. Resets every round.
+
+### Cultist
+Gains +X1 mult per hand played, starting at X1. Resets every round.
 
 ## Installation
 - All mods require [Steamodded](https://github.com/Steamopollys/Steamodded/).
