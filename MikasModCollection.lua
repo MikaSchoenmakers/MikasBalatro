@@ -642,10 +642,9 @@ function Card.generate_UIBox_ability_table(self)
 end
 
 -- Handle card addition/removing
+local add_to_deckref = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
     if not self.added_to_deck then
-        self.added_to_deck = true
-
         -- Straight Nate
         if self.ability.name == 'Straight Nate' then
             -- Add Joker slot
@@ -669,12 +668,12 @@ function Card:add_to_deck(from_debuff)
             for_hire_counter = for_hire_counter + 1
         end
     end
+    add_to_deckref(self, from_debuff)
 end
 
+local remove_from_deckref = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
     if self.added_to_deck then
-        self.added_to_deck = false
-
         -- Straight Nate
         if self.ability.name == 'Straight Nate' then
             -- Remove Joker slot
@@ -698,6 +697,7 @@ function Card:remove_from_deck(from_debuff)
             for_hire_counter = for_hire_counter - 1
         end
     end
+    remove_from_deckref(self, from_debuff)
 end
 
 -- Handle cost increase
