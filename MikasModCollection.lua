@@ -651,16 +651,6 @@ function Card:add_to_deck(from_debuff)
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
         end
 
-        -- -- Seal Collector
-        -- if self.seal ~= nil then
-        --     for _, v in pairs(G.jokers.cards) do
-        --         if v.ability.name == 'Seal Collector' then
-        --             -- Add chips
-        --             v.ability.extra.chips = v.ability.extra.chips + v.ability.extra.chips_add
-        --         end
-        --     end
-        -- end
-
         -- Jokers for Hire
         if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
             -- Add Joker slot and increment counter
