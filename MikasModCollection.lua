@@ -281,7 +281,7 @@ local locs = {
         text = {
             "Gains {C:chips}+#2#{} Chips for",
             "every card with a {C:attention}seal",
-            "{C:inactive}(Currently {C:chips}#1#{} Chips)"
+            "{C:inactive}(Currently {C:chips}+#1#{} Chips)"
         }
     }
 }
@@ -392,7 +392,7 @@ local jokers = {
     sealCollectorJoker = {
         ability_name = "Seal Collector",
         slug = "mmc_seal_collector",
-        ability = { extra = { chips = 20, chip_add = 10 } },
+        ability = { extra = { chips = 25, chip_add = 25 } },
         sprite = { x = 6, y = 5 },
         rarity = 1,
         cost = 4,
