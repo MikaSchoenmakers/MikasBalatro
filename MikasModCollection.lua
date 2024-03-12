@@ -654,7 +654,7 @@ function Card:add_to_deck(from_debuff)
         -- Seal Collector
         if self.seal ~= nil then
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == "Seal Collector" then
+                if v.ability.name == 'Seal Collector' then
                     -- Add chips
                     v.ability.extra.chips = v.ability.extra.chips + v.ability.extra.chip_add
                 end
@@ -683,7 +683,7 @@ function Card:remove_from_deck(from_debuff)
         -- Seal Collector
         if self.seal ~= nil then
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == "Seal Collector" then
+                if v.ability.name == 'Seal Collector' then
                     -- Remove chips
                     v.ability.extra.chips = v.ability.extra.chips - v.ability.extra.chip_add
                 end
@@ -708,6 +708,23 @@ function Card.set_cost(self)
         -- Multiply cost exponentially with counter
         self.cost = self.cost * 2 ^ for_hire_counter
     end
+end
+
+-- Card updates
+local card_updateref = Card.update
+function Card.update(self, dt)
+    if G.STAGE == G.STAGES.RUN then
+        if self.ability.name == 'Seal Collector' then
+            self.ability.extra.chips = 0
+            for _, v in pairs(G.playing_cards) do
+                if v.seal ~= nil then
+                    sendDebugMessage("We have a seal card!")
+                    self.ability.extra.chips = self.ability.extra.chips + self.ability.extra.chips_add
+                end
+            end
+        end
+    end
+    card_updateref(self, dt)
 end
 
 ----------------------------------------------
