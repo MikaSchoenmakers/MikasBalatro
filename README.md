@@ -40,7 +40,7 @@ Gives +2 mult per discarded card. Resets every round.
 Gains +X1 mult per hand played, starting at X1. Resets every round.
 
 ### Seal Collector
-Gains 10 Chips for every card with a seal, starting at 20 Chips.
+Gains 25 Chips for every card with a seal, starting at 25 Chips.
 
 ## Installation
 - All mods require [Steamodded](https://github.com/Steamopollys/Steamodded/).
