@@ -392,7 +392,7 @@ local jokers = {
     sealCollectorJoker = {
         ability_name = "Seal Collector",
         slug = "mmc_seal_collector",
-        ability = { extra = { chips = 25, chip_add = 25 } },
+        ability = { extra = { chips = 25, chips_add = 25 } },
         sprite = { x = 6, y = 5 },
         rarity = 1,
         cost = 4,
@@ -598,7 +598,7 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'Cultist' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
         elseif self.ability.name == 'Seal Collector' then
-            loc_vars = { self.ability.extra.chips, self.ability.extra.chip_add }
+            loc_vars = { self.ability.extra.chips, self.ability.extra.chips_add }
         else
             customJoker = false
         end
@@ -651,15 +651,15 @@ function Card:add_to_deck(from_debuff)
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
         end
 
-        -- Seal Collector
-        if self.seal ~= nil then
-            for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'Seal Collector' then
-                    -- Add chips
-                    v.ability.extra.chips = v.ability.extra.chips + v.ability.extra.chip_add
-                end
-            end
-        end
+        -- -- Seal Collector
+        -- if self.seal ~= nil then
+        --     for _, v in pairs(G.jokers.cards) do
+        --         if v.ability.name == 'Seal Collector' then
+        --             -- Add chips
+        --             v.ability.extra.chips = v.ability.extra.chips + v.ability.extra.chips_add
+        --         end
+        --     end
+        -- end
 
         -- Jokers for Hire
         if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
@@ -714,11 +714,13 @@ end
 local card_updateref = Card.update
 function Card.update(self, dt)
     if G.STAGE == G.STAGES.RUN then
+        -- Seal Collector
         if self.ability.name == 'Seal Collector' then
-            self.ability.extra.chips = 0
+            self.ability.extra.chips = 25
+            -- Count all seal cards
             for _, v in pairs(G.playing_cards) do
                 if v.seal ~= nil then
-                    sendDebugMessage("We have a seal card!")
+                    -- Add chips to total
                     self.ability.extra.chips = self.ability.extra.chips + self.ability.extra.chips_add
                 end
             end
