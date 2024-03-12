@@ -7,20 +7,20 @@
 ------------MOD CODE -------------------------
 -- Config: DISABLE UNWANTED MODS HERE
 local config = {
-	-- Decks
+    -- Decks
     evenStevenDeck = true,
     oddToddDeck = true,
     fibonacciDeck = true,
     primeDeck = true, -- Do not enable without primeJoker
     midasDeck = true,
     jokersForHireDeck = true,
-	-- Jokers
+    -- Jokers
     primeJoker = true,
     straightNateJoker = true,
     fishermanJoker = true,
     impatientJoker = true,
     cultistJoker = true,
-	sealCollectorJoker = true
+    sealCollectorJoker = true
 }
 
 -- Helper functions
@@ -279,7 +279,7 @@ local locs = {
     sealCollectorJoker = {
         name = "Seal Collector",
         text = {
-			"Gains {C:chips}+#2#{} Chips for",
+            "Gains {C:chips}+#2#{} Chips for",
             "every card with a {C:attention}seal",
             "{C:inactive}(Currently {C:chips}#1#{} Chips)"
         }
@@ -404,7 +404,7 @@ local jokers = {
 }
 
 function SMODS.INIT.MikasModCollection()
-	-- Localization
+    -- Localization
     init_localization()
 
     -- Initialize Jokers
@@ -554,7 +554,7 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-	if config.sealCollectorJoker then
+    if config.sealCollectorJoker then
         SMODS.Jokers.j_mmc_seal_collector.calculate = function(self, context)
             -- Apply chips
             if SMODS.end_calculate_context(context) then
@@ -642,40 +642,60 @@ function Card.generate_UIBox_ability_table(self)
 end
 
 -- Handle card addition/removing
-if config.straightNateJoker or config.jokersForHireDeck then
-    function Card:add_to_deck(from_debuff)
-        -- Straight Nate
-        if not self.added_to_deck then
-            self.added_to_deck = true
-            if self.ability.name == 'Straight Nate' then
-                -- Add Joker slot
-                G.jokers.config.card_limit = G.jokers.config.card_limit + 1
-            end
+function Card:add_to_deck(from_debuff)
+    if not self.added_to_deck then
+        self.added_to_deck = true
 
-            -- Jokers for Hire
-            if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
-                -- Add Joker slot and increment counter
-                G.jokers.config.card_limit = G.jokers.config.card_limit + 1
-                for_hire_counter = for_hire_counter + 1
+        -- Straight Nate
+        if self.ability.name == 'Straight Nate' then
+            -- Add Joker slot
+            G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+        end
+
+        -- Seal Collector
+        if self.seal ~= nil then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == "Seal Collector" then
+                    -- Add chips
+                    v.ability.extra.chips = v.ability.extra.chips + v.ability.extra.chip_add
+                end
             end
         end
+
+        -- Jokers for Hire
+        if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
+            -- Add Joker slot and increment counter
+            G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+            for_hire_counter = for_hire_counter + 1
+        end
     end
+end
 
-    function Card:remove_from_deck(from_debuff)
+function Card:remove_from_deck(from_debuff)
+    if self.added_to_deck then
+        self.added_to_deck = false
+
         -- Straight Nate
-        if self.added_to_deck then
-            self.added_to_deck = false
-            if self.ability.name == 'Straight Nate' then
-                -- Remove Joker slot
-                G.jokers.config.card_limit = G.jokers.config.card_limit - 1
-            end
+        if self.ability.name == 'Straight Nate' then
+            -- Remove Joker slot
+            G.jokers.config.card_limit = G.jokers.config.card_limit - 1
+        end
 
-            -- Jokers for Hire
-            if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
-                -- Remove Joker slot and decrement counter
-                G.jokers.config.card_limit = G.jokers.config.card_limit - 1
-                for_hire_counter = for_hire_counter - 1
+        -- Seal Collector
+        if self.seal ~= nil then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == "Seal Collector" then
+                    -- Remove chips
+                    v.ability.extra.chips = v.ability.extra.chips - v.ability.extra.chip_add
+                end
             end
+        end
+
+        -- Jokers for Hire
+        if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
+            -- Remove Joker slot and decrement counter
+            G.jokers.config.card_limit = G.jokers.config.card_limit - 1
+            for_hire_counter = for_hire_counter - 1
         end
     end
 end
