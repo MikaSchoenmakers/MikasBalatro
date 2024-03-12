@@ -43,6 +43,6 @@ Gains +X1 mult per hand played, starting at X1. Resets every round.
 Gains 25 Chips for every card with a seal, starting at 25 Chips.
 
 ## Installation
-- All mods require [Steamodded](https://github.com/Steamopollys/Steamodded/).
+- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
 - The mod has a config right at the top of the file, to disable any unwanted mods.
