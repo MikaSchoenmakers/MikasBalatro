@@ -19,7 +19,8 @@ Only prime cards _(2, 3, 5, 7, Ace)_. Starts with the **_Prime_** joker.
 Only Gold Face cards. Starts with the **_Midas Mask_** joker.
 
 ### "Jokers for Hire" Deck
-All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**
+All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**.\
+_All Jokers also remove the Joker slot again once sold_
 
 ## Jokers
 
