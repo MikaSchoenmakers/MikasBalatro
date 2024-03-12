@@ -19,7 +19,8 @@ Only prime cards _(2, 3, 5, 7, Ace)_. Starts with the **_Prime_** joker.
 Only Gold Face cards. Starts with the **_Midas Mask_** joker.
 
 ### "Jokers for Hire" Deck
-All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**
+All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**.\
+_All Jokers also remove the Joker slot again once sold_
 
 ## Jokers
 
@@ -39,9 +40,9 @@ Gives +2 mult per discarded card. Resets every round.
 Gains +X1 mult per hand played, starting at X1. Resets every round.
 
 ### Seal Collector
-Gains 10 Chips for every card with a seal, starting at 20 Chips.
+Gains 25 Chips for every card with a seal, starting at 25 Chips.
 
 ## Installation
-- All mods require [Steamodded](https://github.com/Steamopollys/Steamodded/).
+- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
 - The mod has a config right at the top of the file, to disable any unwanted mods.
