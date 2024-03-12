@@ -680,16 +680,6 @@ function Card:remove_from_deck(from_debuff)
             G.jokers.config.card_limit = G.jokers.config.card_limit - 1
         end
 
-        -- Seal Collector
-        if self.seal ~= nil then
-            for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'Seal Collector' then
-                    -- Remove chips
-                    v.ability.extra.chips = v.ability.extra.chips - v.ability.extra.chip_add
-                end
-            end
-        end
-
         -- Jokers for Hire
         if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
             -- Remove Joker slot and decrement counter
