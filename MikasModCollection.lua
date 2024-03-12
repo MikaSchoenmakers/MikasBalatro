@@ -7,17 +7,20 @@
 ------------MOD CODE -------------------------
 -- Config: DISABLE UNWANTED MODS HERE
 local config = {
+	-- Decks
     evenStevenDeck = true,
     oddToddDeck = true,
     fibonacciDeck = true,
     primeDeck = true, -- Do not enable without primeJoker
     midasDeck = true,
     jokersForHireDeck = true,
+	-- Jokers
     primeJoker = true,
     straightNateJoker = true,
     fishermanJoker = true,
     impatientJoker = true,
-    cultistJoker = true
+    cultistJoker = true,
+	sealCollectorJoker = true
 }
 
 -- Helper functions
@@ -272,6 +275,14 @@ local locs = {
             "Resets every round",
             "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
+    },
+    sealCollectorJoker = {
+        name = "Seal Collector",
+        text = {
+			"Gains {C:chips}+#2#{} Chips for",
+            "every card with a {C:attention}seal",
+            "{C:inactive}(Currently {C:chips}#1#{} Chips)"
+        }
     }
 }
 
@@ -345,8 +356,7 @@ local jokers = {
     fishermanJoker = {
         ability_name = "The Fisherman",
         slug = "mmc_fisherman",
-        ability = {
-            extra = { hand_size = 0, hand_add = 1 } },
+        ability = { extra = { hand_size = 0, hand_add = 1 } },
         sprite = { x = 6, y = 10 },
         rarity = 2,
         cost = 6,
@@ -374,6 +384,18 @@ local jokers = {
         sprite = { x = 8, y = 10 },
         rarity = 3,
         cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    sealCollectorJoker = {
+        ability_name = "Seal Collector",
+        slug = "mmc_seal_collector",
+        ability = { extra = { chips = 20, chip_add = 10 } },
+        sprite = { x = 6, y = 5 },
+        rarity = 1,
+        cost = 4,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -531,6 +553,23 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+	if config.sealCollectorJoker then
+        SMODS.Jokers.j_mmc_seal_collector.calculate = function(self, context)
+            -- Apply chips
+            if SMODS.end_calculate_context(context) then
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_chips',
+                        vars = { self.ability.extra.chips }
+                    },
+                    chip_mod = self.ability.extra.chips,
+                    card = self
+                }
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -558,6 +597,8 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.mult, self.ability.extra.mult_add }
         elseif self.ability.name == 'Cultist' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+        elseif self.ability.name == 'Seal Collector' then
+            loc_vars = { self.ability.extra.chips, self.ability.extra.chip_add }
         else
             customJoker = false
         end
