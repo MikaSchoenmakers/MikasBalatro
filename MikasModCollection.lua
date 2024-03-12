@@ -20,7 +20,8 @@ local config = {
     fishermanJoker = true,
     impatientJoker = true,
     cultistJoker = true,
-    sealCollectorJoker = true
+    sealCollectorJoker = true,
+    camperJoker = true
 }
 
 -- Helper functions
@@ -283,6 +284,14 @@ local locs = {
             "every card with a {C:attention}seal",
             "{C:inactive}(Currently {C:chips}+#1#{} Chips)"
         }
+    },
+    camperJoker = {
+        name = "Camper",
+        text = {
+            "Every discarded {C:attention}card{}",
+            "permanently gains",
+            "{C:chips}+#1#{} Chips when scored"
+        }
     }
 }
 
@@ -330,7 +339,7 @@ end
 -- Create Jokers
 local jokers = {
     primeJoker = {
-        ability_name = "Prime Joker",
+        ability_name = "MMC Prime Joker",
         slug = "mmc_prime",
         ability = { extra = { Xmult = 1.2 } },
         sprite = { x = 0, y = 4 },
@@ -342,7 +351,7 @@ local jokers = {
         eternal_compat = true
     },
     straightNateJoker = {
-        ability_name = "Straight Nate",
+        ability_name = "MMC Straight Nate",
         slug = "mmc_straight_nate",
         ability = { extra = { Xmult = 4 } },
         sprite = { x = 0, y = 0 },
@@ -354,7 +363,7 @@ local jokers = {
         eternal_compat = true
     },
     fishermanJoker = {
-        ability_name = "The Fisherman",
+        ability_name = "MMC The Fisherman",
         slug = "mmc_fisherman",
         ability = { extra = { hand_size = 0, hand_add = 1 } },
         sprite = { x = 6, y = 10 },
@@ -366,7 +375,7 @@ local jokers = {
         eternal_compat = true
     },
     impatientJoker = {
-        ability_name = "Impatient Joker",
+        ability_name = "MMC Impatient Joker",
         slug = "mmc_impatient",
         ability = { mult = 0, extra = { mult_add = 2 } },
         sprite = { x = 3, y = 4 },
@@ -378,7 +387,7 @@ local jokers = {
         eternal_compat = true
     },
     cultistJoker = {
-        ability_name = "Cultist",
+        ability_name = "MMC Cultist",
         slug = "mmc_cultist",
         ability = { extra = { Xmult = 1, Xmult_add = 1 } },
         sprite = { x = 8, y = 10 },
@@ -390,7 +399,7 @@ local jokers = {
         eternal_compat = true
     },
     sealCollectorJoker = {
-        ability_name = "Seal Collector",
+        ability_name = "MMC Seal Collector",
         slug = "mmc_seal_collector",
         ability = { extra = { chips = 25, chips_add = 25 } },
         sprite = { x = 6, y = 5 },
@@ -400,11 +409,25 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    camperJoker = {
+        ability_name = "MMC Camper",
+        slug = "mmc_camper",
+        ability = { extra = { chips_add = 4 } },
+        sprite = { x = 0, y = 11 },
+        rarity = 2,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
 function SMODS.INIT.MikasModCollection()
     -- Localization
+    G.localization.misc.dictionary.k_upgrade = "Upgrade!"
+
     init_localization()
 
     -- Initialize Jokers
@@ -570,6 +593,20 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.camperJoker then
+        SMODS.Jokers.j_mmc_camper.calculate = function(self, context)
+            if context.discard then
+                context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
+                context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra.chips_add
+                return {
+                    message = localize('k_upgrade'),
+                    colour = G.C.CHIPS,
+                    card = self
+                }
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -587,18 +624,20 @@ function Card.generate_UIBox_ability_table(self)
     elseif self.ability.set == 'Joker' then
         local customJoker = true
 
-        if self.ability.name == 'Prime Joker' then
+        if self.ability.name == 'MMC Prime Joker' then
             loc_vars = { self.ability.extra.Xmult }
-        elseif self.ability.name == 'Straight Nate' then
+        elseif self.ability.name == 'MMC Straight Nate' then
             loc_vars = { self.ability.extra.Xmult }
-        elseif self.ability.name == 'The Fisherman' then
+        elseif self.ability.name == 'MMC The Fisherman' then
             loc_vars = { self.ability.extra.hand_size, self.ability.extra.hand_add }
-        elseif self.ability.name == 'Impatient Joker' then
+        elseif self.ability.name == 'MMC Impatient Joker' then
             loc_vars = { self.ability.mult, self.ability.extra.mult_add }
-        elseif self.ability.name == 'Cultist' then
+        elseif self.ability.name == 'MMC Cultist' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
-        elseif self.ability.name == 'Seal Collector' then
+        elseif self.ability.name == 'MMC Seal Collector' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.chips_add }
+        elseif self.ability.name == 'MMC Camper' then
+            loc_vars = { self.ability.extra.chips_add }
         else
             customJoker = false
         end
@@ -646,7 +685,7 @@ local add_to_deckref = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
     if not self.added_to_deck then
         -- Straight Nate
-        if self.ability.name == 'Straight Nate' then
+        if self.ability.name == 'MMC Straight Nate' then
             -- Add Joker slot
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
         end
@@ -665,7 +704,7 @@ local remove_from_deckref = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
     if self.added_to_deck then
         -- Straight Nate
-        if self.ability.name == 'Straight Nate' then
+        if self.ability.name == 'MMC Straight Nate' then
             -- Remove Joker slot
             G.jokers.config.card_limit = G.jokers.config.card_limit - 1
         end
@@ -695,7 +734,7 @@ local card_updateref = Card.update
 function Card.update(self, dt)
     if G.STAGE == G.STAGES.RUN then
         -- Seal Collector
-        if self.ability.name == 'Seal Collector' then
+        if self.ability.name == 'MMC Seal Collector' then
             self.ability.extra.chips = 25
             -- Count all seal cards
             for _, v in pairs(G.playing_cards) do
