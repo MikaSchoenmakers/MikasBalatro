@@ -43,7 +43,7 @@ Gains +X1 mult per hand played, starting at X1. Resets every round.
 Gains 25 Chips for every card with a seal, starting at 25 Chips.
 
 ### Camper
-Every discarded card permenantly gains +4 Chips.
+Every discarded card permanently gains +4 Chips.
 
 ### Lucky Number Seven
 Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
