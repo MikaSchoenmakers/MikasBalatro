@@ -23,7 +23,8 @@ local config = {
     cultistJoker = true,
     sealCollectorJoker = true,
     camperJoker = true,
-    luckyNumberSevenJoker = true
+    luckyNumberSevenJoker = true,
+    delayedJoker = true
 }
 
 -- Helper functions
@@ -303,6 +304,15 @@ local locs = {
             "{C:attention}7 cards{} are played,",
             "respectively"
         }
+    },
+    delayedJoker = {
+        name = "Delayed Joker",
+        text = {
+            "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{} Chips",
+            "and {X:mult,C:white}X#3#{} Mult on",
+            "the {C:attention}4th{} action",
+            "{C:inactive}(Current action: {C:attention}#4#{}{C:inactive})",
+        }
     }
 }
 
@@ -444,6 +454,18 @@ local jokers = {
         sprite = { x = 6, y = 3 },
         rarity = 1,
         cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    delayedJoker = {
+        ability_name = "MMC Delayed Joker",
+        slug = "mmc_delayed",
+        ability = { extra = { mult = 20, chips = 100, Xmult = 1.5, action_tally = 1 } },
+        sprite = { x = 9, y = 13 },
+        rarity = 2,
+        cost = 7,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -600,7 +622,7 @@ function SMODS.INIT.MikasModCollection()
                         key = 'a_xmult',
                         vars = { self.ability.extra.Xmult_old }
                     },
-                    mult_mod = self.ability.extra.Xmult_old,
+                    Xmult_mod = self.ability.extra.Xmult_old,
                     card = self
                 }
             end
@@ -682,6 +704,29 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.delayedJoker then
+        SMODS.Jokers.j_mmc_delayed.calculate = function(self, context)
+            -- Apply mult, chips and xmult
+            if SMODS.end_calculate_context(context) then
+                self.ability.extra.action_tally = self.ability.extra.action_tally + 1
+                if self.ability.extra.action_tally == 5 then
+                    self.ability.extra.action_tally = 1
+                    return {
+                        mult_mod = self.ability.extra.mult,
+                        chip_mod = self.ability.extra.chips,
+                        Xmult_mod = self.ability.extra.Xmult,
+                        card = self
+                    }
+                end
+            end
+
+            -- Increment action tally
+            if context.pre_discard then
+                self.ability.extra.action_tally = self.ability.extra.action_tally + 1
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -714,8 +759,12 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC Camper' then
             loc_vars = { self.ability.extra.chips_add }
         elseif self.ability.name == 'MMC Lucky Number Seven' then
-            loc_vars = { self.ability.extra.dollar_gain_one, self.ability.extra.dollar_gain_two, self.ability.extra
-                .dollar_gain_three, self.ability.extra.dollar_gain_four, self.ability.extra.dollar_gain_five }
+            loc_vars = { self.ability.extra.dollar_gain_one, self.ability.extra.dollar_gain_two,
+                self.ability.extra.dollar_gain_three, self.ability.extra.dollar_gain_four,
+                self.ability.extra.dollar_gain_five }
+        elseif self.ability.name == 'MMC Delayed Joker' then
+            loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.Xmult,
+                self.ability.extra.action_tally }
         else
             customJoker = false
         end
