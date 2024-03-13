@@ -292,7 +292,7 @@ local locs = {
         text = {
             "Every discarded {C:attention}card{}",
             "permanently gains",
-            "{C:chips}+#1#{} Chips when scored"
+            "{C:chips}+#1#{} Chips"
         }
     },
     luckyNumberSevenJoker = {

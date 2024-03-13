@@ -42,6 +42,12 @@ Gains +X1 mult per hand played, starting at X1. Resets every round.
 ### Seal Collector
 Gains 25 Chips for every card with a seal, starting at 25 Chips.
 
+### Camper
+Every discarded card permenantly gains +4 Chips.
+
+### Lucky Number Seven
+Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
+
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
