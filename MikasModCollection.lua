@@ -24,7 +24,9 @@ local config = {
     sealCollectorJoker = true,
     camperJoker = true,
     luckyNumberSevenJoker = true,
-    delayedJoker = true
+    delayedJoker = true,
+    showoffJoker = true,
+    sniperJoker = true
 }
 
 -- Helper functions
@@ -311,7 +313,25 @@ local locs = {
             "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
             "Chips and {X:mult,C:white}X#3#{} Mult on",
             "the {C:attention}4th{} action",
-            "{C:inactive}(Current action: {C:attention}#4#{}{C:inactive})",
+            "{C:inactive}(Current action: {C:attention}#4#{}{C:inactive})"
+        }
+    },
+    showoffJoker = {
+        name = "The Show-Off",
+        text = {
+            "Gains {X:mult,C:white}X#2#{} Mult when",
+            "a blind is finished with",
+            "{C:attention}2x{} the chip requirement",
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{} Mult)"
+        }
+    },
+    sniperJoker = {
+        name = "The Sniper",
+        text = {
+            "Gains {X:mult,C:white}X#2#{} Mult when",
+            "a blind is finished with",
+            "the {C:attention}exact{} chip requirement",
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{} Mult)"
         }
     }
 }
@@ -470,6 +490,30 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    showoffJoker = {
+        ability_name = "MMC Show-Off",
+        slug = "mmc_showoff",
+        ability = { extra = { Xmult = 1, Xmult_add = 1, total_chips = 0 } },
+        sprite = { x = 5, y = 7 },
+        rarity = 3,
+        cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    sniperJoker = {
+        ability_name = "MMC Sniper",
+        slug = "mmc_sniper",
+        ability = { extra = { Xmult = 1, Xmult_add = 4, total_chips = 0 } },
+        sprite = { x = 3, y = 7 },
+        rarity = 4,
+        cost = 15,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -479,6 +523,8 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_charging = "Charging..."
     G.localization.misc.dictionary.k_mmc_bonus = "Bonus!"
     G.localization.misc.dictionary.k_mmc_reset = "Reset!"
+    G.localization.misc.dictionary.k_mmc_hand_up = "+1 Hand Size!"
+    G.localization.misc.dictionary.k_mmc_hand_down = "-1 Hand Size!"
 
     init_localization()
 
@@ -561,6 +607,9 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.hand_size > 0 then
                     self.ability.extra.hand_size = math.max(0, self.ability.extra.hand_size - 1)
                     G.hand:change_size(-self.ability.extra.hand_add)
+                    -- Decrease message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_hand_down'), colour = G.C.RED })
                 end
             end
 
@@ -568,12 +617,20 @@ function SMODS.INIT.MikasModCollection()
             if context.pre_discard then
                 self.ability.extra.hand_size = self.ability.extra.hand_size + 1
                 G.hand:change_size(self.ability.extra.hand_add)
+                -- Increase message
+                card_eval_status_text(self, 'extra', nil, nil, nil,
+                    { message = localize('k_mmc_hand_up'), colour = G.C.CHIPS })
             end
 
             -- Reset hand size
             if context.end_of_round then
-                G.hand:change_size(-self.ability.extra.hand_size)
-                self.ability.extra.hand_size = 0
+                if self.ability.extra.hand_size ~= 0 then
+                    G.hand:change_size(-self.ability.extra.hand_size)
+                    self.ability.extra.hand_size = 0
+                    -- Reset message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_reset') })
+                end
             end
         end
     end
@@ -599,13 +656,20 @@ function SMODS.INIT.MikasModCollection()
             if context.discard then
                 self.ability.mult = self.ability.mult + self.ability.extra.mult_add
                 return {
-                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult_add } }
+                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult_add } },
+                    colour = G.C.RED,
+                    card = self
                 }
             end
 
             -- Reset mult
             if context.end_of_round then
-                self.ability.mult = 0
+                if self.ability.mult ~= 0 then
+                    self.ability.extra.Xmult = 0
+                    -- Reset message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_reset') })
+                end
             end
         end
     end
@@ -632,7 +696,12 @@ function SMODS.INIT.MikasModCollection()
 
             -- Reset mult
             if context.end_of_round then
-                self.ability.extra.Xmult = 1
+                if self.ability.extra.Xmult ~= 1 then
+                    self.ability.extra.Xmult = 1
+                    -- Reset message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_reset') })
+                end
             end
         end
     end
@@ -748,6 +817,74 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.showoffJoker then
+        SMODS.Jokers.j_mmc_showoff.calculate = function(self, context)
+            -- Apply xmult
+            if SMODS.end_calculate_context(context) then
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.Xmult }
+                    },
+                    Xmult_mod = self.ability.extra.Xmult,
+                    card = self
+                }
+            end
+
+            -- Add scored chips to total
+            if context.scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            end
+
+            -- See if total scored chips > 2 * blind chips, then increment xmult
+            if context.end_of_round then
+                if self.ability.extra.total_chips > (2 * G.GAME.blind.chips) then
+                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
+
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_upgrade'), colour = G.C.RED })
+                end
+                -- Reset total chip count
+                self.ability.extra.total_chips = 0
+            end
+        end
+    end
+
+    if config.sniperJoker then
+        SMODS.Jokers.j_mmc_sniper.calculate = function(self, context)
+            -- Apply xmult
+            if SMODS.end_calculate_context(context) then
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.Xmult }
+                    },
+                    Xmult_mod = self.ability.extra.Xmult,
+                    card = self
+                }
+            end
+
+            -- Add scored chips to total
+            if context.scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            end
+
+            -- See if total scored chips == blind chips, then increment xmult
+            if context.end_of_round then
+                if self.ability.extra.total_chips == G.GAME.blind.chips then
+                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
+
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_upgrade'), colour = G.C.RED })
+                end
+                -- Reset total chip count
+                self.ability.extra.total_chips = 0
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -786,6 +923,10 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC Delayed Joker' then
             loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.Xmult,
                 self.ability.extra.action_tally }
+        elseif self.ability.name == 'MMC Show-Off' then
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+        elseif self.ability.name == 'MMC Sniper' then
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
         else
             customJoker = false
         end
@@ -894,6 +1035,20 @@ function Card.update(self, dt)
         end
     end
     card_updateref(self, dt)
+end
+
+-- Calculate Chips
+local evaluate_playref = G.FUNCS.evaluate_play
+function G.FUNCS.evaluate_play(self, e)
+    evaluate_playref(self, e)
+
+    for i = 1, #G.jokers.cards do
+        local effects = eval_card(G.jokers.cards[i],
+            { card = G.consumeables, after = true, scored_chips = hand_chips * mult })
+        if effects.jokers then
+            card_eval_status_text(G.jokers.cards[i], 'jokers', nil, 0.3, nil, effects.jokers)
+        end
+    end
 end
 
 ----------------------------------------------

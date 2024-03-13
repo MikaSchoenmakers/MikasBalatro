@@ -1,4 +1,4 @@
-# Mikas Balatro Mod Collection
+# Mika's Balatro Mod Collection
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/).
 
 ## Decks
@@ -51,6 +51,12 @@ Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
 ### Delayed Joker
 Gives 20 Mult, 100 Chips and X1.5 Mult on the 4th action.\
 _An action is either playing a hand or discarding_
+
+### The Show-Off
+Gains X1 Mult a blind is finished with **_2x_** the chip requirement.
+
+### The Sniper
+Gains X4 Mult when a blind is finished with the **_exact_** chip requirement.
 
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
