@@ -48,6 +48,10 @@ Every discarded card permanently gains +4 Chips.
 ### Lucky Number Seven
 Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
 
+### Delayed Joker
+Gives 20 Mult, 100 Chips and X1.5 Mult on the 4th action.\
+_An action is either playing a hand or discarding_
+
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).

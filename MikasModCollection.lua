@@ -308,8 +308,8 @@ local locs = {
     delayedJoker = {
         name = "Delayed Joker",
         text = {
-            "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{} Chips",
-            "and {X:mult,C:white}X#3#{} Mult on",
+            "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
+            "Chips and {X:mult,C:white}X#3#{} Mult on",
             "the {C:attention}4th{} action",
             "{C:inactive}(Current action: {C:attention}#4#{}{C:inactive})",
         }
@@ -475,7 +475,10 @@ local jokers = {
 
 function SMODS.INIT.MikasModCollection()
     -- Localization
-    G.localization.misc.dictionary.k_upgrade = "Upgrade!"
+    G.localization.misc.dictionary.k_mmc_upgrade = "Upgrade!"
+    G.localization.misc.dictionary.k_mmc_charging = "Charging..."
+    G.localization.misc.dictionary.k_mmc_bonus = "Bonus!"
+    G.localization.misc.dictionary.k_mmc_reset = "Reset!"
 
     init_localization()
 
@@ -660,7 +663,7 @@ function SMODS.INIT.MikasModCollection()
                 context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus +
                     self.ability.extra.chips_add
                 return {
-                    message = localize('k_upgrade'),
+                    message = localize('k_mmc_upgrade'),
                     colour = G.C.CHIPS,
                     card = self
                 }
@@ -713,9 +716,18 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.action_tally == 5 then
                     self.ability.extra.action_tally = 1
                     return {
+                        -- Return bonus message and apply bonus
                         mult_mod = self.ability.extra.mult,
                         chip_mod = self.ability.extra.chips,
                         Xmult_mod = self.ability.extra.Xmult,
+                        message = localize('k_mmc_bonus'),
+                        card = self
+                    }
+                else
+                    -- Return charging message
+                    return {
+                        message = localize('k_mmc_charging'),
+                        colour = G.C.JOKER_GREY,
                         card = self
                     }
                 end
@@ -723,7 +735,16 @@ function SMODS.INIT.MikasModCollection()
 
             -- Increment action tally
             if context.pre_discard then
-                self.ability.extra.action_tally = self.ability.extra.action_tally + 1
+                self.ability.extra.action_tally = (self.ability.extra.action_tally % 4) + 1
+                if self.ability.extra.action_tally == 1 then
+                    -- Reset message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_reset') })
+                else
+                    -- Charging message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_charging'), colour = G.C.JOKER_GREY })
+                end
             end
         end
     end
