@@ -5,6 +5,7 @@
 --- MOD_DESCRIPTION: A collection of Mika's Mods. Check the mod description on GitHub for more information :)
 ----------------------------------------------
 ------------MOD CODE -------------------------
+
 -- Config: DISABLE UNWANTED MODS HERE
 local config = {
     -- Decks
@@ -21,7 +22,8 @@ local config = {
     impatientJoker = true,
     cultistJoker = true,
     sealCollectorJoker = true,
-    camperJoker = true
+    camperJoker = true,
+    luckyNumberSevenJoker = true
 }
 
 -- Helper functions
@@ -292,10 +294,19 @@ local locs = {
             "permanently gains",
             "{C:chips}+#1#{} Chips when scored"
         }
+    },
+    luckyNumberSevenJoker = {
+        name = "Lucky Number Seven",
+        text = {
+            "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
+            "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
+            "{C:attention}7 cards{} are played,",
+            "respectively"
+        }
     }
 }
 
--- Initialize Decks
+-- Create Decks
 local decks = {
     evenStevenDeck = {
         name = "Even Steven's Deck",
@@ -328,13 +339,6 @@ local decks = {
         sprite = { x = 6, y = 0 }
     }
 }
-
-for key, value in pairs(decks) do
-    if config[key] then
-        local newDeck = SMODS.Deck:new(value.name, key, value.config, value.sprite, locs[key])
-        newDeck:register()
-    end
-end
 
 -- Create Jokers
 local jokers = {
@@ -421,6 +425,29 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    luckyNumberSevenJoker = {
+        ability_name = "MMC Lucky Number Seven",
+        slug = "mmc_lucky_number_seven",
+        ability = {
+            extra = {
+                dollar_gain_one = 1,
+                dollar_gain_two = 3,
+                dollar_gain_three = 10,
+                dollar_gain_four = 25,
+                dollar_gain_five = 50,
+                dollars = 0,
+                seven_tally = 0,
+                old_dollars = 0
+            }
+        },
+        sprite = { x = 6, y = 3 },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -429,6 +456,14 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_upgrade = "Upgrade!"
 
     init_localization()
+
+    -- Initialize Decks
+    for key, value in pairs(decks) do
+        if config[key] then
+            local newDeck = SMODS.Deck:new(value.name, key, value.config, value.sprite, locs[key])
+            newDeck:register()
+        end
+    end
 
     -- Initialize Jokers
     for key, value in pairs(jokers) do
@@ -596,14 +631,54 @@ function SMODS.INIT.MikasModCollection()
 
     if config.camperJoker then
         SMODS.Jokers.j_mmc_camper.calculate = function(self, context)
+            -- If discarded
             if context.discard then
+                -- Add chips to card
                 context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
-                context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra.chips_add
+                context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus +
+                    self.ability.extra.chips_add
                 return {
                     message = localize('k_upgrade'),
                     colour = G.C.CHIPS,
                     card = self
                 }
+            end
+        end
+    end
+
+    if config.luckyNumberSevenJoker then
+        SMODS.Jokers.j_mmc_lucky_number_seven.calculate = function(self, context)
+            -- Count sevens
+            if context.individual and context.cardarea == G.play and context.other_card:get_id() == 7 then
+                self.ability.extra.seven_tally = self.ability.extra.seven_tally + 1
+            end
+
+            if SMODS.end_calculate_context(context) then
+                -- Set dollars
+                if self.ability.extra.seven_tally == 1 then
+                    self.ability.extra.dollars = self.ability.extra.dollar_gain_one
+                elseif self.ability.extra.seven_tally == 2 then
+                    self.ability.extra.dollars = self.ability.extra.dollar_gain_two
+                elseif self.ability.extra.seven_tally == 3 then
+                    self.ability.extra.dollars = self.ability.extra.dollar_gain_three
+                elseif self.ability.extra.seven_tally == 4 then
+                    self.ability.extra.dollars = self.ability.extra.dollar_gain_four
+                elseif self.ability.extra.seven_tally == 5 then
+                    self.ability.extra.dollars = self.ability.extra.dollar_gain_five
+                end
+
+                -- Give money and reset
+                if self.ability.extra.seven_tally >= 1 then
+                    ease_dollars(self.ability.extra.dollars)
+                    self.ability.extra.old_dollars = self.ability.extra.dollars
+                    self.ability.extra.dollars = 0
+                    self.ability.extra.seven_tally = 0
+                    return {
+                        message = localize('$') .. self.ability.extra.old_dollars,
+                        dollars = self.ability.extra.old_dollars,
+                        colour = G.C.MONEY
+                    }
+                end
             end
         end
     end
@@ -638,6 +713,9 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.chips, self.ability.extra.chips_add }
         elseif self.ability.name == 'MMC Camper' then
             loc_vars = { self.ability.extra.chips_add }
+        elseif self.ability.name == 'MMC Lucky Number Seven' then
+            loc_vars = { self.ability.extra.dollar_gain_one, self.ability.extra.dollar_gain_two, self.ability.extra
+                .dollar_gain_three, self.ability.extra.dollar_gain_four, self.ability.extra.dollar_gain_five }
         else
             customJoker = false
         end
