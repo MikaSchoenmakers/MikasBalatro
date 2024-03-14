@@ -26,7 +26,10 @@ local config = {
     luckyNumberSevenJoker = true,
     delayedJoker = true,
     showoffJoker = true,
-    sniperJoker = true
+    sniperJoker = true,
+    blackjackJoker = true,
+    batmanJoker = true,
+    bombJoker = true
 }
 
 -- Helper functions
@@ -287,7 +290,7 @@ local locs = {
         text = {
             "Gains {C:chips}+#2#{} Chips for",
             "every card with a {C:attention}seal",
-            "{C:inactive}(Currently {C:chips}+#1#{} Chips)"
+            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
     },
     camperJoker = {
@@ -313,7 +316,7 @@ local locs = {
             "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
             "Chips and {X:mult,C:white}X#3#{} Mult on",
             "the {C:attention}4th{} action",
-            "{C:inactive}(Current action: {C:attention}#4#{}{C:inactive})"
+            "{C:inactive}(Current action: {C:attention}#4#{C:inactive} )"
         }
     },
     showoffJoker = {
@@ -322,7 +325,7 @@ local locs = {
             "Gains {X:mult,C:white}X#2#{} Mult when",
             "a blind is finished with",
             "{C:attention}2x{} the chip requirement",
-            "{C:inactive}(Currently {X:mult,C:white}X#1#{} Mult)"
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
     },
     sniperJoker = {
@@ -331,7 +334,33 @@ local locs = {
             "Gains {X:mult,C:white}X#2#{} Mult when",
             "a blind is finished with",
             "the {C:attention}exact{} chip requirement",
-            "{C:inactive}(Currently {X:mult,C:white}X#1#{} Mult)"
+            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+        }
+    },
+    blackjackJoker = {
+        name = "Blackjack Joker",
+        text = {
+            "Gives {X:mult,C:white}X#2#{} Mult when",
+            "the rank of all played",
+            "cards is {C:attention}exactly 21{}"
+        }
+    },
+    batmanJoker = {
+        name = "Batman",
+        text = {
+            "Gains {C:mult}+#2#{} Mult for",
+            "every {C:attention}non-lethal{} hand",
+            "Mult gain increases for every joker",
+            "with {C:attention}\"Joker\"{} in the name",
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+        }
+    },
+    bombJoker = {
+        name = "Bomb",
+        text = {
+            "Gains {C:mult}+#2#{} Mult per round",
+            "self destructs after {C:attention}#3#{} rounds",
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
     }
 }
@@ -503,6 +532,39 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    blackjackJoker = {
+        ability_name = "MMC Blackjack Joker",
+        slug = "mmc_blackjack",
+        ability = { extra = { Xmult = 3, rank_tally = 0 } },
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    batmanJoker = {
+        ability_name = "MMC Batman",
+        slug = "mmc_batman",
+        ability = { extra = { mult = 4, mult_add = 2, joker_tally = 0 } },
+        rarity = 3,
+        cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    bombJoker = {
+        ability_name = "MMC Bomb",
+        slug = "mmc_bomb",
+        ability = { extra = { mult = 15, mult_add = 15, rounds_left = 3 } },
+        rarity = 1,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -514,6 +576,7 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_reset = "Reset!"
     G.localization.misc.dictionary.k_mmc_hand_up = "+1 Hand Size!"
     G.localization.misc.dictionary.k_mmc_hand_down = "-1 Hand Size!"
+    G.localization.misc.dictionary.k_mmc_tick = "Tick..."
 
     init_localization()
 
@@ -876,6 +939,24 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.blackjackJoker then
+        SMODS.Jokers.j_mmc_blackjack.calculate = function(self, context)
+            -- TODO
+        end
+    end
+
+    if config.batmanJoker then
+        SMODS.Jokers.j_mmc_batman.calculate = function(self, context)
+            -- TODO
+        end
+    end
+
+    if config.bombJoker then
+        SMODS.Jokers.j_mmc_bomb.calculate = function(self, context)
+            -- TODO
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -918,6 +999,12 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
         elseif self.ability.name == 'MMC Sniper' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+        elseif self.ability.name == 'MMC Blackjack Joker' then
+            loc_vars = { self.ability.extra.Xmult }
+        elseif self.ability.name == 'MMC Batman' then
+            loc_vars = { self.ability.extra.mult, self.ability.extra.mult_add }
+        elseif self.ability.name == 'MMC Bomb' then
+            loc_vars = { self.ability.extra.mult, self.ability.extra.mult_add, self.ability.extra.rounds_left }
         else
             customJoker = false
         end
