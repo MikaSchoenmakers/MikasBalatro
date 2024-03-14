@@ -36,29 +36,65 @@ local config = {
 }
 
 -- Helper functions
-local function isEven(card)
+local function is_even(card)
     local id = card:get_id()
     return id <= 10 and id % 2 == 0
 end
 
-local function isOdd(card)
+local function is_odd(card)
     local id = card:get_id()
     return (id % 2 ~= 0 and id < 10) or id == 14
 end
 
-local function isFibo(card)
+local function is_fibo(card)
     local id = card:get_id()
     return id == 2 or id == 3 or id == 5 or id == 8 or id == 14
 end
 
-local function isPrime(card)
+local function is_prime(card)
     local id = card:get_id()
     return id == 2 or id == 3 or id == 5 or id == 7 or id == 14
 end
 
-local function isFace(card)
+local function is_face(card)
     local id = card:get_id()
     return id == 11 or id == 12 or id == 13
+end
+
+local function get_random_letter(letter)
+    -- 'A' to 'Z' is 65 to 95
+    local random_ascii = math.random(65, 90)
+    local new_letter = string.char(random_ascii)
+    if letter ~= new_letter then
+        return new_letter
+    else
+        return get_random_letter(letter)
+    end
+end
+
+local function remove_prefix(name, prefix)
+    local start_pos, end_pos = string.find(name, prefix)
+    if start_pos == 1 then
+        return string.sub(name, end_pos + 1)
+    else
+        return name
+    end
+end
+
+local enhancements = {
+    G.P_CENTERS.m_bonus,
+    G.P_CENTERS.m_mult,
+    G.P_CENTERS.m_wild,
+    G.P_CENTERS.m_glass,
+    G.P_CENTERS.m_steel,
+    G.P_CENTERS.m_stone,
+    G.P_CENTERS.m_gold,
+    G.P_CENTERS.m_lucky
+}
+
+function get_random_in_table(table)
+    local index = math.random(1, #table)
+    return table[index]
 end
 
 -- Local variables
@@ -76,7 +112,7 @@ function Back.apply_to_run(arg_56_0)
                 -- Loop over all cards
                 for i = #G.playing_cards, 1, -1 do
                     -- Remove odd cards
-                    if not isEven(G.playing_cards[i]) then
+                    if not is_even(G.playing_cards[i]) then
                         G.playing_cards[i]:start_dissolve(nil, true)
                     end
                 end
@@ -97,7 +133,7 @@ function Back.apply_to_run(arg_56_0)
                 -- Loop over all cards
                 for i = #G.playing_cards, 1, -1 do
                     -- Remove even cards
-                    if not isOdd(G.playing_cards[i]) then
+                    if not is_odd(G.playing_cards[i]) then
                         G.playing_cards[i]:start_dissolve(nil, true)
                     end
                 end
@@ -118,7 +154,7 @@ function Back.apply_to_run(arg_56_0)
                 -- Loop over all cards
                 for i = #G.playing_cards, 1, -1 do
                     -- Remove non fibonacci cards
-                    if not isFibo(G.playing_cards[i]) then
+                    if not is_fibo(G.playing_cards[i]) then
                         G.playing_cards[i]:start_dissolve(nil, true)
                     end
                 end
@@ -139,7 +175,7 @@ function Back.apply_to_run(arg_56_0)
                 -- Loop over all cards
                 for i = #G.playing_cards, 1, -1 do
                     -- Remove non prime cards
-                    if not isPrime(G.playing_cards[i]) then
+                    if not is_prime(G.playing_cards[i]) then
                         G.playing_cards[i]:start_dissolve(nil, true)
                     end
                 end
@@ -159,7 +195,7 @@ function Back.apply_to_run(arg_56_0)
             func = function()
                 -- Loop over all cards
                 for i = #G.playing_cards, 1, -1 do
-                    if not isFace(G.playing_cards[i]) then
+                    if not is_face(G.playing_cards[i]) then
                         -- Remove non face cards
                         G.playing_cards[i]:start_dissolve(nil, true)
                     else
@@ -243,7 +279,7 @@ local locs = {
             "All Jokers give {C:dark_edition}+1{}",
             "Joker slot. Price of",
             "{C:attention}Jokers{} and {C:attention}Buffoon Packs",
-            "increase {C:red}exponentially",
+            "increase {C:red}exponentially"
         }
     },
     primeJoker = {
@@ -366,20 +402,20 @@ local locs = {
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
     },
-    alphabetJokerJoker = {
+    alphabetJoker = {
         name = "Alphabet Joker",
         text = {
             "Gives {C:chips}+#2#{} Chips per Joker",
             "with the letter {C:attention}\"#3#\"{} in the name.",
-            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+            "Letter changes per hand played",
         }
     },
     grudgefulJoker = {
         name = "Grudgeful Joker",
         text = {
-            "Adds the {C:attention}excess chips{} from",
-            "last blind to the first hand",
-            "of the current round",
+            "Adds {C:attention}#2#%{} of the {C:attention}excess chips{}",
+            "from last blind to the first",
+            "hand of the current round",
             "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
     },
@@ -608,9 +644,9 @@ local jokers = {
     grudgefulJoker = {
         ability_name = "MMC Grudgeful Joker",
         slug = "mmc_grudgeful",
-        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0 } },
-        rarity = 2,
-        cost = 7,
+        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, chips_percentage = 10 } },
+        rarity = 4,
+        cost = 18,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -619,7 +655,7 @@ local jokers = {
     finishingBlowJoker = {
         ability_name = "MMC Finishing Blow",
         slug = "mmc_finishing_blow",
-        ability = { extra = { enhancement = "" } },
+        ability = { extra = { high_card = false, card_ref = 0 } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -1140,20 +1176,47 @@ function SMODS.INIT.MikasModCollection()
 
     if config.alphabetJoker then
         SMODS.Jokers.j_mmc_alphabet.calculate = function(self, context)
-            -- TODO
+            -- Check if Joker name contains letter and apply chips
+            if context.other_joker and context.other_joker ~= self then
+                -- FOR OTHER MODS:
+                -- If your mod uses ability names with a prefix and you want it to be compatible with this Joker,
+                -- Send me a message on Discord and I will add your prefix here so that it will work correctly!
+
+                -- Remove prefix from ability names
+                local ability_name = context.other_joker.ability.name:lower()
+                ability_name = remove_prefix(ability_name, 'mmc')
+
+                -- Check if Joker name contains letter
+                if string.find(ability_name, self.ability.extra.letter:lower()) then
+                    -- Animate other Joker
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            context.other_joker:juice_up(0.5, 0.5)
+                            return true
+                        end
+                    }))
+                    -- Apply chips
+                    return {
+                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
+                        chip_mod = self.ability.extra.chips
+                    }
+                end
+            end
+
+            -- Get new random letter
+            if context.after then
+                self.ability.extra.letter = get_random_letter()
+            end
         end
     end
 
     if config.grudgefulJoker then
         SMODS.Jokers.j_mmc_grudgeful.calculate = function(self, context)
-            -- When hand is played
+            -- Apply chips and reset
             if SMODS.end_calculate_context(context) then
-                -- Apply chips and reset
                 if self.ability.extra.chips > 0 then
                     self.ability.extra.old_chips = self.ability.extra.chips
                     self.ability.extra.chips = 0
-                    
-                    -- Apply chips
                     return {
                         message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.old_chips } },
                         chip_mod = self.ability.extra.old_chips
@@ -1167,9 +1230,10 @@ function SMODS.INIT.MikasModCollection()
             end
 
             if context.end_of_round and not context.individual and not context.repetition then
-                -- Add excess chips to chips
+                -- Add excess chips to bonus
                 if self.ability.extra.total_chips >= G.GAME.blind.chips then
-                    self.ability.extra.chips = self.ability.extra.total_chips - G.GAME.blind.chips
+                    self.ability.extra.chips = math.ceil((self.ability.extra.total_chips - G.GAME.blind.chips) *
+                        self.ability.extra.chips_percentage / 100)
                 end
 
                 -- Reset chip count
@@ -1180,7 +1244,24 @@ function SMODS.INIT.MikasModCollection()
 
     if config.finishingBlowJoker then
         SMODS.Jokers.j_mmc_finishing_blow.calculate = function(self, context)
-            -- TODO
+            -- Check for high card and set card reference
+            if context.cardarea == G.play and not context.repetition then
+                if #context.scoring_hand == 1 then
+                    self.ability.extra.high_card = true
+                    self.ability.extra.card_ref = context.other_card
+                else
+                    self.ability.extra.high_card = false
+                end
+            end
+
+            -- Give random enhancement if last hand was high card
+            if context.end_of_round and not context.individual and not context.repetition then
+                if self.ability.extra.high_card then
+                    self.ability.extra.card_ref:set_ability(get_random_in_table(enhancements), nil, true)
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_upgrade') })
+                end
+            end
         end
     end
 end
@@ -1231,6 +1312,12 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.mult, self.ability.extra.mult_add }
         elseif self.ability.name == 'MMC Bomb' then
             loc_vars = { self.ability.extra.mult, self.ability.extra.mult_add, self.ability.extra.rounds_left }
+        elseif self.ability.name == 'MMC Alphabet Joker' then
+            loc_vars = { self.ability.extra.chips, self.ability.extra.chips_add, self.ability.extra.letter }
+        elseif self.ability.name == 'MMC Grudgeful Joker' then
+            loc_vars = { self.ability.extra.chips, self.ability.extra.chips_percentage }
+        elseif self.ability.name == 'MMC Finishing Blow' then
+            loc_vars = { self.ability.extra.enhancement }
         else
             customJoker = false
         end
