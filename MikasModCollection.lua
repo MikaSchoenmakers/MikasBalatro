@@ -413,9 +413,10 @@ local locs = {
     grudgefulJoker = {
         name = "Grudgeful Joker",
         text = {
-            "Adds {C:attention}#2#%{} of the {C:attention}excess chips{}",
-            "from last blind to the first",
+            "Adds {C:attention}excess chips{} from",
+            "last blind to the first",
             "hand of the current round",
+            "caps at {C:attention}#2#%{} of current blinds chips",
             "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
     },
