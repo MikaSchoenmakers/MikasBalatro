@@ -68,6 +68,15 @@ Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 
 ### Bomb
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.
 
+### Alphabet Joker
+Gives +25 Chips for every Joker with the a specific letter in the name. Letter changes per hand played.
+
+### Grudgeful Joker
+Add excess Chips from last blind to the first hand of the current round. Caps at 25% of the current blind's chips.
+
+### Finishing Blow
+If a blind is finished with a **_High Card_**, randomly enhance the played card.
+
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).

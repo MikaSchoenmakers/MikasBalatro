@@ -405,7 +405,7 @@ local locs = {
     alphabetJoker = {
         name = "Alphabet Joker",
         text = {
-            "Gives {C:chips}+#2#{} Chips per Joker",
+            "Gives {C:chips}+#2#{} Chips for every Joker",
             "with the letter {C:attention}\"#3#\"{} in the name.",
             "Letter changes per hand played",
         }
@@ -413,10 +413,10 @@ local locs = {
     grudgefulJoker = {
         name = "Grudgeful Joker",
         text = {
-            "Adds {C:attention}excess chips{} from last",
+            "Adds {C:attention}excess Chips{} from last",
             "blind to the first hand",
             "of the current round. Caps",
-            "at {C:attention}#2#%{} of current blinds chips",
+            "at {C:attention}#2#%{} of current blind's Chips",
             "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
     },
