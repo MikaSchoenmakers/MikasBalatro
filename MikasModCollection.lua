@@ -413,10 +413,10 @@ local locs = {
     grudgefulJoker = {
         name = "Grudgeful Joker",
         text = {
-            "Adds {C:attention}excess chips{} from",
-            "last blind to the first",
-            "hand of the current round",
-            "caps at {C:attention}#2#%{} of current blinds chips",
+            "Adds {C:attention}excess chips{} from last",
+            "blind to the first hand",
+            "of the current round. Caps",
+            "at {C:attention}#2#%{} of current blinds chips",
             "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
     },
@@ -645,9 +645,9 @@ local jokers = {
     grudgefulJoker = {
         ability_name = "MMC Grudgeful Joker",
         slug = "mmc_grudgeful",
-        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, chips_percentage = 10 } },
-        rarity = 4,
-        cost = 18,
+        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, chips_percentage = 25 } },
+        rarity = 3,
+        cost = 9,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -1233,8 +1233,9 @@ function SMODS.INIT.MikasModCollection()
             if context.end_of_round and not context.individual and not context.repetition then
                 -- Add excess chips to bonus
                 if self.ability.extra.total_chips >= G.GAME.blind.chips then
-                    self.ability.extra.chips = math.ceil((self.ability.extra.total_chips - G.GAME.blind.chips) *
-                        self.ability.extra.chips_percentage / 100)
+                    self.ability.extra.chips = self.ability.extra.total_chips - G.GAME.blind.chips
+                    self.ability.extra.chips = math.ceil(math.min(G.GAME.blind.chips * self.ability.extra.chips_percentage / 100,
+                        self.ability.extra.chips))
                 end
 
                 -- Reset chip count
