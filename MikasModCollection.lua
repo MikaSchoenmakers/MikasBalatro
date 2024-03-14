@@ -349,8 +349,8 @@ local locs = {
         name = "Batman",
         text = {
             "Gains {C:mult}+#2#{} Mult for",
-            "every {C:attention}non-lethal{} hand",
-            "Mult gain increases for every joker",
+            "every {C:attention}non-lethal{} hand. Mult",
+            "gain increases for every joker",
             "with {C:attention}\"Joker\"{} in the name",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
@@ -1003,11 +1003,6 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_batman.calculate = function(self, context)
             -- When hand is played
             if SMODS.end_calculate_context(context) then
-                -- Increase mult if non-lethal
-                if self.ability.extra.total_chips < G.GAME.blind.chips then
-                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
-                end
-
                 -- Apply mult
                 return {
                     message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult } },
@@ -1018,8 +1013,11 @@ function SMODS.INIT.MikasModCollection()
             -- Add scored chips to total
             if context.scored_chips then
                 self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+                
+                if self.ability.extra.total_chips < G.GAME.blind.chips then
+                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
+                end
             end
-
             -- Reset total chip count
             if context.end_of_round and not context.individual and not context.repetition then
                 -- Reset total chip count
