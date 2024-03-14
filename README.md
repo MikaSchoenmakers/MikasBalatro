@@ -40,7 +40,7 @@ Gives +2 mult per discarded card. Resets every round.
 Gains +X1 mult per hand played, starting at X1. Resets every round.
 
 ### Seal Collector
-Gains 25 Chips for every card with a seal, starting at 25 Chips.
+Gains +25 Chips for every card with a seal, starting at 25 Chips.
 
 ### Camper
 Every discarded card permanently gains +4 Chips.
@@ -53,10 +53,20 @@ Gives 20 Mult, 100 Chips and X1.5 Mult on the 4th action.\
 _An action is either playing a hand or discarding_
 
 ### The Show-Off
-Gains X1 Mult a blind is finished with **_2x_** the chip requirement.
+Gains +X1 Mult a blind is finished with **_2x_** the chip requirement.
 
 ### The Sniper
-Gains X4 Mult when a blind is finished with the **_exact_** chip requirement.
+Gains +X4 Mult when a blind is finished with the **_exact_** chip requirement.
+
+### Blackjack Joker
+Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**.
+_An Ace can be valued at either 1 or 11_
+
+### Batman
+Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 for every Joker with "Joker" in the name.
+
+### Bomb
+Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.
 
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).

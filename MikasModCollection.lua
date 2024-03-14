@@ -341,7 +341,7 @@ local locs = {
         name = "Blackjack Joker",
         text = {
             "Gives {X:mult,C:white}X#1#{} Mult when",
-            "the rank of all played",
+            "the ranks of all played",
             "cards is {C:attention}exactly 21{}"
         }
     },
@@ -349,9 +349,9 @@ local locs = {
         name = "Batman",
         text = {
             "Gains {C:mult}+#2#{} Mult for",
-            "every {C:attention}non-lethal{} hand. Mult",
-            "gain increases for every joker",
-            "with {C:attention}\"Joker\"{} in the name",
+            "every {C:attention}non-lethal{} hand played.",
+            "Mult gain increases for every",
+            "Joker with {C:attention}\"Joker\"{} in the name",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
     },
