@@ -340,7 +340,7 @@ local locs = {
     blackjackJoker = {
         name = "Blackjack Joker",
         text = {
-            "Gives {X:mult,C:white}X#2#{} Mult when",
+            "Gives {X:mult,C:white}X#1#{} Mult when",
             "the rank of all played",
             "cards is {C:attention}exactly 21{}"
         }
@@ -536,7 +536,7 @@ local jokers = {
     blackjackJoker = {
         ability_name = "MMC Blackjack Joker",
         slug = "mmc_blackjack",
-        ability = { extra = { Xmult = 3, rank_tally = 0 } },
+        ability = { extra = { Xmult = 3, rank_tally = { 0 }, updated_rank_tally = {} } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -547,7 +547,7 @@ local jokers = {
     batmanJoker = {
         ability_name = "MMC Batman",
         slug = "mmc_batman",
-        ability = { extra = { mult = 4, mult_add = 2, joker_tally = 0 } },
+        ability = { extra = { mult = 1, mult_add = 1, total_chips = 0 } },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -591,11 +591,12 @@ function SMODS.INIT.MikasModCollection()
     -- Initialize Jokers
     for key, value in pairs(jokers) do
         if config[key] then
-            local newJoker = SMODS.Joker:new(value.ability_name, value.slug, value.ability, { x = 0, y = 0 }, locs[key],
+            local joker = SMODS.Joker:new(value.ability_name, value.slug, value.ability, { x = 0, y = 0 }, locs[key],
                 value.rarity, value.cost, value.unlocked, value.discovered, value.blueprint_compat, value.eternal_compat)
-            newJoker:register()
-            SMODS.Sprite:new("j_" .. value.slug, SMODS.findModByID("MikasMods").path,
-                "j_" .. value.slug .. ".png", 71, 95, "asset_atli"):register()
+            joker:register()
+            local sprite = SMODS.Sprite:new("j_" .. value.slug, SMODS.findModByID("MikasMods").path,
+                "j_" .. value.slug .. ".png", 71, 95, "asset_atli")
+            sprite:register()
         end
     end
 
@@ -677,7 +678,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Reset hand size
-            if context.end_of_round then
+            if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.hand_size ~= 0 then
                     G.hand:change_size(-self.ability.extra.hand_size)
                     self.ability.extra.hand_size = 0
@@ -717,7 +718,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Reset mult
-            if context.end_of_round then
+            if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.mult ~= 0 then
                     self.ability.mult = 0
                     -- Reset message
@@ -749,7 +750,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Reset mult
-            if context.end_of_round then
+            if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.Xmult ~= 1 then
                     self.ability.extra.Xmult = 1
                     -- Reset message
@@ -893,7 +894,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- See if total scored chips > 2 * blind chips, then increment xmult
-            if context.end_of_round then
+            if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.total_chips > (2 * G.GAME.blind.chips) then
                     self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
 
@@ -927,7 +928,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- See if total scored chips == blind chips, then increment xmult
-            if context.end_of_round then
+            if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.total_chips == G.GAME.blind.chips then
                     self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
 
@@ -942,19 +943,139 @@ function SMODS.INIT.MikasModCollection()
 
     if config.blackjackJoker then
         SMODS.Jokers.j_mmc_blackjack.calculate = function(self, context)
-            -- TODO
+            -- For full hand
+            if context.before and context.full_hand then
+                -- For every played card
+                for _, v in ipairs(context.full_hand) do
+                    local id = v:get_id()
+                    if id <= 10 then -- Numbered cards
+                        for key, value in ipairs(self.ability.extra.rank_tally) do
+                            self.ability.extra.rank_tally[key] = value + id
+                        end
+                    elseif id < 14 then -- Face cards
+                        for key, value in ipairs(self.ability.extra.rank_tally) do
+                            self.ability.extra.rank_tally[key] = value + 10
+                        end
+                    else -- Aces, need to be handled differently because they can either have a value of 1 or 11
+                        for key, value in ipairs(self.ability.extra.rank_tally) do
+                            -- If someone ever plays 32 aces in one hand, I'm doomed
+                            self.ability.extra.rank_tally[key] = value + 11
+                            table.insert(self.ability.extra.updated_rank_tally, value + 1)
+                        end
+
+                        -- Append updated_rank_tally to rank_tally
+                        for _, value in ipairs(self.ability.extra.updated_rank_tally) do
+                            table.insert(self.ability.extra.rank_tally, value)
+                        end
+
+                        -- Reset rank_tally
+                        self.ability.extra.updated_rank_tally = {}
+                    end
+                end
+            end
+
+            -- When hand is played
+            if SMODS.end_calculate_context(context) then
+                -- For every rank_tally, check if we got 21
+                for _, value in ipairs(self.ability.extra.rank_tally) do
+                    if value == 21 then
+                        -- Apply mult and reset rank_tally
+                        self.ability.extra.rank_tally = { 0 }
+                        return {
+                            message = localize {
+                                type = 'variable',
+                                key = 'a_xmult',
+                                vars = { self.ability.extra.Xmult }
+                            },
+                            Xmult_mod = self.ability.extra.Xmult,
+                            card = self
+                        }
+                    end
+                end
+
+                -- Reset rank_tally
+                self.ability.extra.rank_tally = { 0 }
+            end
         end
     end
 
     if config.batmanJoker then
         SMODS.Jokers.j_mmc_batman.calculate = function(self, context)
-            -- TODO
+            -- When hand is played
+            if SMODS.end_calculate_context(context) then
+                -- Increase mult if non-lethal
+                if self.ability.extra.total_chips < G.GAME.blind.chips then
+                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
+                end
+
+                -- Apply mult
+                return {
+                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult } },
+                    mult_mod = self.ability.extra.mult
+                }
+            end
+
+            -- Add scored chips to total
+            if context.scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            end
+
+            -- Reset total chip count
+            if context.end_of_round and not context.individual and not context.repetition then
+                -- Reset total chip count
+                self.ability.extra.total_chips = 0
+            end
         end
     end
 
     if config.bombJoker then
+        -- Apply mult
         SMODS.Jokers.j_mmc_bomb.calculate = function(self, context)
-            -- TODO
+            if SMODS.end_calculate_context(context) then
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_mult',
+                        vars = { self.ability.extra.mult }
+                    },
+                    mult_mod = self.ability.extra.mult,
+                    card = self
+                }
+            end
+
+            -- Decrease round_left counter or destroy
+            if context.end_of_round and not context.individual and not context.repetition then
+                self.ability.extra.rounds_left = self.ability.extra.rounds_left - 1
+
+                if self.ability.extra.rounds_left == 0 then
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('tarot1')
+                            self.T.r = -0.2
+                            self:juice_up(0.3, 0.4)
+                            self.states.drag.is = true
+                            self.children.center.pinch.x = true
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.3,
+                                blockable = false,
+                                func = function()
+                                    G.jokers:remove_card(self)
+                                    self:remove()
+                                    self = nil
+                                    return true;
+                                end
+                            }))
+                            return true
+                        end
+                    }))
+                else
+                    -- Increase mult
+                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_tick'), colour = G.C.RED })
+                end
+            end
         end
     end
 end
@@ -1104,10 +1225,21 @@ function Card.update(self, dt)
         if self.ability.name == 'MMC Seal Collector' then
             self.ability.extra.chips = 25
             -- Count all seal cards
-            for _, v in pairs(G.playing_cards) do
-                if v.seal ~= nil then
+            for _, value in pairs(G.playing_cards) do
+                if value.seal ~= nil then
                     -- Add chips to total
                     self.ability.extra.chips = self.ability.extra.chips + self.ability.extra.chips_add
+                end
+            end
+        end
+        -- Batman
+        if self.ability.name == 'MMC Batman' then
+            self.ability.extra.mult_add = 1
+            -- Count all jokers with 'Joker' in the name
+            for _, value in pairs(G.jokers.cards) do
+                if string.find(value.ability.name, 'Joker') then
+                    -- Increase mult gain
+                    self.ability.extra.mult_add = self.ability.extra.mult_add + 1
                 end
             end
         end
