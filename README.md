@@ -61,4 +61,5 @@ Gains X4 Mult when a blind is finished with the **_exact_** chip requirement.
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
+- Place both the `MikasModCollection.lua` file and the `assets` folder in `Balatro\Mods`.
 - The mod has a config right at the top of the file, to disable any unwanted mods.

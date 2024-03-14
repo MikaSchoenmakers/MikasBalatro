@@ -1,6 +1,6 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: Mika's Mod Collection
---- MOD_ID: Mikasmods
+--- MOD_ID: MikasMods
 --- MOD_AUTHOR: [Mikadoe]
 --- MOD_DESCRIPTION: A collection of Mika's Mods. Check the mod description on GitHub for more information :)
 ----------------------------------------------
@@ -9,12 +9,12 @@
 -- Config: DISABLE UNWANTED MODS HERE
 local config = {
     -- Decks
-    evenStevenDeck = true,
-    oddToddDeck = true,
-    fibonacciDeck = true,
-    primeDeck = true, -- Do not enable without primeJoker
-    midasDeck = true,
-    jokersForHireDeck = true,
+    evenStevenDeck = false,
+    oddToddDeck = false,
+    fibonacciDeck = false,
+    primeDeck = false, -- Do not enable without primeJoker
+    midasDeck = false,
+    jokersForHireDeck = false,
     -- Jokers
     primeJoker = true,
     straightNateJoker = true,
@@ -376,7 +376,6 @@ local jokers = {
         ability_name = "MMC Prime Joker",
         slug = "mmc_prime",
         ability = { extra = { Xmult = 1.2 } },
-        sprite = { x = 0, y = 4 },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -388,7 +387,6 @@ local jokers = {
         ability_name = "MMC Straight Nate",
         slug = "mmc_straight_nate",
         ability = { extra = { Xmult = 4 } },
-        sprite = { x = 0, y = 0 },
         rarity = 3,
         cost = 7,
         unlocked = true,
@@ -400,7 +398,6 @@ local jokers = {
         ability_name = "MMC The Fisherman",
         slug = "mmc_fisherman",
         ability = { extra = { hand_size = 0, hand_add = 1 } },
-        sprite = { x = 6, y = 10 },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -412,7 +409,6 @@ local jokers = {
         ability_name = "MMC Impatient Joker",
         slug = "mmc_impatient",
         ability = { mult = 0, extra = { mult_add = 2 } },
-        sprite = { x = 3, y = 4 },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -424,7 +420,6 @@ local jokers = {
         ability_name = "MMC Cultist",
         slug = "mmc_cultist",
         ability = { extra = { Xmult = 1, Xmult_add = 1 } },
-        sprite = { x = 8, y = 10 },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -436,7 +431,6 @@ local jokers = {
         ability_name = "MMC Seal Collector",
         slug = "mmc_seal_collector",
         ability = { extra = { chips = 25, chips_add = 25 } },
-        sprite = { x = 6, y = 5 },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -448,7 +442,6 @@ local jokers = {
         ability_name = "MMC Camper",
         slug = "mmc_camper",
         ability = { extra = { chips_add = 4 } },
-        sprite = { x = 0, y = 11 },
         rarity = 2,
         cost = 5,
         unlocked = true,
@@ -471,7 +464,6 @@ local jokers = {
                 old_dollars = 0
             }
         },
-        sprite = { x = 6, y = 3 },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -483,7 +475,6 @@ local jokers = {
         ability_name = "MMC Delayed Joker",
         slug = "mmc_delayed",
         ability = { extra = { mult = 20, chips = 100, Xmult = 1.5, action_tally = 1 } },
-        sprite = { x = 9, y = 13 },
         rarity = 2,
         cost = 7,
         unlocked = true,
@@ -495,7 +486,6 @@ local jokers = {
         ability_name = "MMC Show-Off",
         slug = "mmc_showoff",
         ability = { extra = { Xmult = 1, Xmult_add = 1, total_chips = 0 } },
-        sprite = { x = 5, y = 7 },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -507,7 +497,6 @@ local jokers = {
         ability_name = "MMC Sniper",
         slug = "mmc_sniper",
         ability = { extra = { Xmult = 1, Xmult_add = 4, total_chips = 0 } },
-        sprite = { x = 3, y = 7 },
         rarity = 4,
         cost = 15,
         unlocked = true,
@@ -539,9 +528,11 @@ function SMODS.INIT.MikasModCollection()
     -- Initialize Jokers
     for key, value in pairs(jokers) do
         if config[key] then
-            local newJoker = SMODS.Joker:new(value.ability_name, value.slug, value.ability, value.sprite, locs[key],
+            local newJoker = SMODS.Joker:new(value.ability_name, value.slug, value.ability, { x = 0, y = 0 }, locs[key],
                 value.rarity, value.cost, value.unlocked, value.discovered, value.blueprint_compat, value.eternal_compat)
             newJoker:register()
+            SMODS.Sprite:new("j_" .. value.slug, SMODS.findModByID("MikasMods").path,
+                "j_" .. value.slug .. ".png", 71, 95, "asset_atli"):register()
         end
     end
 
