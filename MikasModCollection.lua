@@ -600,7 +600,7 @@ function SMODS.INIT.MikasModCollection()
                     G.hand:change_size(-self.ability.extra.hand_add)
                     -- Decrease message
                     card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_hand_down'), colour = G.C.RED })
+                        { message = localize('k_mmc_hand_down') })
                 end
             end
 
@@ -610,7 +610,7 @@ function SMODS.INIT.MikasModCollection()
                 G.hand:change_size(self.ability.extra.hand_add)
                 -- Increase message
                 card_eval_status_text(self, 'extra', nil, nil, nil,
-                    { message = localize('k_mmc_hand_up'), colour = G.C.CHIPS })
+                    { message = localize('k_mmc_hand_up') })
             end
 
             -- Reset hand size
@@ -656,7 +656,7 @@ function SMODS.INIT.MikasModCollection()
             -- Reset mult
             if context.end_of_round then
                 if self.ability.mult ~= 0 then
-                    self.ability.extra.Xmult = 0
+                    self.ability.mult = 0
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_reset') })
