@@ -29,7 +29,10 @@ local config = {
     sniperJoker = true,
     blackjackJoker = true,
     batmanJoker = true,
-    bombJoker = true
+    bombJoker = true,
+    alphabetJoker = true,
+    grudgefulJoker = true,
+    finishingBlowJoker = true
 }
 
 -- Helper functions
@@ -248,7 +251,7 @@ local locs = {
         text = {
             "Each played {C:attention}2{},",
             "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
-            "{X:mult,C:white} X#1# {} Mult when scored"
+            "{X:mult,C:white}X#1#{} Mult when scored"
         }
     },
     straightNateJoker = {
@@ -361,6 +364,31 @@ local locs = {
             "Gains {C:mult}+#2#{} Mult per round",
             "self destructs after {C:attention}#3#{} rounds",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+        }
+    },
+    alphabetJokerJoker = {
+        name = "Alphabet Joker",
+        text = {
+            "Gives {C:chips}+#2#{} Chips per Joker",
+            "with the letter {C:attention}\"#3#\"{} in the name.",
+            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+        }
+    },
+    grudgefulJoker = {
+        name = "Grudgeful Joker",
+        text = {
+            "Adds the {C:attention}excess chips{} from",
+            "last blind to the first hand",
+            "of the current round",
+            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+        }
+    },
+    finishingBlowJoker = {
+        name = "Finishing Blow",
+        text = {
+            "If a blind is finished",
+            "with a {C:attention}High Card{}, randomly",
+            "{C:attention}enhance{} the played card"
         }
     }
 }
@@ -561,6 +589,39 @@ local jokers = {
         ability = { extra = { mult = 15, mult_add = 15, rounds_left = 3 } },
         rarity = 1,
         cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    alphabetJoker = {
+        ability_name = "MMC Alphabet Joker",
+        slug = "mmc_alphabet",
+        ability = { extra = { chips = 25, chips_add = 25, letter = "A" } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    grudgefulJoker = {
+        ability_name = "MMC Grudgeful Joker",
+        slug = "mmc_grudgeful",
+        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0 } },
+        rarity = 2,
+        cost = 7,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    finishingBlowJoker = {
+        ability_name = "MMC Finishing Blow",
+        slug = "mmc_finishing_blow",
+        ability = { extra = { enhancement = "" } },
+        rarity = 2,
+        cost = 6,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -1013,7 +1074,7 @@ function SMODS.INIT.MikasModCollection()
             -- Add scored chips to total
             if context.scored_chips then
                 self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
-                
+
                 if self.ability.extra.total_chips < G.GAME.blind.chips then
                     self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
                 end
@@ -1074,6 +1135,52 @@ function SMODS.INIT.MikasModCollection()
                         { message = localize('k_mmc_tick'), colour = G.C.RED })
                 end
             end
+        end
+    end
+
+    if config.alphabetJoker then
+        SMODS.Jokers.j_mmc_alphabet.calculate = function(self, context)
+            -- TODO
+        end
+    end
+
+    if config.grudgefulJoker then
+        SMODS.Jokers.j_mmc_grudgeful.calculate = function(self, context)
+            -- When hand is played
+            if SMODS.end_calculate_context(context) then
+                -- Apply chips and reset
+                if self.ability.extra.chips > 0 then
+                    self.ability.extra.old_chips = self.ability.extra.chips
+                    self.ability.extra.chips = 0
+                    
+                    -- Apply chips
+                    return {
+                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.old_chips } },
+                        chip_mod = self.ability.extra.old_chips
+                    }
+                end
+            end
+
+            -- Add scored chips to total
+            if context.scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            end
+
+            if context.end_of_round and not context.individual and not context.repetition then
+                -- Add excess chips to chips
+                if self.ability.extra.total_chips >= G.GAME.blind.chips then
+                    self.ability.extra.chips = self.ability.extra.total_chips - G.GAME.blind.chips
+                end
+
+                -- Reset chip count
+                self.ability.extra.total_chips = 0
+            end
+        end
+    end
+
+    if config.finishingBlowJoker then
+        SMODS.Jokers.j_mmc_finishing_blow.calculate = function(self, context)
+            -- TODO
         end
     end
 end
