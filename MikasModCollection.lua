@@ -9,12 +9,12 @@
 -- Config: DISABLE UNWANTED MODS HERE
 local config = {
     -- Decks
-    evenStevenDeck = false,
-    oddToddDeck = false,
-    fibonacciDeck = false,
-    primeDeck = false, -- Do not enable without primeJoker
-    midasDeck = false,
-    jokersForHireDeck = false,
+    evenStevenDeck = true,
+    oddToddDeck = true,
+    fibonacciDeck = true,
+    primeDeck = true, -- Do not enable without primeJoker
+    midasDeck = true,
+    jokersForHireDeck = true,
     -- Jokers
     primeJoker = true,
     straightNateJoker = true,
