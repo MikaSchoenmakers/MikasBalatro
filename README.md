@@ -69,13 +69,23 @@ Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.
 
 ### Alphabet Joker
-Gives +25 Chips for every Joker with the a specific letter in the name. Letter changes per hand played.
+Gives +20 Chips for every specific letter in all your Jokers. Letter changes when this Joker appears in the shop.\
+_An example: If the current letter is 'o' and you have "Cool Joker" and "Joker", you'd get a (3 * 20) + 20 = 80 chip bonus_
 
 ### Grudgeful Joker
-Add excess Chips from last blind to the first hand of the current round. Caps at 25% of the current blind's chips.
+Add excess Chips from last blind to the first hand of the current round. Caps at 25% of the current blind's Chips.
 
 ### Finishing Blow
 If a blind is finished with a **_High Card_**, randomly enhance the played card.
+
+### Planetary Alignment
+Once every 2 rounds, Blue Seals give 2 Planet cards. One of these will be for your most played poker hand.
+
+### Historical Joker
+If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand.
+
+### Suit Alley
+Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3 Mult when scored.
 
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).

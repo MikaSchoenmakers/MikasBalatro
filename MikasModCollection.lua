@@ -431,7 +431,7 @@ local locs = {
             "Gives {C:chips}+#1#{} Chips for every",
             "letter {C:attention}\"#2#\"{} in your Jokers.",
             "Letter changes when this",
-            "Joker is bought"
+            "Joker appears in the shop"
         }
     },
     grudgefulJoker = {
@@ -455,7 +455,8 @@ local locs = {
     planetaryAlignmentJoker = {
         name = "Planetary Alignment",
         text = {
-            "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards",
+            "Once every 2 rounds",
+            "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
             "one of them will be for your",
             "most played {C:attention}poker hand{}"
         }
@@ -717,7 +718,7 @@ local jokers = {
     planetaryAlignmentJoker = {
         ability_name = "MMC Planetary Alignment",
         slug = "mmc_planetary_alignment",
-        ability = {},
+        ability = { extra = { round = 1 } },
         rarity = 1,
         cost = 6,
         unlocked = true,
@@ -1351,6 +1352,15 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
+    if config.planetaryAlignmentJoker then
+        SMODS.Jokers.j_mmc_planetary_alignment.calculate = function(self, context)
+            -- Update round counter
+            if context.end_of_round and not context.individual and not context.repetition then
+                self.ability.extra.round = self.ability.extra.round + 1
+            end
+        end
+    end
+
     if config.historicalJoker then
         SMODS.Jokers.j_mmc_historical.calculate = function(self, context)
             -- Save previous cards
@@ -1513,11 +1523,6 @@ function Card:add_to_deck(from_debuff)
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
         end
 
-        -- Alphabet Joker
-        if self.ability.name == 'MMC Alphabet Joker' then
-            self.ability.extra.letter = get_random_letter()
-        end
-
         -- Jokers for Hire
         if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
             -- Add Joker slot and increment counter
@@ -1551,6 +1556,12 @@ end
 local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
+    -- Alphabet Joker
+    if self.ability.name == 'MMC Alphabet Joker' then
+        self.ability.extra.letter = get_random_letter()
+    end
+
+    -- Jokers for Hire
     if G.GAME.starting_params.mmc_for_hire and (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
         -- Multiply cost exponentially with counter
         self.cost = self.cost * 2 ^ for_hire_counter
@@ -1605,10 +1616,10 @@ end
 local get_end_of_round_effectref = Card.get_end_of_round_effect
 function Card:get_end_of_round_effect(context)
     -- Planetary Alignment
-    if self.seal ~= nil then
+    if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
-            -- Check for Planetary Alignment Joker
-            if v.ability.name == 'MMC Planetary Alignment' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+            -- Check for Planetary Alignment Joker and consumable space
+            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % 2 == 0 and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
