@@ -33,7 +33,9 @@ local config = {
     alphabetJoker = true,
     grudgefulJoker = true,
     finishingBlowJoker = true,
-    planetaryAlignmentJoker = true
+    planetaryAlignmentJoker = true,
+    historicalJoker = true,
+    suitAlleyJoker = true
 }
 
 -- Helper functions
@@ -82,6 +84,14 @@ local function remove_prefix(name, prefix)
     end
 end
 
+local function count_letters(str, letter)
+    local count = 0
+    for i in str:gmatch(letter) do
+        count = count + 1
+    end
+    return count
+end
+
 local enhancements = {
     G.P_CENTERS.m_bonus,
     G.P_CENTERS.m_mult,
@@ -93,9 +103,21 @@ local enhancements = {
     G.P_CENTERS.m_lucky
 }
 
-function get_random_in_table(table)
+local function get_random_in_table(table)
     local index = math.random(1, #table)
     return table[index]
+end
+
+local function tables_equal(a, b)
+    return table.concat(a) == table.concat(b)
+end
+
+local function tables_copy(t)
+    local t2 = {}
+    for k, v in pairs(t) do
+        t2[k] = v
+    end
+    return t2
 end
 
 -- Local variables
@@ -406,9 +428,10 @@ local locs = {
     alphabetJoker = {
         name = "Alphabet Joker",
         text = {
-            "Gives {C:chips}+#2#{} Chips for every Joker",
-            "with the letter {C:attention}\"#3#\"{} in the name.",
-            "Letter changes per hand played",
+            "Gives {C:chips}+#1#{} Chips for every",
+            "letter {C:attention}\"#2#\"{} in your Jokers.",
+            "Letter changes when this",
+            "Joker is bought"
         }
     },
     grudgefulJoker = {
@@ -435,6 +458,24 @@ local locs = {
             "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards",
             "one of them will be for your",
             "most played {C:attention}poker hand{}"
+        }
+    },
+    historicalJoker = {
+        name = "Historical Joker",
+        text = {
+            "If scored cards have the",
+            "same {C:attention}ranks{} and {C:attention}order{} as",
+            "previous hand, add previous hands",
+            "{C:chips}Chips{} to the current hand"
+        }
+    },
+    suitAlleyJoker = {
+        name = "Suit Alley",
+        text = {
+            "{C:diamonds}Diamond{} and {C:clubs}Club{} cards",
+            "gain {C:chips}+#1#{} Chips when scored",
+            "{C:hearts}Heart{} and {C:spades}Spade{} cards",
+            "gain {C:mult}+#2#{} Mult when scored"
         }
     }
 }
@@ -643,7 +684,7 @@ local jokers = {
     alphabetJoker = {
         ability_name = "MMC Alphabet Joker",
         slug = "mmc_alphabet",
-        ability = { extra = { chips = 25, chips_add = 25, letter = "A" } },
+        ability = { extra = { chips = 20, letter = 'A' } },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -682,6 +723,28 @@ local jokers = {
         unlocked = true,
         discovered = true,
         blueprint_compat = false,
+        eternal_compat = true
+    },
+    historicalJoker = {
+        ability_name = "MMC Historical Joker",
+        slug = "mmc_historical",
+        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0 } },
+        rarity = 2,
+        cost = 7,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    suitAlleyJoker = {
+        ability_name = "MMC Suit Alley",
+        slug = "mmc_suit_alley",
+        ability = { extra = { mult = 3, chips = 12 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
         eternal_compat = true
     }
 }
@@ -1137,6 +1200,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
                 end
             end
+
             -- Reset total chip count
             if context.end_of_round and not context.individual and not context.repetition then
                 -- Reset total chip count
@@ -1208,8 +1272,11 @@ function SMODS.INIT.MikasModCollection()
                 local ability_name = context.other_joker.ability.name:lower()
                 ability_name = remove_prefix(ability_name, 'mmc')
 
+                -- Count letters
+                local letter_tally = count_letters(ability_name, self.ability.extra.letter:lower())
+
                 -- Check if Joker name contains letter
-                if string.find(ability_name, self.ability.extra.letter:lower()) then
+                if letter_tally > 0 then
                     -- Animate other Joker
                     G.E_MANAGER:add_event(Event({
                         func = function()
@@ -1219,15 +1286,10 @@ function SMODS.INIT.MikasModCollection()
                     }))
                     -- Apply chips
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
-                        chip_mod = self.ability.extra.chips
+                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips * letter_tally } },
+                        chip_mod = self.ability.extra.chips * letter_tally
                     }
                 end
-            end
-
-            -- Get new random letter
-            if context.after then
-                self.ability.extra.letter = get_random_letter()
             end
         end
     end
@@ -1288,6 +1350,57 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.historicalJoker then
+        SMODS.Jokers.j_mmc_historical.calculate = function(self, context)
+            -- Save previous cards
+            if context.cardarea == G.play and not context.repetition then
+                table.insert(self.ability.extra.current_cards, context.other_card.base.id)
+            end
+
+            -- Calculate chip score
+            if context.scored_chips then
+                self.ability.extra.chips = context.scored_chips
+            end
+
+            -- Apply chips if previous cards are the same as the current cards
+            if SMODS.end_calculate_context(context) then
+                if tables_equal(self.ability.extra.prev_cards, self.ability.extra.current_cards) then
+                    self.ability.extra.prev_cards = tables_copy(self.ability.extra.current_cards)
+                    self.ability.extra.current_cards = {}
+                    return {
+                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
+                        chip_mod = self.ability.extra.chips
+                    }
+                else
+                    self.ability.extra.prev_cards = tables_copy(self.ability.extra.current_cards)
+                    self.ability.extra.current_cards = {}
+                end
+            end
+        end
+    end
+
+    if config.suitAlleyJoker then
+        SMODS.Jokers.j_mmc_suit_alley.calculate = function(self, context)
+            if context.cardarea == G.play and not context.repetition then
+                if context.other_card:is_suit('Diamonds') or context.other_card:is_suit('Clubs') then
+                    -- Add chips if suit is Diamonds or Clubs
+                    return {
+                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
+                        chips = self.ability.extra.chips,
+                        card = self
+                    }
+                elseif context.other_card:is_suit('Hearts') or context.other_card:is_suit('Spades') then
+                    -- Add mult if Hearts or Spades
+                    return {
+                        message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult } },
+                        mult = self.ability.extra.mult,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -1337,13 +1450,17 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC Bomb' then
             loc_vars = { self.ability.extra.mult, self.ability.extra.mult_add, self.ability.extra.rounds_left }
         elseif self.ability.name == 'MMC Alphabet Joker' then
-            loc_vars = { self.ability.extra.chips, self.ability.extra.chips_add, self.ability.extra.letter }
+            loc_vars = { self.ability.extra.chips, self.ability.extra.letter }
         elseif self.ability.name == 'MMC Grudgeful Joker' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.chips_percentage }
         elseif self.ability.name == 'MMC Finishing Blow' then
             loc_vars = { self.ability.extra.enhancement }
         elseif self.ability.name == 'MMC Planery Alignment' then
             loc_vars = {}
+        elseif self.ability.name == 'MMC Historical Joker' then
+            loc_vars = {}
+        elseif self.ability.name == 'MMC Suit Alley' then
+            loc_vars = { self.ability.extra.chips, self.ability.extra.mult }
         else
             customJoker = false
         end
@@ -1394,6 +1511,11 @@ function Card:add_to_deck(from_debuff)
         if self.ability.name == 'MMC Straight Nate' then
             -- Add Joker slot
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
+        end
+
+        -- Alphabet Joker
+        if self.ability.name == 'MMC Alphabet Joker' then
+            self.ability.extra.letter = get_random_letter()
         end
 
         -- Jokers for Hire
