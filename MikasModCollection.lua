@@ -32,7 +32,8 @@ local config = {
     bombJoker = true,
     alphabetJoker = true,
     grudgefulJoker = true,
-    finishingBlowJoker = true
+    finishingBlowJoker = true,
+    planetaryAlignmentJoker = true
 }
 
 -- Helper functions
@@ -427,6 +428,14 @@ local locs = {
             "with a {C:attention}High Card{}, randomly",
             "{C:attention}enhance{} the played card"
         }
+    },
+    planetaryAlignmentJoker = {
+        name = "Planetary Alignment",
+        text = {
+            "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards",
+            "one of them will be for your",
+            "most played {C:attention}poker hand{}"
+        }
     }
 }
 
@@ -663,6 +672,17 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    planetaryAlignmentJoker = {
+        ability_name = "MMC Planetary Alignment",
+        slug = "mmc_planetary_alignment",
+        ability = {},
+        rarity = 1,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
     }
 }
 
@@ -675,6 +695,7 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_hand_up = "+1 Hand Size!"
     G.localization.misc.dictionary.k_mmc_hand_down = "-1 Hand Size!"
     G.localization.misc.dictionary.k_mmc_tick = "Tick..."
+    G.localization.misc.dictionary.k_mmc_planet = "Planet!"
 
     init_localization()
 
@@ -910,7 +931,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.dollars = self.ability.extra.dollar_gain_three
                 elseif self.ability.extra.seven_tally == 4 then
                     self.ability.extra.dollars = self.ability.extra.dollar_gain_four
-                elseif self.ability.extra.seven_tally == 5 then
+                elseif self.ability.extra.seven_tally >= 5 then
                     self.ability.extra.dollars = self.ability.extra.dollar_gain_five
                 end
 
@@ -1234,7 +1255,8 @@ function SMODS.INIT.MikasModCollection()
                 -- Add excess chips to bonus
                 if self.ability.extra.total_chips >= G.GAME.blind.chips then
                     self.ability.extra.chips = self.ability.extra.total_chips - G.GAME.blind.chips
-                    self.ability.extra.chips = math.ceil(math.min(G.GAME.blind.chips * self.ability.extra.chips_percentage / 100,
+                    self.ability.extra.chips = math.ceil(math.min(
+                        G.GAME.blind.chips * self.ability.extra.chips_percentage / 100,
                         self.ability.extra.chips))
                 end
 
@@ -1320,6 +1342,8 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.chips, self.ability.extra.chips_percentage }
         elseif self.ability.name == 'MMC Finishing Blow' then
             loc_vars = { self.ability.extra.enhancement }
+        elseif self.ability.name == 'MMC Planery Alignment' then
+            loc_vars = {}
         else
             customJoker = false
         end
@@ -1453,6 +1477,54 @@ function G.FUNCS.evaluate_play(self, e)
             card_eval_status_text(G.jokers.cards[i], 'jokers', nil, 0.3, nil, effects.jokers)
         end
     end
+end
+
+-- Handle end of round card effects
+local get_end_of_round_effectref = Card.get_end_of_round_effect
+function Card:get_end_of_round_effect(context)
+    -- Planetary Alignment
+    if self.seal ~= nil then
+        for _, v in pairs(G.jokers.cards) do
+            -- Check for Planetary Alignment Joker
+            if v.ability.name == 'MMC Planetary Alignment' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                -- Get most played hand
+                local _planet, _hand, _tally = nil, nil, 0
+                for _, v in ipairs(G.handlist) do
+                    if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
+                        _hand = v
+                        _tally = G.GAME.hands[v].played
+                    end
+                end
+                if _hand then
+                    for _, v in pairs(G.P_CENTER_POOLS.Planet) do
+                        if v.config.hand_type == _hand then
+                            _planet = v.key
+                        end
+                    end
+                end
+
+                -- Add card
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'before',
+                    delay = 0.0,
+                    func = (function()
+                        local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, _planet, 'blusl')
+                        card:add_to_deck()
+                        G.consumeables:emplace(card)
+                        G.GAME.consumeable_buffer = 0
+                        return true
+                    end)
+                }))
+
+                -- Show message
+                card_eval_status_text(v, 'extra', nil, nil, nil,
+                    { message = localize('k_mmc_planet'), G.C.BLUE })
+            end
+        end
+    end
+
+    get_end_of_round_effectref(self, context)
 end
 
 ----------------------------------------------
