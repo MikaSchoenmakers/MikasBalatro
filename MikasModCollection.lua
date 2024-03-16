@@ -1615,6 +1615,9 @@ end
 -- Handle end of round card effects
 local get_end_of_round_effectref = Card.get_end_of_round_effect
 function Card:get_end_of_round_effect(context)
+    -- Prevent red seals from crashing
+    if self.seal == 'Red' then return {} end
+
     -- Planetary Alignment
     if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
@@ -1652,7 +1655,7 @@ function Card:get_end_of_round_effect(context)
 
                 -- Show message
                 card_eval_status_text(v, 'extra', nil, nil, nil,
-                    { message = localize('k_mmc_planet'), G.C.BLUE })
+                    { message = localize('k_mmc_planet'), colour = G.C.SECONDARY_SET.Planet })
             end
         end
     end
