@@ -35,7 +35,10 @@ local config = {
     finishingBlowJoker = true,
     planetaryAlignmentJoker = true,
     historicalJoker = true,
-    suitAlleyJoker = true
+    suitAlleyJoker = true,
+    printerJoker = true,
+    shyJoker = true,
+    gamblerJoker = true
 }
 
 -- Helper functions
@@ -478,6 +481,29 @@ local locs = {
             "{C:hearts}Heart{} and {C:spades}Spade{} cards",
             "gain {C:mult}+#2#{} Mult when scored"
         }
+    },
+    printerJoker = {
+        name = "The Printer",
+        text = {
+            "If hand scores more",
+            "than the blind's Chips,",
+            "{C:attention}duplicate{} your hand"
+        }
+    },
+    shyJoker = {
+        name = "Shy Joker",
+        text = {
+            "{X:mult,C:white}X#1#{} Mult,",
+            "gains {X:mult,C:white}X#2#{} Mult",
+            "per {C:attention}card{} played",
+        }
+    },
+    gamblerJoker = {
+        name = "The Gambler",
+        text = {
+            "Retrigger all",
+            "played {C:attention}Lucky{} cards"
+        }
     }
 }
 
@@ -628,7 +654,7 @@ local jokers = {
         eternal_compat = true
     },
     showoffJoker = {
-        ability_name = "MMC Show-Off",
+        ability_name = "MMC The Show-Off",
         slug = "mmc_showoff",
         ability = { extra = { Xmult = 1, Xmult_add = 1, total_chips = 0 } },
         rarity = 3,
@@ -639,7 +665,7 @@ local jokers = {
         eternal_compat = true
     },
     sniperJoker = {
-        ability_name = "MMC Sniper",
+        ability_name = "MMC The Sniper",
         slug = "mmc_sniper",
         ability = { extra = { Xmult = 1, Xmult_add = 4, total_chips = 0 } },
         rarity = 4,
@@ -741,6 +767,39 @@ local jokers = {
         ability_name = "MMC Suit Alley",
         slug = "mmc_suit_alley",
         ability = { extra = { mult = 3, chips = 12 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    printerJoker = {
+        ability_name = "MMC The Printer",
+        slug = "mmc_printer",
+        ability = { extra = { hand = {}, chips = 0 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    shyJoker = {
+        ability_name = "MMC Shy Joker",
+        slug = "mmc_shy",
+        ability = { extra = { Xmult = 1, Xmult_add = 0.01 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    gamblerJoker = {
+        ability_name = "MMC The Gambler",
+        slug = "mmc_gambler",
+        ability = {},
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -1449,9 +1508,9 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC Delayed Joker' then
             loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.Xmult,
                 self.ability.extra.action_tally }
-        elseif self.ability.name == 'MMC Show-Off' then
+        elseif self.ability.name == 'MMC The Show-Off' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
-        elseif self.ability.name == 'MMC Sniper' then
+        elseif self.ability.name == 'MMC The Sniper' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
         elseif self.ability.name == 'MMC Blackjack Joker' then
             loc_vars = { self.ability.extra.Xmult }
@@ -1471,6 +1530,12 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = {}
         elseif self.ability.name == 'MMC Suit Alley' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.mult }
+        elseif self.ability.name == 'MMC The Printer' then
+            loc_vars = {}
+        elseif self.ability.name == 'MMC Shy Joker' then
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+        elseif self.ability.name == 'MMC The Gambler' then
+            loc_vars = {}
         else
             customJoker = false
         end
