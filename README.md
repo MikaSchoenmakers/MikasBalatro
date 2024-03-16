@@ -64,6 +64,7 @@ _An Ace can be valued at either 1 or 11_
 
 ### Batman
 Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 for every Joker with "Joker" in the name.
+_A non lethal hand is a hand that does not finish off a blind_
 
 ### Bomb
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.
@@ -86,6 +87,15 @@ If scored cards have the same **_ranks_** and **_order_** as the previous hand, 
 
 ### Suit Alley
 Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3 Mult when scored.
+
+### The Printer
+If a hand scores more than the blind's required Chips, duplicate the played hand and add cards to your hand.
+
+### Shy Joker
+Gain X0.01 Mult for every card played, starting at X1 Mult.
+
+### The Gambler
+Retrigger all played **_Lucky_** cards.
 
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).

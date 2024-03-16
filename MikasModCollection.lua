@@ -485,9 +485,10 @@ local locs = {
     printerJoker = {
         name = "The Printer",
         text = {
-            "If hand scores more",
-            "than the blind's Chips,",
-            "{C:attention}duplicate{} your hand"
+            "If hand scores more than",
+            "the blind's Chips, {C:attention}duplicate{}",
+            "your hand and add the duplicated",
+            "cards to your hand"
         }
     },
     shyJoker = {
@@ -546,7 +547,7 @@ local jokers = {
     primeJoker = {
         ability_name = "MMC Prime Joker",
         slug = "mmc_prime",
-        ability = { extra = { Xmult = 1.2 } },
+        ability = { extra = { x_mult = 1.2 } },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -557,7 +558,7 @@ local jokers = {
     straightNateJoker = {
         ability_name = "MMC Straight Nate",
         slug = "mmc_straight_nate",
-        ability = { extra = { Xmult = 4 } },
+        ability = { extra = { x_mult = 4 } },
         rarity = 3,
         cost = 7,
         unlocked = true,
@@ -590,7 +591,7 @@ local jokers = {
     cultistJoker = {
         ability_name = "MMC Cultist",
         slug = "mmc_cultist",
-        ability = { extra = { Xmult = 1, Xmult_add = 1 } },
+        ability = { extra = { x_mult = 1, x_mult_add = 1, x_mult_old = 0 } },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -645,7 +646,7 @@ local jokers = {
     delayedJoker = {
         ability_name = "MMC Delayed Joker",
         slug = "mmc_delayed",
-        ability = { extra = { mult = 20, chips = 100, Xmult = 1.5, action_tally = 1 } },
+        ability = { extra = { mult = 20, chips = 100, x_mult = 1.5, action_tally = 1 } },
         rarity = 2,
         cost = 7,
         unlocked = true,
@@ -656,7 +657,7 @@ local jokers = {
     showoffJoker = {
         ability_name = "MMC The Show-Off",
         slug = "mmc_showoff",
-        ability = { extra = { Xmult = 1, Xmult_add = 1, total_chips = 0 } },
+        ability = { extra = { x_mult = 1, x_mult_add = 1, total_chips = 0 } },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -667,9 +668,9 @@ local jokers = {
     sniperJoker = {
         ability_name = "MMC The Sniper",
         slug = "mmc_sniper",
-        ability = { extra = { Xmult = 1, Xmult_add = 4, total_chips = 0 } },
-        rarity = 4,
-        cost = 15,
+        ability = { extra = { x_mult = 1, x_mult_add = 4, total_chips = 0 } },
+        rarity = 3,
+        cost = 10,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -678,7 +679,7 @@ local jokers = {
     blackjackJoker = {
         ability_name = "MMC Blackjack Joker",
         slug = "mmc_blackjack",
-        ability = { extra = { Xmult = 3, rank_tally = { 0 }, updated_rank_tally = {} } },
+        ability = { extra = { x_mult = 3, rank_tally = { 0 }, updated_rank_tally = {} } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -777,9 +778,9 @@ local jokers = {
     printerJoker = {
         ability_name = "MMC The Printer",
         slug = "mmc_printer",
-        ability = { extra = { hand = {}, chips = 0 } },
-        rarity = 1,
-        cost = 4,
+        ability = { extra = { hand = {} } },
+        rarity = 3,
+        cost = 9,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -788,9 +789,9 @@ local jokers = {
     shyJoker = {
         ability_name = "MMC Shy Joker",
         slug = "mmc_shy",
-        ability = { extra = { Xmult = 1, Xmult_add = 0.01 } },
-        rarity = 1,
-        cost = 4,
+        ability = { extra = { x_mult = 1, x_mult_add = 0.01 } },
+        rarity = 2,
+        cost = 6,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -799,9 +800,9 @@ local jokers = {
     gamblerJoker = {
         ability_name = "MMC The Gambler",
         slug = "mmc_gambler",
-        ability = {},
-        rarity = 1,
-        cost = 4,
+        ability = { extra = { repetitions = 1 } },
+        rarity = 2,
+        cost = 6,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -855,9 +856,9 @@ function SMODS.INIT.MikasModCollection()
                     message = localize {
                         type = 'variable',
                         key = 'a_xmult',
-                        vars = { self.ability.extra.Xmult }
+                        vars = { self.ability.extra.x_mult }
                     },
-                    x_mult = self.ability.extra.Xmult,
+                    x_mult = self.ability.extra.x_mult,
                     card = self
                 }
             end
@@ -887,9 +888,9 @@ function SMODS.INIT.MikasModCollection()
                             message = localize {
                                 type = 'variable',
                                 key = 'a_xmult',
-                                vars = { self.ability.extra.Xmult }
+                                vars = { self.ability.extra.x_mult }
                             },
-                            Xmult_mod = self.ability.extra.Xmult
+                            Xmult_mod = self.ability.extra.x_mult
                         }
                     end
                 end
@@ -976,25 +977,25 @@ function SMODS.INIT.MikasModCollection()
             -- If hand played
             if SMODS.end_calculate_context(context) then
                 -- Increment Xmult
-                self.ability.extra.Xmult_old = self.ability.extra.Xmult
-                self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
+                self.ability.extra.x_mult_old = self.ability.extra.x_mult
+                self.ability.extra.x_mult = self.ability.extra.x_mult + self.ability.extra.x_mult_add
 
                 -- Apply xmult
                 return {
                     message = localize {
                         type = 'variable',
                         key = 'a_xmult',
-                        vars = { self.ability.extra.Xmult_old }
+                        vars = { self.ability.extra.x_mult_old }
                     },
-                    Xmult_mod = self.ability.extra.Xmult_old,
+                    Xmult_mod = self.ability.extra.x_mult_old,
                     card = self
                 }
             end
 
             -- Reset mult
             if context.end_of_round and not context.individual and not context.repetition then
-                if self.ability.extra.Xmult ~= 1 then
-                    self.ability.extra.Xmult = 1
+                if self.ability.extra.x_mult ~= 1 then
+                    self.ability.extra.x_mult = 1
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_reset') })
@@ -1085,7 +1086,7 @@ function SMODS.INIT.MikasModCollection()
                         -- Return bonus message and apply bonus
                         mult_mod = self.ability.extra.mult,
                         chip_mod = self.ability.extra.chips,
-                        Xmult_mod = self.ability.extra.Xmult,
+                        Xmult_mod = self.ability.extra.x_mult,
                         message = localize('k_mmc_bonus'),
                         card = self
                     }
@@ -1123,9 +1124,9 @@ function SMODS.INIT.MikasModCollection()
                     message = localize {
                         type = 'variable',
                         key = 'a_xmult',
-                        vars = { self.ability.extra.Xmult }
+                        vars = { self.ability.extra.x_mult }
                     },
-                    Xmult_mod = self.ability.extra.Xmult,
+                    Xmult_mod = self.ability.extra.x_mult,
                     card = self
                 }
             end
@@ -1138,7 +1139,7 @@ function SMODS.INIT.MikasModCollection()
             -- See if total scored chips > 2 * blind chips, then increment xmult
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.total_chips > (2 * G.GAME.blind.chips) then
-                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
+                    self.ability.extra.x_mult = self.ability.extra.x_mult + self.ability.extra.x_mult_add
 
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_upgrade'), colour = G.C.RED })
@@ -1157,9 +1158,9 @@ function SMODS.INIT.MikasModCollection()
                     message = localize {
                         type = 'variable',
                         key = 'a_xmult',
-                        vars = { self.ability.extra.Xmult }
+                        vars = { self.ability.extra.x_mult }
                     },
-                    Xmult_mod = self.ability.extra.Xmult,
+                    Xmult_mod = self.ability.extra.x_mult,
                     card = self
                 }
             end
@@ -1172,7 +1173,7 @@ function SMODS.INIT.MikasModCollection()
             -- See if total scored chips == blind chips, then increment xmult
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.total_chips == G.GAME.blind.chips then
-                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_add
+                    self.ability.extra.x_mult = self.ability.extra.x_mult + self.ability.extra.x_mult_add
 
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_upgrade'), colour = G.C.RED })
@@ -1227,9 +1228,9 @@ function SMODS.INIT.MikasModCollection()
                             message = localize {
                                 type = 'variable',
                                 key = 'a_xmult',
-                                vars = { self.ability.extra.Xmult }
+                                vars = { self.ability.extra.x_mult }
                             },
-                            Xmult_mod = self.ability.extra.Xmult,
+                            Xmult_mod = self.ability.extra.x_mult,
                             card = self
                         }
                     end
@@ -1470,6 +1471,89 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.printerJoker then
+        SMODS.Jokers.j_mmc_printer.calculate = function(self, context)
+            -- Save previous cards
+            if context.cardarea == G.play and not context.repetition then
+                table.insert(self.ability.extra.hand, context.other_card)
+            end
+
+            -- Calculate chip score and duplicate cards
+            if context.scored_chips then
+                if context.scored_chips >= G.GAME.blind.chips then
+                    -- Loop over hand
+                    for _, v in ipairs(self.ability.extra.hand) do
+                        -- Copy card
+                        local _card = copy_card(v, nil, nil, G.playing_card)
+                        _card:add_to_deck()
+                        G.deck.config.card_limit = G.deck.config.card_limit + 1
+                        table.insert(G.playing_cards, _card)
+                        G.hand:emplace(_card)
+                        _card.states.visible = nil
+
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                _card:start_materialize()
+                                return true
+                            end
+                        }))
+                        -- Show message
+                        card_eval_status_text(self, 'extra', nil, nil, nil, {
+                            message = localize('k_copied_ex'),
+                            colour = G.C.CHIPS,
+                            card = self,
+                            playing_cards_created = { true }
+                        })
+                    end
+                end
+                -- Reset hand
+                self.ability.extra.hand = {}
+            end
+        end
+    end
+
+    if config.shyJoker then
+        SMODS.Jokers.j_mmc_shy.calculate = function(self, context)
+            -- Add xmult for every played card
+            if context.individual and context.cardarea == G.play then
+                self.ability.extra.x_mult = self.ability.extra.x_mult + self.ability.extra.x_mult_add
+                card_eval_status_text(self, 'extra', nil, nil, nil,
+                    {
+                        message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.x_mult } },
+                        colour = G.C.MULT
+                    })
+            end
+
+            -- Apply xmult
+            if SMODS.end_calculate_context(context) then
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.x_mult }
+                    },
+                    Xmult_mod = self.ability.extra.x_mult,
+                    card = self
+                }
+            end
+        end
+    end
+
+    if config.gamblerJoker then
+        SMODS.Jokers.j_mmc_gambler.calculate = function(self, context)
+            -- Retrigger lucky cards
+            if context.repetition and context.cardarea == G.play then
+                if context.other_card.ability.effect == "Lucky Card" then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = self.ability.extra.repetitions,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -1488,15 +1572,15 @@ function Card.generate_UIBox_ability_table(self)
         local customJoker = true
 
         if self.ability.name == 'MMC Prime Joker' then
-            loc_vars = { self.ability.extra.Xmult }
+            loc_vars = { self.ability.extra.x_mult }
         elseif self.ability.name == 'MMC Straight Nate' then
-            loc_vars = { self.ability.extra.Xmult }
+            loc_vars = { self.ability.extra.x_mult }
         elseif self.ability.name == 'MMC The Fisherman' then
             loc_vars = { self.ability.extra.hand_size, self.ability.extra.hand_add }
         elseif self.ability.name == 'MMC Impatient Joker' then
             loc_vars = { self.ability.mult, self.ability.extra.mult_add }
         elseif self.ability.name == 'MMC Cultist' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+            loc_vars = { self.ability.extra.x_mult, self.ability.extra.x_mult_add }
         elseif self.ability.name == 'MMC Seal Collector' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.chips_add }
         elseif self.ability.name == 'MMC Camper' then
@@ -1506,14 +1590,14 @@ function Card.generate_UIBox_ability_table(self)
                 self.ability.extra.dollar_gain_three, self.ability.extra.dollar_gain_four,
                 self.ability.extra.dollar_gain_five }
         elseif self.ability.name == 'MMC Delayed Joker' then
-            loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.Xmult,
+            loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.x_mult,
                 self.ability.extra.action_tally }
         elseif self.ability.name == 'MMC The Show-Off' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+            loc_vars = { self.ability.extra.x_mult, self.ability.extra.x_mult_add }
         elseif self.ability.name == 'MMC The Sniper' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+            loc_vars = { self.ability.extra.x_mult, self.ability.extra.x_mult_add }
         elseif self.ability.name == 'MMC Blackjack Joker' then
-            loc_vars = { self.ability.extra.Xmult }
+            loc_vars = { self.ability.extra.x_mult }
         elseif self.ability.name == 'MMC Batman' then
             loc_vars = { self.ability.extra.mult, self.ability.extra.mult_add }
         elseif self.ability.name == 'MMC Bomb' then
@@ -1533,7 +1617,7 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC The Printer' then
             loc_vars = {}
         elseif self.ability.name == 'MMC Shy Joker' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_add }
+            loc_vars = { self.ability.extra.x_mult, self.ability.extra.x_mult_add }
         elseif self.ability.name == 'MMC The Gambler' then
             loc_vars = {}
         else
@@ -1679,10 +1763,7 @@ end
 
 -- Handle end of round card effects
 local get_end_of_round_effectref = Card.get_end_of_round_effect
-function Card:get_end_of_round_effect(context)
-    -- Prevent red seals from crashing
-    if self.seal == 'Red' then return {} end
-
+function Card.get_end_of_round_effect(self, context)
     -- Planetary Alignment
     if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
@@ -1725,7 +1806,9 @@ function Card:get_end_of_round_effect(context)
         end
     end
 
-    get_end_of_round_effectref(self, context)
+    -- Call base function and return result
+    local ret = get_end_of_round_effectref(self, context)
+    return ret
 end
 
 ----------------------------------------------
