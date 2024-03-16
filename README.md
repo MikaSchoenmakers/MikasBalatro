@@ -97,6 +97,15 @@ Gain X0.01 Mult for every card played, starting at X1 Mult.
 ### The Gambler
 Retrigger all played **_Lucky_** cards.
 
+### Incomplete Joker
+Give +100 Chips if played hand contains 3 or fewer cards.
+
+### Statistic Joker
+If 4 hands have been played the same amount of times, gives X4 Mult.
+
+### Boating License
+Copies the effect of all played **_Enhanced_** cards.
+
 ## Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).

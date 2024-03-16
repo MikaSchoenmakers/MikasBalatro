@@ -38,7 +38,10 @@ local config = {
     suitAlleyJoker = true,
     printerJoker = true,
     shyJoker = true,
-    gamblerJoker = true
+    gamblerJoker = true,
+    incompleteJoker = true,
+    statisticJoker = true,
+    boatingLicenseJoker = true
 }
 
 -- Helper functions
@@ -505,6 +508,29 @@ local locs = {
             "Retrigger all",
             "played {C:attention}Lucky{} cards"
         }
+    },
+    incompleteJoker = {
+        name = "Incomplete Joker",
+        text = {
+            "{C:chips}+#1#{} Chips if played",
+            "hand contains",
+            "{C:attention}3{} or fewer cards"
+        }
+    },
+    statisticJoker = {
+        name = "Statistic Joker",
+        text = {
+            "If {C:attention}#2#{} hands have been played",
+            "the same amount of times,",
+            "give {X:mult,C:white}X#1#{} Mult"
+        }
+    },
+    boatingLicenseJoker = {
+        name = "Boating License",
+        text = {
+            "{C:attention}Copies{} the effects",
+            "of all played {C:attention}Enhanced{} cards"
+        }
     }
 }
 
@@ -783,7 +809,7 @@ local jokers = {
         cost = 9,
         unlocked = true,
         discovered = true,
-        blueprint_compat = true,
+        blueprint_compat = false,
         eternal_compat = true
     },
     shyJoker = {
@@ -794,7 +820,7 @@ local jokers = {
         cost = 6,
         unlocked = true,
         discovered = true,
-        blueprint_compat = true,
+        blueprint_compat = false,
         eternal_compat = true
     },
     gamblerJoker = {
@@ -803,6 +829,39 @@ local jokers = {
         ability = { extra = { repetitions = 1 } },
         rarity = 2,
         cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    incompleteJoker = {
+        ability_name = "MMC Incomplete Joker",
+        slug = "mmc_incomplete",
+        ability = { extra = { chips = 100 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    statisticJoker = {
+        ability_name = "MMC Statistic Joker",
+        slug = "mmc_statistic",
+        ability = { extra = { x_mult = 4, hand_req = 4, hand_equal_count = {}, should_trigger = false } },
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    boatingLicenseJoker = {
+        ability_name = "MMC Boating License",
+        slug = "mmc_boating_license",
+        ability = {},
+        rarity = 3,
+        cost = 8,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -1554,6 +1613,104 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.incompleteJoker then
+        SMODS.Jokers.j_mmc_incomplete.calculate = function(self, context)
+            -- Check if hand is less than 3 cards, then apply chips
+            if SMODS.end_calculate_context(context) then
+                if #context.full_hand <= 3 then
+                    return {
+                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
+                        chip_mod = self.ability.extra.chips
+                    }
+                end
+            end
+        end
+    end
+
+    if config.statisticJoker then
+        SMODS.Jokers.j_mmc_statistic.calculate = function(self, context)
+            if context.after then
+                sendDebugMessage("After")
+                -- Reset hand count
+                self.ability.extra.hand_equal_count = {}
+
+                -- Count occurance of all hands
+                for _, v in ipairs(G.handlist) do
+                    if G.GAME.hands[v].played > 0 then
+                        if self.ability.extra.hand_equal_count[G.GAME.hands[v].played] == nil then
+                            self.ability.extra.hand_equal_count[G.GAME.hands[v].played] = 1
+                        else
+                            self.ability.extra.hand_equal_count[G.GAME.hands[v].played] =
+                                self.ability.extra.hand_equal_count[G.GAME.hands[v].played] + 1
+                        end
+                    end
+                end
+
+                -- If any count is higher than hand_req, apply mult
+                for _, v in pairs(self.ability.extra.hand_equal_count) do
+                    if v >= self.ability.extra.hand_req then
+                        self.ability.extra.should_trigger = true
+                    end
+                end
+            end
+
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.should_trigger then
+                    self.ability.extra.should_trigger = false
+                    return {
+                        message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.x_mult } },
+                        Xmult_mod = self.ability.extra.x_mult,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
+
+    if config.boatingLicenseJoker then
+        SMODS.Jokers.j_mmc_boating_license.calculate = function(self, context)
+            if context.individual and context.cardarea == G.play then
+                if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect == "Stone Card" then
+                    return {
+                        message = localize { type = 'variable', key = 'a_chips', vars = { context.other_card.ability.chips } },
+                        chips = context.other_card.ability.chips,
+                        card = self
+                    }
+                elseif context.other_card.ability.effect == "Mult Card" then
+                    return {
+                        message = localize { type = 'variable', key = 'a_mult', vars = { context.other_card.ability.mult } },
+                        mult = context.other_card.ability.mult,
+                        card = self
+                    }
+                elseif context.other_card.ability.effect == "Glass Card" then
+                    return {
+                        message = localize { type = 'variable', key = 'x_mult', vars = { context.other_card.ability.x_mult } },
+                        x_mult = context.other_card.ability.x_mult,
+                        card = self
+                    }
+                elseif context.other_card.ability.effect == "Lucky Card" then
+                    if pseudorandom('lucky_money') < G.GAME.probabilities.normal / 15 then
+                        ease_dollars(context.other_card.ability.p_dollars)
+                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                            {
+                                message = localize('$') .. context.other_card.ability.p_dollars,
+                                dollars = context.other_card.ability.p_dollars,
+                                colour = G.C.MONEY,
+                                delay = 0.45
+                            })
+                    end
+                    if pseudorandom('lucky_mult') < G.GAME.probabilities.normal / 5 then
+                        return {
+                            message = localize { type = 'variable', key = 'a_mult', vars = { context.other_card.ability.mult } },
+                            mult = context.other_card.ability.mult,
+                            card = self
+                        }
+                    end
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -1619,6 +1776,12 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC Shy Joker' then
             loc_vars = { self.ability.extra.x_mult, self.ability.extra.x_mult_add }
         elseif self.ability.name == 'MMC The Gambler' then
+            loc_vars = {}
+        elseif self.ability.name == 'MMC Incomplete Joker' then
+            loc_vars = { self.ability.extra.chips }
+        elseif self.ability.name == 'MMC Statistic Joker' then
+            loc_vars = { self.ability.extra.x_mult, self.ability.extra.hand_req }
+        elseif self.ability.name == 'MMC Boating License' then
             loc_vars = {}
         else
             customJoker = false
