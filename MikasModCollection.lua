@@ -573,31 +573,6 @@ local locs = {
             "random {C:attention}enhancement{}, {C:attention}seal",
             "and {C:attention}edition"
         }
-    },
-    bankerJoker = {
-        name = "The Banker",
-        text = {
-            "Earn {C:money}$#1#{} per",
-            "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
-            "at end of round"
-        }
-    },
-    riggedJoker = {
-        name = "Rigged Joker",
-        text = {
-            "One {C:attention}Lucky{} card",
-            "is {C:attention}guaranteed{} to",
-            "trigger per hand"
-        }
-    },
-    commanderJoker = {
-        name = "The Commander",
-        text = {
-            "If {C:attention}first hand{} of round",
-            "has only {C:attention}1{} card, give",
-            "it a random {C:attention}enhancement{}, {C:attention}seal",
-            "and {C:attention}edition"
-        }
     }
 }
 
