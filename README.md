@@ -87,6 +87,10 @@ Gain X0.01 Mult for every card played, starting at X1 Mult.
 If at least 4 poker hands have been played the same amount of times, gives X4 Mult.\
 _Does not count unplayed poker hands_
 
+### What Are The Odds
+If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.
+_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_
+
 ## Rare
 ### Batman
 Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 for every Joker with "Joker" in the name.
@@ -121,10 +125,6 @@ Gains +X4 Mult when a blind is finished with the **_exact_** chip requirement.
 Gives X4 mult if the hand contains a straight and you have both the **_Odd Todd_** and **_Even Steven_** jokers. Also gives 1 extra joker slot.
 
 ## Legendary
-### What Are The Odds
-If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.
-_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_
-
 Nope!
 
 # Installation
