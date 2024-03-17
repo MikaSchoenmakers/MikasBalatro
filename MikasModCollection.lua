@@ -41,7 +41,10 @@ local config = {
     gamblerJoker = true,
     incompleteJoker = true,
     statisticJoker = true,
-    boatingLicenseJoker = true
+    boatingLicenseJoker = true,
+    bankerJoker = true,
+    riggedJoker = true,
+    commanderJoker = true
 }
 
 -- Helper functions
@@ -107,6 +110,19 @@ local enhancements = {
     G.P_CENTERS.m_stone,
     G.P_CENTERS.m_gold,
     G.P_CENTERS.m_lucky
+}
+
+local card_editions = {
+    { foil = true },
+    { holo = true },
+    { polychrome = true }
+}
+
+local seals = {
+    "Gold",
+    "Red",
+    "Blue",
+    "Purple"
 }
 
 local function get_random_in_table(table)
@@ -374,7 +390,7 @@ local locs = {
         text = {
             "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
             "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
-            "{C:attention}7 cards{} are played,",
+            "{C:attention}7 cards{} are scored,",
             "respectively"
         }
     },
@@ -455,7 +471,7 @@ local locs = {
         text = {
             "If a blind is finished",
             "with a {C:attention}High Card{}, randomly",
-            "{C:attention}enhance{} the played card"
+            "{C:attention}enhance{} scored cards"
         }
     },
     planetaryAlignmentJoker = {
@@ -489,8 +505,8 @@ local locs = {
         name = "The Printer",
         text = {
             "If hand scores more than",
-            "the blind's Chips, {C:attention}duplicate{}",
-            "your hand and add the duplicated",
+            "blind's Chips, {C:attention}duplicate{}",
+            "your hand and add duplicated",
             "cards to your hand"
         }
     },
@@ -499,14 +515,14 @@ local locs = {
         text = {
             "{X:mult,C:white}X#1#{} Mult,",
             "gains {X:mult,C:white}X#2#{} Mult",
-            "per {C:attention}card{} played",
+            "per {C:attention}card{} scored",
         }
     },
     gamblerJoker = {
         name = "The Gambler",
         text = {
             "Retrigger all",
-            "played {C:attention}Lucky{} cards"
+            "scored {C:attention}Lucky{} cards"
         }
     },
     incompleteJoker = {
@@ -520,16 +536,42 @@ local locs = {
     statisticJoker = {
         name = "Statistic Joker",
         text = {
-            "If {C:attention}#2#{} hands have been played",
-            "the same amount of times,",
-            "give {X:mult,C:white}X#1#{} Mult"
+            "If at least {C:attention}#2#{} poker",
+            "hands have been played the same",
+            "amount of times, give {X:mult,C:white}X#1#{} Mult"
         }
     },
     boatingLicenseJoker = {
         name = "Boating License",
         text = {
-            "{C:attention}Copies{} the effects",
-            "of all played {C:attention}Enhanced{} cards"
+            "{C:attention}Copies{} effects of all",
+            "scored {C:attention}Enhanced{} cards"
+        }
+    },
+    bankerJoker = {
+        name = "The Banker",
+        text = {
+            "Earn {C:money}$#1#{} for every",
+            "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
+            "at end of round"
+        }
+    },
+    riggedJoker = {
+        name = "Rigged Joker",
+        text = {
+            "Once per hand, add {C:attention}+1{} to all",
+            "listed {C:green,E:1,S:1.1}probabilities{} whenever a",
+            "{C:attention}Lucky{} card does not trigger.",
+            "Resets every round"
+        }
+    },
+    commanderJoker = {
+        name = "The Commander",
+        text = {
+            "If {C:attention}first hand{} of round",
+            "has only {C:attention}1{} card, give it a",
+            "random {C:attention}enhancement{}, {C:attention}seal",
+            "and {C:attention}edition"
         }
     }
 }
@@ -733,7 +775,7 @@ local jokers = {
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
-        eternal_compat = true
+        eternal_compat = false
     },
     alphabetJoker = {
         ability_name = "MMC Alphabet Joker",
@@ -760,7 +802,7 @@ local jokers = {
     finishingBlowJoker = {
         ability_name = "MMC Finishing Blow",
         slug = "mmc_finishing_blow",
-        ability = { extra = { high_card = false, card_ref = 0 } },
+        ability = { extra = { high_card = false, card_refs = {} } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -866,6 +908,39 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    bankerJoker = {
+        ability_name = "MMC The Banker",
+        slug = "mmc_banker",
+        ability = { extra = { dollars = 2 } },
+        rarity = 1,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    riggedJoker = {
+        ability_name = "MMC Rigged Joker",
+        slug = "mmc_rigged",
+        ability = { extra = { luck_increase = 0, has_triggered = false } },
+        rarity = 1,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    commanderJoker = {
+        ability_name = "MMC The Commander",
+        slug = "mmc_commander",
+        ability = {},
+        rarity = 3,
+        cost = 9,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -879,25 +954,26 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_hand_down = "-1 Hand Size!"
     G.localization.misc.dictionary.k_mmc_tick = "Tick..."
     G.localization.misc.dictionary.k_mmc_planet = "Planet!"
+    G.localization.misc.dictionary.k_mmc_luck = "+1 Luck!"
 
     init_localization()
 
     -- Initialize Decks
-    for key, value in pairs(decks) do
-        if config[key] then
-            local newDeck = SMODS.Deck:new(value.name, key, value.config, value.sprite, locs[key])
+    for k, v in pairs(decks) do
+        if config[k] then
+            local newDeck = SMODS.Deck:new(v.name, k, v.config, v.sprite, locs[k])
             newDeck:register()
         end
     end
 
     -- Initialize Jokers
-    for key, value in pairs(jokers) do
-        if config[key] then
-            local joker = SMODS.Joker:new(value.ability_name, value.slug, value.ability, { x = 0, y = 0 }, locs[key],
-                value.rarity, value.cost, value.unlocked, value.discovered, value.blueprint_compat, value.eternal_compat)
+    for k, v in pairs(jokers) do
+        if config[k] then
+            local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, { x = 0, y = 0 }, locs[k],
+                v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
             joker:register()
-            local sprite = SMODS.Sprite:new("j_" .. value.slug, SMODS.findModByID("MikasMods").path,
-                "j_" .. value.slug .. ".png", 71, 95, "asset_atli")
+            local sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
+                "j_" .. v.slug .. ".png", 71, 95, "asset_atli")
             sprite:register()
         end
     end
@@ -1040,15 +1116,17 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.x_mult = self.ability.extra.x_mult + self.ability.extra.x_mult_add
 
                 -- Apply xmult
-                return {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.x_mult_old }
-                    },
-                    Xmult_mod = self.ability.extra.x_mult_old,
-                    card = self
-                }
+                if self.ability.extra.x_mult_old > 1 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.x_mult_old }
+                        },
+                        Xmult_mod = self.ability.extra.x_mult_old,
+                        card = self
+                    }
+                end
             end
 
             -- Reset mult
@@ -1246,28 +1324,28 @@ function SMODS.INIT.MikasModCollection()
     if config.blackjackJoker then
         SMODS.Jokers.j_mmc_blackjack.calculate = function(self, context)
             -- For full hand
-            if context.before and context.full_hand then
+            if context.before then
                 -- For every played card
                 for _, v in ipairs(context.full_hand) do
                     local id = v:get_id()
                     if id <= 10 then -- Numbered cards
-                        for key, value in ipairs(self.ability.extra.rank_tally) do
-                            self.ability.extra.rank_tally[key] = value + id
+                        for k, v in ipairs(self.ability.extra.rank_tally) do
+                            self.ability.extra.rank_tally[k] = v + id
                         end
                     elseif id < 14 then -- Face cards
-                        for key, value in ipairs(self.ability.extra.rank_tally) do
-                            self.ability.extra.rank_tally[key] = value + 10
+                        for k, v in ipairs(self.ability.extra.rank_tally) do
+                            self.ability.extra.rank_tally[k] = v + 10
                         end
                     else -- Aces, need to be handled differently because they can either have a value of 1 or 11
-                        for key, value in ipairs(self.ability.extra.rank_tally) do
+                        for k, v in ipairs(self.ability.extra.rank_tally) do
                             -- If someone ever plays 32 aces in one hand, I'm doomed
-                            self.ability.extra.rank_tally[key] = value + 11
-                            table.insert(self.ability.extra.updated_rank_tally, value + 1)
+                            self.ability.extra.rank_tally[k] = v + 11
+                            table.insert(self.ability.extra.updated_rank_tally, v + 1)
                         end
 
                         -- Append updated_rank_tally to rank_tally
-                        for _, value in ipairs(self.ability.extra.updated_rank_tally) do
-                            table.insert(self.ability.extra.rank_tally, value)
+                        for _, v in ipairs(self.ability.extra.updated_rank_tally) do
+                            table.insert(self.ability.extra.rank_tally, v)
                         end
 
                         -- Reset rank_tally
@@ -1279,8 +1357,8 @@ function SMODS.INIT.MikasModCollection()
             -- When hand is played
             if SMODS.end_calculate_context(context) then
                 -- For every rank_tally, check if we got 21
-                for _, value in ipairs(self.ability.extra.rank_tally) do
-                    if value == 21 then
+                for _, v in ipairs(self.ability.extra.rank_tally) do
+                    if v == 21 then
                         -- Apply mult and reset rank_tally
                         self.ability.extra.rank_tally = { 0 }
                         return {
@@ -1383,7 +1461,7 @@ function SMODS.INIT.MikasModCollection()
     if config.alphabetJoker then
         SMODS.Jokers.j_mmc_alphabet.calculate = function(self, context)
             -- Check if Joker name contains letter and apply chips
-            if context.other_joker and context.other_joker ~= self then
+            if context.other_joker and context.other_joker ~= self and context.other_joker.ability.set == 'Joker' then
                 -- FOR OTHER MODS:
                 -- If your mod uses ability names with a prefix and you want it to be compatible with this Joker,
                 -- Send me a message on Discord and I will add your prefix here so that it will work correctly!
@@ -1452,9 +1530,11 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_finishing_blow.calculate = function(self, context)
             -- Check for high card and set card reference
             if context.cardarea == G.play and not context.repetition then
-                if #context.scoring_hand == 1 then
-                    self.ability.extra.high_card = true
-                    self.ability.extra.card_ref = context.other_card
+                if context.scoring_name == 'High Card' then
+                    if context.other_card.ability.effect == 'Base' then
+                        self.ability.extra.high_card = true
+                        table.insert(self.ability.extra.card_refs, context.other_card)
+                    end
                 else
                     self.ability.extra.high_card = false
                 end
@@ -1463,10 +1543,17 @@ function SMODS.INIT.MikasModCollection()
             -- Give random enhancement if last hand was high card
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.high_card then
-                    self.ability.extra.card_ref:set_ability(get_random_in_table(enhancements), nil, true)
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_upgrade') })
+                    for _, v in ipairs(self.ability.extra.card_refs) do
+                        v:set_ability(get_random_in_table(enhancements), nil, true)
+                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                            {
+                                message = localize('k_mmc_upgrade'),
+                                delay = 0.45
+                            })
+                    end
                 end
+                -- Reset card_refs
+                self.ability.extra.card_refs = {}
             end
         end
     end
@@ -1483,8 +1570,10 @@ function SMODS.INIT.MikasModCollection()
     if config.historicalJoker then
         SMODS.Jokers.j_mmc_historical.calculate = function(self, context)
             -- Save previous cards
-            if context.cardarea == G.play and not context.repetition then
-                table.insert(self.ability.extra.current_cards, context.other_card.base.id)
+            if context.before then
+                for _, v in ipairs(context.full_hand) do
+                    table.insert(self.ability.extra.current_cards, v.base.id)
+                end
             end
 
             -- Calculate chip score
@@ -1533,9 +1622,11 @@ function SMODS.INIT.MikasModCollection()
 
     if config.printerJoker then
         SMODS.Jokers.j_mmc_printer.calculate = function(self, context)
-            -- Save previous cards
-            if context.cardarea == G.play and not context.repetition then
-                table.insert(self.ability.extra.hand, context.other_card)
+            -- Save cards
+            if context.before then
+                for _, v in ipairs(context.full_hand) do
+                    table.insert(self.ability.extra.hand, v)
+                end
             end
 
             -- Calculate chip score and duplicate cards
@@ -1630,8 +1721,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.statisticJoker then
         SMODS.Jokers.j_mmc_statistic.calculate = function(self, context)
-            if context.after and not context.repition then
-                sendDebugMessage("After")
+            if context.after and context.cardarea == G.jokers then
                 -- Reset hand count
                 self.ability.extra.hand_equal_count = {}
 
@@ -1711,6 +1801,109 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.bankerJoker then
+        SMODS.Jokers.j_mmc_banker.calculate = function(self, context)
+            -- Banker
+            if context.end_of_round and not context.individual and not context.repetition then
+                local gold_tally = 0
+                -- Count all Gold Cards and Gold Seals
+                for _, v in pairs(G.playing_cards) do
+                    if v.ability.name == 'Gold Card' then
+                        gold_tally = gold_tally + 1
+                    end
+                    if v.seal == 'Gold' then
+                        gold_tally = gold_tally + 1
+                    end
+                end
+
+                -- Give money and reset
+                if gold_tally >= 1 then
+                    ease_dollars(gold_tally * self.ability.extra.dollars)
+                    return {
+                        message = localize('$') .. gold_tally * self.ability.extra.dollars,
+                        dollars = gold_tally * self.ability.extra.dollars,
+                        colour = G.C.MONEY
+                    }
+                end
+            end
+        end
+    end
+
+    if config.riggedJoker then
+        SMODS.Jokers.j_mmc_rigged.calculate = function(self, context)
+            -- Check if lucky card does not trigger
+            if context.individual and context.cardarea == G.play and context.other_card.ability.effect == "Lucky Card" then
+                if not context.other_card.lucky_trigger and not self.ability.extra.has_triggered then
+                    self.ability.extra.has_triggered = true
+                end
+            end
+
+            -- Increase probabilities and reset has_triggered
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.has_triggered then
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_luck'), colour = G.C.GREEN })
+                    self.ability.extra.luck_increase = self.ability.extra.luck_increase + 1
+                    for k, v in pairs(G.GAME.probabilities) do
+                        G.GAME.probabilities[k] = v + 1
+                    end
+                end
+                self.ability.extra.has_triggered = false
+            end
+
+            -- Reset probabilities
+            if context.end_of_round and not context.individual and not context.repetition then
+                if self.ability.extra.luck_increase > 0 then
+                    for k, v in pairs(G.GAME.probabilities) do
+                        G.GAME.probabilities[k] = v - self.ability.extra.luck_increase
+                    end
+                    self.ability.extra.luck_increase = 0
+                    -- Reset message
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_mmc_reset') })
+                end
+            end
+        end
+    end
+
+    if config.commanderJoker then
+        SMODS.Jokers.j_mmc_commander.calculate = function(self, context)
+            -- If first hand is single card, upgrade
+            if G.GAME.current_round.hands_played == 0 then
+                if context.before then
+                    if #context.full_hand == 1 then
+                        local _card = context.full_hand[1]
+
+                        -- Animate card
+                        G.E_MANAGER:add_event(Event({
+                            delay = 0.5,
+                            func = function()
+                                _card:juice_up(0.3, 0.5)
+                                -- Add seal and edition
+                                if _card.ability.seal == nil then
+                                    _card:set_seal(get_random_in_table(seals), nil, true)
+                                end
+                                if _card.edition == nil then
+                                    _card:set_edition(get_random_in_table(card_editions), nil, true)
+                                end
+                                return true
+                            end
+                        }))
+
+                        -- Add enhancement, outside of animate because this has a delay for some reason
+                        if _card.ability.effect == 'Base' then
+                            _card:set_ability(get_random_in_table(enhancements), nil, true)
+                        end
+
+                        -- Return message
+                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                            { message = localize('k_mmc_upgrade') })
+                    end
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -1783,6 +1976,12 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.x_mult, self.ability.extra.hand_req }
         elseif self.ability.name == 'MMC Boating License' then
             loc_vars = {}
+        elseif self.ability.name == 'MMC The Banker' then
+            loc_vars = { self.ability.extra.dollars }
+        elseif self.ability.name == 'MMC Rigged Joker' then
+            loc_vars = {}
+        elseif self.ability.name == 'MMC The Commander' then
+            loc_vars = {}
         else
             customJoker = false
         end
@@ -1827,7 +2026,7 @@ end
 
 -- Handle card addition/removing
 local add_to_deckref = Card.add_to_deck
-function Card.add_to_deck(self, from_debuff)
+function Card:add_to_deck(from_debuff)
     if not self.added_to_deck then
         -- Straight Nate
         if self.ability.name == 'MMC Straight Nate' then
@@ -1846,7 +2045,7 @@ function Card.add_to_deck(self, from_debuff)
 end
 
 local remove_from_deckref = Card.remove_from_deck
-function Card.remove_from_deck(self, from_debuff)
+function Card:remove_from_deck(from_debuff)
     if self.added_to_deck then
         -- Straight Nate
         if self.ability.name == 'MMC Straight Nate' then
@@ -1860,6 +2059,25 @@ function Card.remove_from_deck(self, from_debuff)
             G.jokers.config.card_limit = G.jokers.config.card_limit - 1
             for_hire_counter = for_hire_counter - 1
         end
+
+        -- Fisherman
+        if self.ability.name == 'MMC The Fisherman' then
+            -- Reset hand size
+            if self.ability.extra.hand_size ~= 0 then
+                G.hand:change_size(-self.ability.extra.hand_size)
+                self.ability.extra.hand_size = 0
+            end
+        end
+        -- Rigged Joker
+        if self.ability.name == 'MMC Rigged Joker' then
+            -- Reset probabilities
+            if self.ability.extra.luck_increase > 0 then
+                for k, v in pairs(G.GAME.probabilities) do
+                    G.GAME.probabilities[k] = v - self.ability.extra.luck_increase
+                end
+                self.ability.extra.luck_increase = 0
+            end
+        end
     end
     remove_from_deckref(self, from_debuff)
 end
@@ -1869,7 +2087,7 @@ local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
     -- Alphabet Joker
-    if self.ability.name == 'MMC Alphabet Joker' then
+    if self.ability.name == 'MMC Alphabet Joker' and not self.added_to_deck then
         self.ability.extra.letter = get_random_letter()
     end
 
@@ -1888,19 +2106,20 @@ function Card.update(self, dt)
         if self.ability.name == 'MMC Seal Collector' then
             self.ability.extra.chips = 25
             -- Count all seal cards
-            for _, value in pairs(G.playing_cards) do
-                if value.seal ~= nil then
+            for _, v in pairs(G.playing_cards) do
+                if v.seal ~= nil then
                     -- Add chips to total
                     self.ability.extra.chips = self.ability.extra.chips + self.ability.extra.chips_add
                 end
             end
         end
+
         -- Batman
         if self.ability.name == 'MMC Batman' then
             self.ability.extra.mult_add = 1
             -- Count all jokers with 'Joker' in the name
-            for _, value in pairs(G.jokers.cards) do
-                if string.find(value.ability.name, 'Joker') then
+            for _, v in pairs(G.jokers.cards) do
+                if string.find(v.ability.name, 'Joker') then
                     -- Increase mult gain
                     self.ability.extra.mult_add = self.ability.extra.mult_add + 1
                 end
