@@ -101,7 +101,8 @@ Retrigger all played **_Lucky_** cards.
 Give +100 Chips if played hand contains 3 or fewer cards.
 
 ### Statistic Joker
-If 4 hands have been played the same amount of times, gives X4 Mult.
+If 4 hands have been played the same amount of times, gives X4 Mult.\
+_Does not count unplayed hands_
 
 ### Boating License
 Copies the effect of all played **_Enhanced_** cards.

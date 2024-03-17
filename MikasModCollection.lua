@@ -1630,7 +1630,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.statisticJoker then
         SMODS.Jokers.j_mmc_statistic.calculate = function(self, context)
-            if context.after then
+            if context.after and not context.repition then
                 sendDebugMessage("After")
                 -- Reset hand count
                 self.ability.extra.hand_equal_count = {}
@@ -1827,7 +1827,7 @@ end
 
 -- Handle card addition/removing
 local add_to_deckref = Card.add_to_deck
-function Card:add_to_deck(from_debuff)
+function Card.add_to_deck(self, from_debuff)
     if not self.added_to_deck then
         -- Straight Nate
         if self.ability.name == 'MMC Straight Nate' then
@@ -1846,7 +1846,7 @@ function Card:add_to_deck(from_debuff)
 end
 
 local remove_from_deckref = Card.remove_from_deck
-function Card:remove_from_deck(from_debuff)
+function Card.remove_from_deck(self, from_debuff)
     if self.added_to_deck then
         -- Straight Nate
         if self.ability.name == 'MMC Straight Nate' then
