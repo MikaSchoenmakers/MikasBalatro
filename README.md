@@ -121,6 +121,10 @@ Gains +X4 Mult when a blind is finished with the **_exact_** chip requirement.
 Gives X4 mult if the hand contains a straight and you have both the **_Odd Todd_** and **_Even Steven_** jokers. Also gives 1 extra joker slot.
 
 ## Legendary
+### What Are The Odds
+If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.
+_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_
+
 Nope!
 
 # Installation

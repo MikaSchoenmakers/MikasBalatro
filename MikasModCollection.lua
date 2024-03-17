@@ -15,6 +15,7 @@ local config = {
     primeDeck = true, -- Do not enable without primeJoker
     midasDeck = true,
     jokersForHireDeck = true,
+    perfectPrecisionDeck = true, -- Do not enable without sniperJoker
     -- Jokers
     primeJoker = true,
     straightNateJoker = true,
@@ -44,7 +45,8 @@ local config = {
     boatingLicenseJoker = true,
     bankerJoker = true,
     riggedJoker = true,
-    commanderJoker = true
+    commanderJoker = true,
+    whatAreTheOddsJoker = true
 }
 
 -- Helper functions
@@ -142,142 +144,9 @@ local function tables_copy(t)
     return t2
 end
 
--- Local variables
-local for_hire_counter = 0
-
--- Initialize deck effect
-local Backapply_to_runRef = Back.apply_to_run
-function Back.apply_to_run(arg_56_0)
-    Backapply_to_runRef(arg_56_0)
-
-    -- Even Steven Deck
-    if arg_56_0.effect.config.only_evens then
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                -- Loop over all cards
-                for i = #G.playing_cards, 1, -1 do
-                    -- Remove odd cards
-                    if not is_even(G.playing_cards[i]) then
-                        G.playing_cards[i]:start_dissolve(nil, true)
-                    end
-                end
-
-                -- Add Even Steven Joker
-                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_even_steven', nil)
-                card:add_to_deck()
-                G.jokers:emplace(card)
-                return true
-            end
-        }))
-    end
-
-    -- Odd Todd Deck
-    if arg_56_0.effect.config.only_odds then
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                -- Loop over all cards
-                for i = #G.playing_cards, 1, -1 do
-                    -- Remove even cards
-                    if not is_odd(G.playing_cards[i]) then
-                        G.playing_cards[i]:start_dissolve(nil, true)
-                    end
-                end
-
-                -- Add Odd Todd Joker
-                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_odd_todd', nil)
-                card:add_to_deck()
-                G.jokers:emplace(card)
-                return true
-            end
-        }))
-    end
-
-    -- Fibonacci Deck
-    if arg_56_0.effect.config.only_fibo then
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                -- Loop over all cards
-                for i = #G.playing_cards, 1, -1 do
-                    -- Remove non fibonacci cards
-                    if not is_fibo(G.playing_cards[i]) then
-                        G.playing_cards[i]:start_dissolve(nil, true)
-                    end
-                end
-
-                -- Add Fibonacci Joker
-                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_fibonacci', nil)
-                card:add_to_deck()
-                G.jokers:emplace(card)
-                return true
-            end
-        }))
-    end
-
-    -- Prime Deck
-    if arg_56_0.effect.config.only_prime then
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                -- Loop over all cards
-                for i = #G.playing_cards, 1, -1 do
-                    -- Remove non prime cards
-                    if not is_prime(G.playing_cards[i]) then
-                        G.playing_cards[i]:start_dissolve(nil, true)
-                    end
-                end
-
-                -- Add Prime Joker
-                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_prime', nil)
-                card:add_to_deck()
-                G.jokers:emplace(card)
-                return true
-            end
-        }))
-    end
-
-    -- Midas Deck
-    if arg_56_0.effect.config.gold then
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                -- Loop over all cards
-                for i = #G.playing_cards, 1, -1 do
-                    if not is_face(G.playing_cards[i]) then
-                        -- Remove non face cards
-                        G.playing_cards[i]:start_dissolve(nil, true)
-                    else
-                        -- Set to gold
-                        G.playing_cards[i]:set_ability(G.P_CENTERS.m_gold)
-                    end
-                end
-
-                -- Add Midas Mask Joker
-                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_midas_mask', nil)
-                card:add_to_deck()
-                G.jokers:emplace(card)
-                return true
-            end
-        }))
-    end
-
-    -- Jokers For Hire Deck
-    if arg_56_0.effect.config.for_hire then
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                -- Set joker slots to 1
-                G.jokers.config.card_limit = 1
-
-                -- Add effect to starting params
-                G.GAME.starting_params.mmc_for_hire = true
-
-                -- Reset counter
-                for_hire_counter = 0
-                return true
-            end
-        }))
-    end
-end
-
 -- Create Localization
 local locs = {
+    -- Decks
     evenStevenDeck = {
         name = "Even Steven's Deck",
         text = {
@@ -327,6 +196,17 @@ local locs = {
             "increase {C:red}exponentially"
         }
     },
+    perfectPrecisionDeck = {
+        name = "Perfect Precision Deck",
+        text = {
+            "+1 {C:blue}hands{}, {C:red}discards{} and",
+            "{C:attention}hand size{}. Start with",
+            "a {C:dark_edition}negative {C:attention}The Sniper{}",
+            "Joker. Ante scales {C:attention}X1.5{}",
+            "as fast"
+        }
+    },
+    -- Jokers
     primeJoker = {
         name = "Prime Joker",
         text = {
@@ -573,6 +453,14 @@ local locs = {
             "random {C:attention}enhancement{}, {C:attention}seal",
             "and {C:attention}edition"
         }
+    },
+    whatAreTheOddsJoker = {
+        name = "What Are The Odds",
+        text = {
+            "If {C:attention}#1# Lucky cards{} trigger",
+            "in one hand, create a",
+            "random {C:dark_edition}negative{} Joker"
+        }
     }
 }
 
@@ -580,33 +468,38 @@ local locs = {
 local decks = {
     evenStevenDeck = {
         name = "Even Steven's Deck",
-        config = { only_evens = true },
+        config = { mmc_only_evens = true },
         sprite = { x = 5, y = 2 }
     },
     oddToddDeck = {
         name = "Odd Todd's Deck",
-        config = { only_odds = true },
+        config = { mmc_only_odds = true },
         sprite = { x = 5, y = 2 }
     },
     fibonacciDeck = {
         name = "Fibonacci Deck",
-        config = { only_fibo = true },
+        config = { mmc_only_fibo = true },
         sprite = { x = 5, y = 2 }
     },
     primeDeck = {
         name = "Prime Deck",
-        config = { only_prime = true },
+        config = { mmc_only_prime = true },
         sprite = { x = 5, y = 2 }
     },
     midasDeck = {
         name = "Midas's Deck",
-        config = { gold = true },
+        config = { mmc_gold = true },
         sprite = { x = 6, y = 0 }
     },
     jokersForHireDeck = {
         name = "Jokers for Hire",
-        config = { for_hire = true },
+        config = { mmc_for_hire = true },
         sprite = { x = 6, y = 0 }
+    },
+    perfectPrecisionDeck = {
+        name = "Perfect Precision",
+        config = { mmc_precision = true, ante_scaling = 1.5, discards = 1, hands = 1, hand_size = 1 },
+        sprite = { x = 5, y = 2 }
     }
 }
 
@@ -939,10 +832,169 @@ local jokers = {
         cost = 9,
         unlocked = true,
         discovered = true,
-        blueprint_compat = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    whatAreTheOddsJoker = {
+        ability_name = "MMC What Are The Odds",
+        slug = "mmc_what_are_the_odds",
+        ability = { extra = { lucky_req = 4, lucky_tally = 0 } },
+        rarity = 2,
+        cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
         eternal_compat = true
     }
 }
+
+-- Local variables
+local for_hire_counter = 0
+
+-- Initialize deck effect
+local Backapply_to_runRef = Back.apply_to_run
+function Back.apply_to_run(arg_56_0)
+    Backapply_to_runRef(arg_56_0)
+
+    -- Even Steven Deck
+    if arg_56_0.effect.config.mmc_only_evens then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Loop over all cards
+                for i = #G.playing_cards, 1, -1 do
+                    -- Remove odd cards
+                    if not is_even(G.playing_cards[i]) then
+                        G.playing_cards[i]:start_dissolve(nil, true)
+                    end
+                end
+
+                -- Add Even Steven Joker
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_even_steven', nil)
+                card:add_to_deck()
+                G.jokers:emplace(card)
+                return true
+            end
+        }))
+    end
+
+    -- Odd Todd Deck
+    if arg_56_0.effect.config.mmc_only_odds then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Loop over all cards
+                for i = #G.playing_cards, 1, -1 do
+                    -- Remove even cards
+                    if not is_odd(G.playing_cards[i]) then
+                        G.playing_cards[i]:start_dissolve(nil, true)
+                    end
+                end
+
+                -- Add Odd Todd Joker
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_odd_todd', nil)
+                card:add_to_deck()
+                G.jokers:emplace(card)
+                return true
+            end
+        }))
+    end
+
+    -- Fibonacci Deck
+    if arg_56_0.effect.config.mmc_only_fibo then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Loop over all cards
+                for i = #G.playing_cards, 1, -1 do
+                    -- Remove non fibonacci cards
+                    if not is_fibo(G.playing_cards[i]) then
+                        G.playing_cards[i]:start_dissolve(nil, true)
+                    end
+                end
+
+                -- Add Fibonacci Joker
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_fibonacci', nil)
+                card:add_to_deck()
+                G.jokers:emplace(card)
+                return true
+            end
+        }))
+    end
+
+    -- Prime Deck
+    if arg_56_0.effect.config.mmc_only_prime then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Loop over all cards
+                for i = #G.playing_cards, 1, -1 do
+                    -- Remove non prime cards
+                    if not is_prime(G.playing_cards[i]) then
+                        G.playing_cards[i]:start_dissolve(nil, true)
+                    end
+                end
+
+                -- Add Prime Joker
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_prime', nil)
+                card:add_to_deck()
+                G.jokers:emplace(card)
+                return true
+            end
+        }))
+    end
+
+    -- Midas Deck
+    if arg_56_0.effect.config.mmc_gold then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Loop over all cards
+                for i = #G.playing_cards, 1, -1 do
+                    if not is_face(G.playing_cards[i]) then
+                        -- Remove non face cards
+                        G.playing_cards[i]:start_dissolve(nil, true)
+                    else
+                        -- Set to gold
+                        G.playing_cards[i]:set_ability(G.P_CENTERS.m_gold)
+                    end
+                end
+
+                -- Add Midas Mask Joker
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_midas_mask', nil)
+                card:add_to_deck()
+                G.jokers:emplace(card)
+                return true
+            end
+        }))
+    end
+
+    -- Jokers For Hire Deck
+    if arg_56_0.effect.config.mmc_for_hire then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Set joker slots to 1
+                G.jokers.config.card_limit = 1
+
+                -- Add effect to starting params
+                G.GAME.starting_params.mmc_for_hire = true
+
+                -- Reset counter
+                for_hire_counter = 0
+                return true
+            end
+        }))
+    end
+
+    -- Jokers For Hire Deck
+    if arg_56_0.effect.config.mmc_precision then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                -- Add The Sniper Joker
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_sniper', nil)
+                card:set_edition({ negative = true })
+                card:add_to_deck()
+                G.jokers:emplace(card)
+                return true
+            end
+        }))
+    end
+end
 
 function SMODS.INIT.MikasModCollection()
     -- Localization
@@ -1257,15 +1309,17 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_showoff.calculate = function(self, context)
             -- Apply xmult
             if SMODS.end_calculate_context(context) then
-                return {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.x_mult }
-                    },
-                    Xmult_mod = self.ability.extra.x_mult,
-                    card = self
-                }
+                if self.ability.extra.x_mult > 1 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.x_mult }
+                        },
+                        Xmult_mod = self.ability.extra.x_mult,
+                        card = self
+                    }
+                end
             end
 
             -- Add scored chips to total
@@ -1291,15 +1345,17 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_sniper.calculate = function(self, context)
             -- Apply xmult
             if SMODS.end_calculate_context(context) then
-                return {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.x_mult }
-                    },
-                    Xmult_mod = self.ability.extra.x_mult,
-                    card = self
-                }
+                if self.ability.extra.x_mult > 1 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.x_mult }
+                        },
+                        Xmult_mod = self.ability.extra.x_mult,
+                        card = self
+                    }
+                end
             end
 
             -- Add scored chips to total
@@ -1904,6 +1960,43 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.whatAreTheOddsJoker then
+        SMODS.Jokers.j_mmc_what_are_the_odds.calculate = function(self, context)
+            -- Count lucky triggers
+            if context.individual and context.cardarea == G.play then
+                for _, v in ipairs(context.full_hand) do
+                    if v.lucky_trigger then
+                        self.ability.extra.lucky_tally = self.ability.extra.lucky_tally + 1
+                    end
+                end
+            end
+
+            -- Check for 5 lucky triggers
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.lucky_tally >= 4 then
+                    -- Create new negative Joker based on Judgement Tarot card
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
+                            card:set_edition({ negative = true })
+                            card:add_to_deck()
+                            G.jokers:emplace(card)
+                            card:start_materialize()
+                            return true
+                        end
+                    }))
+                    -- Reset mult and return message
+                    self.ability.extra.lucky_tally = 0
+                    return { message = localize('k_plus_joker'), colour = G.C.BLUE }
+                else
+                    -- Nope!
+                    self.ability.extra.lucky_tally = 0
+                    return { message = localize('k_nope_ex'), colour = G.C.SECONDARY_SET.Tarot }
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -1982,6 +2075,8 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = {}
         elseif self.ability.name == 'MMC The Commander' then
             loc_vars = {}
+        elseif self.ability.name == 'MMC What Are The Odds' then
+            loc_vars = { self.ability.extra.lucky_req }
         else
             customJoker = false
         end
