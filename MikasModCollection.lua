@@ -41,7 +41,10 @@ local config = {
     gamblerJoker = true,
     incompleteJoker = true,
     statisticJoker = true,
-    boatingLicenseJoker = true
+    boatingLicenseJoker = true,
+    bankerJoker = true,
+    riggedJoker = true,
+    commanderJoker = true
 }
 
 -- Helper functions
@@ -107,6 +110,19 @@ local enhancements = {
     G.P_CENTERS.m_stone,
     G.P_CENTERS.m_gold,
     G.P_CENTERS.m_lucky
+}
+
+local card_editions = {
+    G.P_CENTERS.e_foil,
+    G.P_CENTERS.e_holo,
+    G.P_CENTERS.e_polychrome
+}
+
+local seals = {
+    G.P_SEALS.Gold,
+    G.P_SEALS.Red,
+    G.P_SEALS.Blue,
+    G.P_SEALS.Purple
 }
 
 local function get_random_in_table(table)
@@ -528,8 +544,33 @@ local locs = {
     boatingLicenseJoker = {
         name = "Boating License",
         text = {
-            "{C:attention}Copies{} the effects",
+            "{C:attention}Copies{} effects",
             "of all played {C:attention}Enhanced{} cards"
+        }
+    },
+    bankerJoker = {
+        name = "The Banker",
+        text = {
+            "Earn {C:money}$#1#{} per",
+            "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
+            "at end of round"
+        }
+    },
+    riggedJoker = {
+        name = "Rigged Joker",
+        text = {
+            "One {C:attention}Lucky{} card",
+            "is {C:attention}guaranteed{} to",
+            "trigger per hand"
+        }
+    },
+    commanderJoker = {
+        name = "The Commander",
+        text = {
+            "If {C:attention}first hand{} of round",
+            "has only {C:attention}1{} card, give",
+            "it a random {C:attention}enhancement{}, {C:attention}seal",
+            "and {C:attention}edition"
         }
     }
 }
@@ -733,7 +774,7 @@ local jokers = {
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
-        eternal_compat = true
+        eternal_compat = false
     },
     alphabetJoker = {
         ability_name = "MMC Alphabet Joker",
@@ -760,7 +801,7 @@ local jokers = {
     finishingBlowJoker = {
         ability_name = "MMC Finishing Blow",
         slug = "mmc_finishing_blow",
-        ability = { extra = { high_card = false, card_ref = 0 } },
+        ability = { extra = { high_card = false, card_refs = {} } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -862,6 +903,39 @@ local jokers = {
         ability = {},
         rarity = 3,
         cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    bankerJoker = {
+        ability_name = "MMC The Banker",
+        slug = "mmc_banker",
+        ability = { extra = { dollars = 2 } },
+        rarity = 1,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    riggedJoker = {
+        ability_name = "MMC Rigged Joker",
+        slug = "mmc_rigged",
+        ability = {},
+        rarity = 3,
+        cost = 8,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    commanderJoker = {
+        ability_name = "MMC The Commander",
+        slug = "mmc_commander",
+        ability = {},
+        rarity = 3,
+        cost = 9,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -1383,7 +1457,7 @@ function SMODS.INIT.MikasModCollection()
     if config.alphabetJoker then
         SMODS.Jokers.j_mmc_alphabet.calculate = function(self, context)
             -- Check if Joker name contains letter and apply chips
-            if context.other_joker and context.other_joker ~= self then
+            if context.other_joker and context.other_joker ~= self and context.other_joker.ability.set == 'Joker' then
                 -- FOR OTHER MODS:
                 -- If your mod uses ability names with a prefix and you want it to be compatible with this Joker,
                 -- Send me a message on Discord and I will add your prefix here so that it will work correctly!
@@ -1452,9 +1526,11 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_finishing_blow.calculate = function(self, context)
             -- Check for high card and set card reference
             if context.cardarea == G.play and not context.repetition then
-                if #context.scoring_hand == 1 then
-                    self.ability.extra.high_card = true
-                    self.ability.extra.card_ref = context.other_card
+                if context.scoring_name == 'High Card' then
+                    if context.other_card.ability.effect == 'Base' then
+                        self.ability.extra.high_card = true
+                        table.insert(self.ability.extra.card_refs, context.other_card)
+                    end
                 else
                     self.ability.extra.high_card = false
                 end
@@ -1463,10 +1539,17 @@ function SMODS.INIT.MikasModCollection()
             -- Give random enhancement if last hand was high card
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.high_card then
-                    self.ability.extra.card_ref:set_ability(get_random_in_table(enhancements), nil, true)
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_upgrade') })
+                    for _, v in ipairs(self.ability.extra.card_refs) do
+                        v:set_ability(get_random_in_table(enhancements), nil, true)
+                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                            {
+                                message = localize('k_mmc_upgrade'),
+                                delay = 0.45
+                            })
+                    end
                 end
+                -- Reset card_refs
+                self.ability.extra.card_refs = {}
             end
         end
     end
@@ -1630,8 +1713,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.statisticJoker then
         SMODS.Jokers.j_mmc_statistic.calculate = function(self, context)
-            if context.after and not context.repition then
-                sendDebugMessage("After")
+            if context.after and context.cardarea == G.jokers then
                 -- Reset hand count
                 self.ability.extra.hand_equal_count = {}
 
@@ -1783,6 +1865,12 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.x_mult, self.ability.extra.hand_req }
         elseif self.ability.name == 'MMC Boating License' then
             loc_vars = {}
+        elseif self.ability.name == 'MMC The Banker' then
+            loc_vars = { self.ability.extra.dollars }
+        elseif self.ability.name == 'MMC Rigged Joker' then
+            loc_vars = {}
+        elseif self.ability.name == 'MMC The Commander' then
+            loc_vars = {}
         else
             customJoker = false
         end
@@ -1827,7 +1915,7 @@ end
 
 -- Handle card addition/removing
 local add_to_deckref = Card.add_to_deck
-function Card.add_to_deck(self, from_debuff)
+function Card:add_to_deck(from_debuff)
     if not self.added_to_deck then
         -- Straight Nate
         if self.ability.name == 'MMC Straight Nate' then
@@ -1846,7 +1934,7 @@ function Card.add_to_deck(self, from_debuff)
 end
 
 local remove_from_deckref = Card.remove_from_deck
-function Card.remove_from_deck(self, from_debuff)
+function Card:remove_from_deck(from_debuff)
     if self.added_to_deck then
         -- Straight Nate
         if self.ability.name == 'MMC Straight Nate' then
@@ -1869,7 +1957,7 @@ local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
     -- Alphabet Joker
-    if self.ability.name == 'MMC Alphabet Joker' then
+    if self.ability.name == 'MMC Alphabet Joker' and not self.added_to_deck then
         self.ability.extra.letter = get_random_letter()
     end
 

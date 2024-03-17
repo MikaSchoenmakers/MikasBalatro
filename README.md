@@ -77,7 +77,8 @@ _An example: If the current letter is 'o' and you have "Cool Joker" and "Joker",
 Add excess Chips from last blind to the first hand of the current round. Caps at 25% of the current blind's Chips.
 
 ### Finishing Blow
-If a blind is finished with a **_High Card_**, randomly enhance the played card.
+If a blind is finished with a **_High Card_**, randomly enhance played cards.
+_Does not work on already enhanced cards_
 
 ### Planetary Alignment
 Once every 2 rounds, Blue Seals give 2 Planet cards. One of these will be for your most played poker hand.
