@@ -42,9 +42,9 @@ local config = {
     incompleteJoker = true,
     statisticJoker = true,
     boatingLicenseJoker = true,
-    bankerJoker = true,
-    riggedJoker = true,
-    commanderJoker = true
+    bankerJoker = false,
+    riggedJoker = false,
+    commanderJoker = false
 }
 
 -- Helper functions
