@@ -1114,15 +1114,17 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.x_mult = self.ability.extra.x_mult + self.ability.extra.x_mult_add
 
                 -- Apply xmult
-                return {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.x_mult_old }
-                    },
-                    Xmult_mod = self.ability.extra.x_mult_old,
-                    card = self
-                }
+                if self.ability.extra.x_mult_old > 1 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.x_mult_old }
+                        },
+                        Xmult_mod = self.ability.extra.x_mult_old,
+                        card = self
+                    }
+                end
             end
 
             -- Reset mult
