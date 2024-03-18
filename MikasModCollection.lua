@@ -2393,9 +2393,9 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC The Fisherman' then
             loc_vars = { self.ability.extra.h_size, self.ability.extra.hand_add }
         elseif self.ability.name == 'MMC Impatient Joker' then
-            loc_vars = { self.ability.mult, self.ability.extra.increase }
+            loc_vars = { self.ability.mult, self.ability.extra.mult_mod }
         elseif self.ability.name == 'MMC Cultist' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.increase }
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_mod }
         elseif self.ability.name == 'MMC Seal Collector' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.chips_mod }
         elseif self.ability.name == 'MMC Camper' then
@@ -2408,15 +2408,15 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.Xmult,
                 self.ability.extra.action_tally }
         elseif self.ability.name == 'MMC The Show-Off' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.increase }
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_mod }
         elseif self.ability.name == 'MMC The Sniper' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.increase }
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_mod }
         elseif self.ability.name == 'MMC Blackjack Joker' then
             loc_vars = { self.ability.extra.Xmult }
         elseif self.ability.name == 'MMC Batman' then
-            loc_vars = { self.ability.extra.mult, self.ability.extra.increase }
+            loc_vars = { self.ability.extra.mult, self.ability.extra.mult_mod }
         elseif self.ability.name == 'MMC Bomb' then
-            loc_vars = { self.ability.extra.mult, self.ability.extra.increase, self.ability.extra.every }
+            loc_vars = { self.ability.extra.mult, self.ability.extra.mult_mod, self.ability.extra.every }
         elseif self.ability.name == 'MMC Alphabet Joker' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.letter }
         elseif self.ability.name == 'MMC Grudgeful Joker' then
@@ -2432,7 +2432,7 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC The Printer' then
             loc_vars = {}
         elseif self.ability.name == 'MMC Shy Joker' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.increase }
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.Xmult_mod }
         elseif self.ability.name == 'MMC The Gambler' then
             loc_vars = {}
         elseif self.ability.name == 'MMC Incomplete Joker' then
