@@ -160,6 +160,14 @@ local function increase_attributes(k, v, place)
             place.mult_dagonet = v
         end
         place.mult = v * 2
+    elseif k == 'mult_mod' and v > 0 then
+        if place.mult_mod_dagonet == nil then
+            place.mult_mod_dagonet = v
+        else
+            v = v - place.mult_mod_dagonet
+            place.mult_mod_dagonet = v
+        end
+        place.mult_mod = v * 2
     elseif k == 'chips' and v > 0 then
         if place.chips_dagonet == nil then
             place.chips_dagonet = v
@@ -184,6 +192,14 @@ local function increase_attributes(k, v, place)
             place.Xmult_dagonet = v
         end
         place.Xmult = v * 2
+    elseif k == 'Xmult_mod' and v ~= 1 then
+        if place.Xmult_mod_dagonet == nil then
+            place.Xmult_mod_dagonet = v
+        else
+            v = v - place.Xmult_mod_dagonet
+            place.Xmult_mod_dagonet = v
+        end
+        place.Xmult_mod = v * 2
     elseif k == 'x_mult' and v ~= 1 then
         if place.x_mult_dagonet == nil then
             place.x_mult_dagonet = v
@@ -836,7 +852,7 @@ local jokers = {
     impatientJoker = {
         ability_name = "MMC Impatient Joker",
         slug = "mmc_impatient",
-        ability = { mult = 0, extra = { increase = 2 } },
+        ability = { mult = 0, extra = { mult_mod = 2 } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -913,7 +929,7 @@ local jokers = {
     showoffJoker = {
         ability_name = "MMC The Show-Off",
         slug = "mmc_showoff",
-        ability = { extra = { Xmult = 1, increase = 1, total_chips = 0 } },
+        ability = { extra = { Xmult = 1, Xmult_mod = 1, total_chips = 0 } },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -924,7 +940,7 @@ local jokers = {
     sniperJoker = {
         ability_name = "MMC The Sniper",
         slug = "mmc_sniper",
-        ability = { extra = { Xmult = 1, increase = 4, total_chips = 0 } },
+        ability = { extra = { Xmult = 1, Xmult_mod = 4, total_chips = 0 } },
         rarity = 3,
         cost = 10,
         unlocked = true,
@@ -946,7 +962,7 @@ local jokers = {
     batmanJoker = {
         ability_name = "MMC Batman",
         slug = "mmc_batman",
-        ability = { extra = { mult = 1, increase = 1, total_chips = 0, base = 1 } },
+        ability = { extra = { mult = 1, mult_mod = 1, total_chips = 0, base = 1 } },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -957,7 +973,7 @@ local jokers = {
     bombJoker = {
         ability_name = "MMC Bomb",
         slug = "mmc_bomb",
-        ability = { extra = { mult = 15, increase = 15, every = 3 } },
+        ability = { extra = { mult = 15, mult_mod = 15, every = 3 } },
         rarity = 1,
         cost = 5,
         unlocked = true,
@@ -1045,7 +1061,7 @@ local jokers = {
     shyJoker = {
         ability_name = "MMC Shy Joker",
         slug = "mmc_shy",
-        ability = { extra = { Xmult = 1, increase = 0.01 } },
+        ability = { extra = { Xmult = 1, Xmult_mod = 0.01 } },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -1467,9 +1483,9 @@ function SMODS.INIT.MikasModCollection()
 
             -- Increase mult for each discarded card
             if context.discard then
-                self.ability.mult = self.ability.mult + self.ability.extra.increase
+                self.ability.mult = self.ability.mult + self.ability.extra.mult_mod
                 return {
-                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.increase } },
+                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult_mod } },
                     colour = G.C.RED,
                     card = self
                 }
@@ -1493,7 +1509,7 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 -- Increment Xmult
                 self.ability.extra.old = self.ability.extra.Xmult
-                self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.increase
+                self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_mod
 
                 -- Apply xmult
                 if self.ability.extra.old > 1 then
@@ -1658,7 +1674,7 @@ function SMODS.INIT.MikasModCollection()
             -- See if total scored chips > 2 * blind chips, then increment xmult
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.total_chips > (2 * G.GAME.blind.chips) then
-                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.increase
+                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_mod
 
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_upgrade'), colour = G.C.RED })
@@ -1694,7 +1710,7 @@ function SMODS.INIT.MikasModCollection()
             -- See if total scored chips == blind chips, then increment xmult
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.total_chips == G.GAME.blind.chips then
-                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.increase
+                    self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_mod
 
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_upgrade'), colour = G.C.RED })
@@ -1779,7 +1795,7 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
 
                 if self.ability.extra.total_chips < G.GAME.blind.chips then
-                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.increase
+                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_mod
                 end
             end
 
@@ -2051,7 +2067,7 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_shy.calculate = function(self, context)
             -- Add xmult for every played card
             if context.individual and context.cardarea == G.play then
-                self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.increase
+                self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_mod
                 card_eval_status_text(self, 'extra', nil, nil, nil,
                     {
                         message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.Xmult } },
