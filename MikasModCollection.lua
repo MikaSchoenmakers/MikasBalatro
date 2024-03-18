@@ -416,6 +416,14 @@ local function increase_attributes(k, v, place)
             place.dollar_gain_five_dagonet = v
         end
         place.dollar_gain_five = v * 2
+    elseif k == 'faces' and v > 0 then
+        if place.faces_dagonet == nil then
+            place.faces_dagonet = v
+        else
+            v = v - place.faces_dagonet
+            place.faces_dagonet = v
+        end
+        place.faces = v * 2
     elseif k == "extra" then
         if type(place.extra) == "table" then
             for k2, v2 in pairs(place.extra) do
