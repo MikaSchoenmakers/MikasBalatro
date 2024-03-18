@@ -184,6 +184,14 @@ local function increase_attributes(k, v, place)
             place.Xmult_dagonet = v
         end
         place.Xmult = v * 2
+    elseif k == 'x_mult' and v ~= 1 then
+        if place.x_mult_dagonet == nil then
+            place.x_mult_dagonet = v
+        else
+            v = v - place.x_mult_dagonet
+            place.x_mult_dagonet = v
+        end
+        place.x_mult = v * 2
     elseif k == 't_mult' and v > 0 then
         if place.t_mult_dagonet == nil then
             place.t_mult_dagonet = v
