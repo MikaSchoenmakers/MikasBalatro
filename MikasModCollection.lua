@@ -1323,8 +1323,8 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Add scored chips to total
-            if context.scored_chips then
-                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            if context.mmc_scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
             end
 
             -- See if total scored chips > 2 * blind chips, then increment xmult
@@ -1359,8 +1359,8 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Add scored chips to total
-            if context.scored_chips then
-                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            if context.mmc_scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
             end
 
             -- See if total scored chips == blind chips, then increment xmult
@@ -1447,8 +1447,8 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Add scored chips to total
-            if context.scored_chips then
-                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            if context.mmc_scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
 
                 if self.ability.extra.total_chips < G.GAME.blind.chips then
                     self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_add
@@ -1563,8 +1563,8 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Add scored chips to total
-            if context.scored_chips then
-                self.ability.extra.total_chips = self.ability.extra.total_chips + context.scored_chips
+            if context.mmc_scored_chips then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
             end
 
             if context.end_of_round and not context.individual and not context.repetition then
@@ -1633,8 +1633,8 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Calculate chip score
-            if context.scored_chips then
-                self.ability.extra.chips = context.scored_chips
+            if context.mmc_scored_chips then
+                self.ability.extra.chips = context.mmc_scored_chips
             end
 
             -- Apply chips if previous cards are the same as the current cards
@@ -1686,8 +1686,8 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Calculate chip score and duplicate cards
-            if context.scored_chips then
-                if context.scored_chips >= G.GAME.blind.chips then
+            if context.mmc_scored_chips then
+                if context.mmc_scored_chips >= G.GAME.blind.chips then
                     -- Loop over hand
                     for _, v in ipairs(self.ability.extra.hand) do
                         -- Copy card
@@ -2231,7 +2231,7 @@ function G.FUNCS.evaluate_play(self, e)
 
     for i = 1, #G.jokers.cards do
         local effects = eval_card(G.jokers.cards[i],
-            { card = G.consumeables, after = true, scored_chips = hand_chips * mult })
+            { card = G.consumeables, after = true, mmc_scored_chips = hand_chips * mult })
         if effects.jokers then
             card_eval_status_text(G.jokers.cards[i], 'jokers', nil, 0.3, nil, effects.jokers)
         end
