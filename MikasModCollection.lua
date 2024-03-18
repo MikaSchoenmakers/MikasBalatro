@@ -2344,7 +2344,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.dagonetJoker then
         SMODS.Jokers.j_mmc_dagonet.calculate = function(self, context)
-            if context.before and context.cardarea == G.jokers then
+            if context.pre_discard or (context.before and context.cardarea == G.jokers) then
                 -- Loop over all jokers (excluding self)
                 for _, v in ipairs(G.jokers.cards) do
                     if v ~= self then
