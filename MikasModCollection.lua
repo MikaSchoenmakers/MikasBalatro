@@ -1858,7 +1858,7 @@ function SMODS.INIT.MikasModCollection()
                     }))
                 else
                     -- Increase mult
-                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.increase
+                    self.ability.extra.mult = self.ability.extra.mult + self.ability.extra.mult_mod
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_mmc_tick'), colour = G.C.RED })
                 end
@@ -2597,12 +2597,12 @@ function Card.update(self, dt)
 
         -- Batman
         if self.ability.name == 'MMC Batman' then
-            self.ability.extra.increase = self.ability.extra.base
+            self.ability.extra.mult_mod = self.ability.extra.base
             -- Count all jokers with 'Joker' in the name
             for _, v in pairs(G.jokers.cards) do
                 if string.find(v.ability.name, 'Joker') then
                     -- Increase mult gain
-                    self.ability.extra.increase = self.ability.extra.increase + 1
+                    self.ability.extra.mult_mod = self.ability.extra.mult_mod + 1
                 end
             end
         end
