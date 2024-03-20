@@ -34,6 +34,9 @@ Earn $2 for every Gold Seal and Gold Card in your whole deck at the end of the r
 ### Bomb
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.
 
+### Glue
+If you have both the Half Joker and the Incomplete Joker, give +2 Joker slots and X5 Mult.
+
 ### Incomplete Joker
 Give +100 Chips if played hand contains 3 or fewer cards.
 
@@ -74,11 +77,11 @@ Gives +1 hand size per discard, -1 hand size per hand played _(but hand size eff
 ### The Gambler
 Retrigger all played **_Lucky_** cards.
 
-### Historical Joker
-If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand.
-
 ### Impatient Joker
 Gives +2 mult per discarded card. Resets every round.
+
+### Seal Enthousiast
+Doubles the effect of all Seals.
 
 ### Shy Joker
 Gain X0.01 Mult for every card played, starting at X1 Mult.
@@ -108,6 +111,9 @@ Gains +X1 mult per hand played, starting at X1. Resets every round.
 ### Delayed Joker
 Gives 20 Mult, 100 Chips and X1.5 Mult on the 4th action.\
 _An action is either playing a hand or discarding_
+
+### Historical Joker
+If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand.
 
 ### The Show-Off
 Gains +X1 Mult a blind is finished with **_2x_** the chip requirement.

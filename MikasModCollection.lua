@@ -48,8 +48,8 @@ local config = {
     commanderJoker = true,
     whatAreTheOddsJoker = true,
     dagonetJoker = true,
-    glueJoker = false,
-    sealEnthousiastJoker = false
+    glueJoker = true,
+    sealEnthousiastJoker = true
 }
 
 -- Helper functions
@@ -805,8 +805,8 @@ local jokers = {
         ability_name = "MMC Historical Joker",
         slug = "mmc_historical",
         ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0 } },
-        rarity = 2,
-        cost = 7,
+        rarity = 3,
+        cost = 9,
         unlocked = true,
         discovered = true,
         blueprint_compat = false,
@@ -930,7 +930,7 @@ local jokers = {
         cost = 8,
         unlocked = true,
         discovered = true,
-        blueprint_compat = false,
+        blueprint_compat = true,
         eternal_compat = true
     },
     dagonetJoker = {
@@ -947,7 +947,7 @@ local jokers = {
     glueJoker = {
         ability_name = "MMC Glue",
         slug = "mmc_glue",
-        ability = { extra = { Xmult = 5 } },
+        ability = { extra = { Xmult = 5, half = false, incomplete = false, triggered = false } },
         rarity = 1,
         cost = 5,
         unlocked = true,
@@ -958,7 +958,7 @@ local jokers = {
     sealEnthousiastJoker = {
         ability_name = "MMC Seal Enthousiast",
         slug = "mmc_seal_enthousiast",
-        ability = {},
+        ability = { extra = 1 },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -2136,13 +2136,72 @@ function SMODS.INIT.MikasModCollection()
 
     if config.glueJoker then
         SMODS.Jokers.j_mmc_glue.calculate = function(self, context)
-            -- TODO
+            if SMODS.end_calculate_context(context) then
+                -- Add xmult if we have both Half and Incomplete Joker
+                if self.ability.extra.half and self.ability.extra.incomplete then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.Xmult }
+                        },
+                        Xmult_mod = self.ability.extra.Xmult
+                    }
+                end
+            end
         end
     end
 
     if config.sealEnthousiastJoker then
         SMODS.Jokers.j_mmc_seal_enthousiast.calculate = function(self, context)
-            -- TODO
+            -- Give $3 for each Gold Seal
+            if context.individual and context.cardarea == G.play and not context.repetition then
+                if context.other_card.seal == 'Gold' then
+                    ease_dollars(3)
+                    return {
+                        message = localize('$') .. 3,
+                        dollars = 3,
+                        colour = G.C.MONEY,
+                        card = self
+                    }
+                end
+            end
+
+            -- Repeat Red Seals
+            if context.repetition and context.cardarea == G.play then
+                if context.other_card.seal == 'Red' then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = 1,
+                        card = self
+                    }
+                end
+            end
+
+            -- Create tarot card for each Purple Seal
+            if context.discard then
+                if context.other_card.seal == 'Purple' then
+                    -- Check consumeable space
+                    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                        -- Add card
+                        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'before',
+                            delay = 0.0,
+                            func = (function()
+                                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, '8ba')
+                                card:add_to_deck()
+                                G.consumeables:emplace(card)
+                                G.GAME.consumeable_buffer = 0
+                                return true
+                            end)
+                        }))
+                        -- Show message
+                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                            { message = localize('k_plus_tarot'), colour = G.C.PURPLE })
+                    end
+                end
+            end
         end
     end
 end
@@ -2374,6 +2433,30 @@ function Card.update(self, dt)
                 end
             end
         end
+
+        -- Glue
+        if self.ability.name == 'MMC Glue' then
+            -- Reset defaults
+            if self.ability.extra.triggered then
+                self.ability.extra.half = false
+                self.ability.extra.incomplete = false
+                self.ability.extra.triggered = false
+                G.jokers.config.card_limit = G.jokers.config.card_limit - 2
+            end
+            -- Check for Half and Incomplete Joker
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'Half Joker' then
+                    self.ability.extra.half = true
+                elseif v.ability.name == 'MMC Incomplete Joker' then
+                    self.ability.extra.incomplete = true
+                end
+            end
+            -- Add 2 Joker slots
+            if self.ability.extra.half and self.ability.extra.incomplete and not self.ability.extra.triggered then
+                G.jokers.config.card_limit = G.jokers.config.card_limit + 2
+                self.ability.extra.triggered = true
+            end
+        end
     end
     card_updateref(self, dt)
 end
@@ -2398,8 +2481,9 @@ function Card.get_end_of_round_effect(self, context)
     -- Planetary Alignment
     if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
-            -- Check for Planetary Alignment Joker and consumable space
-            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % 2 == 0 and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+            -- Check for Planetary Alignment Joker and consumeable space
+            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % 2 == 0
+                and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
@@ -2423,6 +2507,28 @@ function Card.get_end_of_round_effect(self, context)
                     delay = 0.0,
                     func = (function()
                         local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, _planet, 'blusl')
+                        card:add_to_deck()
+                        G.consumeables:emplace(card)
+                        G.GAME.consumeable_buffer = 0
+                        return true
+                    end)
+                }))
+
+                -- Show message
+                card_eval_status_text(v, 'extra', nil, nil, nil,
+                    { message = localize('k_mmc_planet'), colour = G.C.SECONDARY_SET.Planet })
+            end
+
+            -- Create planet for each Blue Seal
+            if v.ability.name == 'MMC Seal Enthousiast' and
+                #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                -- Add card
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'before',
+                    delay = 0.0,
+                    func = (function()
+                        local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
                         card:add_to_deck()
                         G.consumeables:emplace(card)
                         G.GAME.consumeable_buffer = 0
