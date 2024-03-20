@@ -1397,7 +1397,7 @@ function SMODS.INIT.MikasModCollection()
                         key = 'a_xmult',
                         vars = { self.ability.extra.Xmult }
                     },
-                    Xmult = self.ability.extra.Xmult,
+                    x_mult = self.ability.extra.Xmult,
                     card = self
                 }
             end
