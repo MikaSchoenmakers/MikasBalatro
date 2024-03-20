@@ -147,297 +147,65 @@ local function tables_copy(t)
     return t2
 end
 
+-- Save attributes
+local attributes = {
+    mult = { key = 'mult_dagonet', min = 0 },
+    mult_mod = { key = 'mult_mod_dagonet', min = 0 },
+    chips = { key = 'chips_dagonet', min = 0 },
+    chip_mod = { key = 'chip_mod_dagonet', min = 0 },
+    Xmult = { key = 'Xmult_dagonet', min = 1 },
+    Xmult_mod = { key = 'Xmult_mod_dagonet', min = 0 },
+    x_mult = { key = 'x_mult_dagonet', min = 1 },
+    t_mult = { key = 't_mult_dagonet', min = 0 },
+    t_chips = { key = 't_chips_dagonet', min = 0 },
+    s_mult = { key = 's_mult_dagonet', min = 0 },
+    dollars = { key = 'dollars_dagonet', min = 0 },
+    hand_add = { key = 'hand_add_dagonet', min = 0 },
+    discard_sub = { key = 'discard_sub_dagonet', min = 0 },
+    odds = { key = 'odds_dagonet', min = 0 },
+    faces = { key = 'faces_dagonet', min = 0 },
+    max = { key = 'max_dagonet', min = 0 },
+    min = { key = 'min_dagonet', min = 0 },
+    every = { key = 'every_dagonet', min = 0 },
+    increase = { key = 'increase_dagonet', min = 0 },
+    h_size = { key = 'h_size_dagonet', min = 0 },
+    d_size = { key = 'd_size_dagonet', min = 0 },
+    h_mod = { key = 'h_mod_dagonet', min = 0 },
+    h_plays = { key = 'h_plays_dagonet', min = 0 },
+    discards = { key = 'discards_dagonet', min = 0 },
+    old = { key = 'old_dagonet', min = 0 },
+    req = { key = 'req_dagonet', min = 0 },
+    percentage = { key = 'percentage_dagonet', min = 0 },
+    base = { key = 'base_dagonet', min = 0 },
+    dollar_gain_one = { key = 'dollar_gain_one_dagonet', min = 0 },
+    dollar_gain_two = { key = 'dollar_gain_two_dagonet', min = 0 },
+    dollar_gain_three = { key = 'dollar_gain_three_dagonet', min = 0 },
+    dollar_gain_four = { key = 'dollar_gain_four_dagonet', min = 0 },
+    dollar_gain_five = { key = 'dollar_gain_five_dagonet', min = 0 },
+    extra = { key = 'extra_dagonet', min = 0 },
+}
+
 -- Increase base attributes
 local function increase_attributes(k, v, place)
-    if type(v) == "string" then
+    local attr = attributes[k]
+
+    if not attr or type(v) == "string" then
         return
     end
-    if k == 'mult' and v > 0 then
-        if place.mult_dagonet == nil then
-            place.mult_dagonet = v
-        else
-            v = v - place.mult_dagonet
-            place.mult_dagonet = v
+
+    -- Handle extra seperately
+    if type(v) == "table" then
+        for k2, v2 in pairs(place.extra) do
+            increase_attributes(k2, v2, place.extra)
         end
-        place.mult = v * 2
-    elseif k == 'mult_mod' and v > 0 then
-        if place.mult_mod_dagonet == nil then
-            place.mult_mod_dagonet = v
+    elseif v > attr.min then
+        if place[attr.key] == nil then
+            place[attr.key] = v
         else
-            v = v - place.mult_mod_dagonet
-            place.mult_mod_dagonet = v
+            v = v - place[attr.key]
+            place[attr.key] = v
         end
-        place.mult_mod = v * 2
-    elseif k == 'chips' and v > 0 then
-        if place.chips_dagonet == nil then
-            place.chips_dagonet = v
-        else
-            v = v - place.chips_dagonet
-            place.chips_dagonet = v
-        end
-        place.chips = v * 2
-    elseif k == 'chip_mod' and v > 0 then
-        if place.chip_mod_dagonet == nil then
-            place.chip_mod_dagonet = v
-        else
-            v = v - place.chip_mod_dagonet
-            place.chip_mod_dagonet = v
-        end
-        place.chip_mod = v * 2
-    elseif k == 'Xmult' and v ~= 1 then
-        if place.Xmult_dagonet == nil then
-            place.Xmult_dagonet = v
-        else
-            v = v - place.Xmult_dagonet
-            place.Xmult_dagonet = v
-        end
-        place.Xmult = v * 2
-    elseif k == 'Xmult_mod' and v ~= 1 then
-        if place.Xmult_mod_dagonet == nil then
-            place.Xmult_mod_dagonet = v
-        else
-            v = v - place.Xmult_mod_dagonet
-            place.Xmult_mod_dagonet = v
-        end
-        place.Xmult_mod = v * 2
-    elseif k == 'x_mult' and v ~= 1 then
-        if place.x_mult_dagonet == nil then
-            place.x_mult_dagonet = v
-        else
-            v = v - place.x_mult_dagonet
-            place.x_mult_dagonet = v
-        end
-        place.x_mult = v * 2
-    elseif k == 't_mult' and v > 0 then
-        if place.t_mult_dagonet == nil then
-            place.t_mult_dagonet = v
-        else
-            v = v - place.t_mult_dagonet
-            place.t_mult_dagonet = v
-        end
-        place.t_mult = v * 2
-    elseif k == 't_chips' and v > 0 then
-        if place.t_chips_dagonet == nil then
-            place.t_chips_dagonet = v
-        else
-            v = v - place.t_chips_dagonet
-            place.t_chips_dagonet = v
-        end
-        place.t_chips = v * 2
-    elseif k == 's_mult' and v > 0 then
-        if place.s_mult_dagonet == nil then
-            place.s_mult_dagonet = v
-        else
-            v = v - place.s_mult_dagonet
-            place.s_mult_dagonet = v
-        end
-        place.s_mult = v * 2
-    elseif k == 'dollars' and v > 0 then
-        if place.dollars_dagonet == nil then
-            place.dollars_dagonet = v
-        else
-            v = v - place.dollars_dagonet
-            place.dollars_dagonet = v
-        end
-        place.dollars = v * 2
-    elseif k == 'hand_add' and v > 0 then
-        if place.hand_add_dagonet == nil then
-            place.hand_add_dagonet = v
-        else
-            v = v - place.hand_add_dagonet
-            place.hand_add_dagonet = v
-        end
-        place.hand_add = v * 2
-    elseif k == 'discard_sub' and v > 0 then
-        if place.discard_sub_dagonet == nil then
-            place.discard_sub_dagonet = v
-        else
-            v = v - place.discard_sub_dagonet
-            place.discard_sub_dagonet = v
-        end
-        place.discard_sub = v * 2
-    elseif k == 'odds' and v > 0 then
-        if place.odds_dagonet == nil then
-            place.odds_dagonet = v
-        else
-            v = v - place.odds_dagonet
-            place.odds_dagonet = v
-        end
-        place.odds = v * 2
-    elseif k == 'faces' and v > 0 then
-        if place.faces_dagonet == nil then
-            place.faces_dagonet = v
-        else
-            v = v - place.faces_dagonet
-            place.faces_dagonet = v
-        end
-        place.faces = v * 2
-    elseif k == 'max' and v > 0 then
-        if place.max_dagonet == nil then
-            place.max_dagonet = v
-        else
-            v = v - place.max_dagonet
-            place.max_dagonet = v
-        end
-        place.max = v * 2
-    elseif k == 'min' and v > 0 then
-        if place.min_dagonet == nil then
-            place.min_dagonet = v
-        else
-            v = v - place.min_dagonet
-            place.min_dagonet = v
-        end
-        place.min = v * 2
-    elseif k == 'every' and v > 0 then
-        if place.every_dagonet == nil then
-            place.every_dagonet = v
-        else
-            v = v - place.every_dagonet
-            place.every_dagonet = v
-        end
-        place.every = v * 2
-    elseif k == 'increase' and v > 0 then
-        if place.increase_dagonet == nil then
-            place.increase_dagonet = v
-        else
-            v = v - place.increase_dagonet
-            place.increase_dagonet = v
-        end
-        place.increase = v * 2
-    elseif k == 'h_size' and v > 0 then
-        if place.h_size_dagonet == nil then
-            place.h_size_dagonet = v
-        else
-            v = v - place.h_size_dagonet
-            place.h_size_dagonet = v
-        end
-        place.h_size = v * 2
-    elseif k == 'd_size' and v > 0 then
-        if place.d_size_dagonet == nil then
-            place.d_size_dagonet = v
-        else
-            v = v - place.d_size_dagonet
-            place.d_size_dagonet = v
-        end
-        place.d_size = v * 2
-    elseif k == 'h_mod' and v > 0 then
-        if place.h_mod_dagonet == nil then
-            place.h_mod_dagonet = v
-        else
-            v = v - place.h_mod_dagonet
-            place.h_mod_dagonet = v
-        end
-        place.h_mod = v * 2
-    elseif k == 'h_plays' and v > 0 then
-        if place.h_plays_dagonet == nil then
-            place.h_plays_dagonet = v
-        else
-            v = v - place.h_plays_dagonet
-            place.h_plays_dagonet = v
-        end
-        place.h_plays = v * 2
-    elseif k == 'discards' and v > 0 then
-        if place.discards_dagonet == nil then
-            place.discards_dagonet = v
-        else
-            v = v - place.discards_dagonet
-            place.discards_dagonet = v
-        end
-        place.discards = v * 2
-    elseif k == 'old' and v > 0 then
-        if place.old_dagonet == nil then
-            place.old_dagonet = v
-        else
-            v = v - place.old_dagonet
-            place.old_dagonet = v
-        end
-        place.old = v * 2
-    elseif k == 'req' and v > 0 then
-        if place.req_dagonet == nil then
-            place.req_dagonet = v
-        else
-            v = v - place.req_dagonet
-            place.req_dagonet = v
-        end
-        place.req = v * 2
-    elseif k == 'percentage' and v > 0 then
-        if place.percentage_dagonet == nil then
-            place.percentage_dagonet = v
-        else
-            v = v - place.percentage_dagonet
-            place.percentage_dagonet = v
-        end
-        place.percentage = v * 2
-    elseif k == 'base' and v > 0 then
-        if place.base_dagonet == nil then
-            place.base_dagonet = v
-        else
-            v = v - place.base_dagonet
-            place.base_dagonet = v
-        end
-        place.base = v * 2
-    elseif k == 'dollar_gain_one' and v > 0 then
-        if place.dollar_gain_one_dagonet == nil then
-            place.dollar_gain_one_dagonet = v
-        else
-            v = v - place.dollar_gain_one_dagonet
-            place.dollar_gain_one_dagonet = v
-        end
-        place.dollar_gain_one = v * 2
-    elseif k == 'dollar_gain_two' and v > 0 then
-        if place.dollar_gain_two_dagonet == nil then
-            place.dollar_gain_two_dagonet = v
-        else
-            v = v - place.dollar_gain_two_dagonet
-            place.dollar_gain_two_dagonet = v
-        end
-        place.dollar_gain_two = v * 2
-    elseif k == 'dollar_gain_three' and v > 0 then
-        if place.dollar_gain_three_dagonet == nil then
-            place.dollar_gain_three_dagonet = v
-        else
-            v = v - place.dollar_gain_three_dagonet
-            place.dollar_gain_three_dagonet = v
-        end
-        place.dollar_gain_three = v * 2
-    elseif k == 'dollar_gain_four' and v > 0 then
-        if place.dollar_gain_four_dagonet == nil then
-            place.dollar_gain_four_dagonet = v
-        else
-            v = v - place.dollar_gain_four_dagonet
-            place.dollar_gain_four_dagonet = v
-        end
-        place.dollar_gain_four = v * 2
-    elseif k == 'dollar_gain_five' and v > 0 then
-        if place.dollar_gain_five_dagonet == nil then
-            place.dollar_gain_five_dagonet = v
-        else
-            v = v - place.dollar_gain_five_dagonet
-            place.dollar_gain_five_dagonet = v
-        end
-        place.dollar_gain_five = v * 2
-    elseif k == 'faces' and v > 0 then
-        if place.faces_dagonet == nil then
-            place.faces_dagonet = v
-        else
-            v = v - place.faces_dagonet
-            place.faces_dagonet = v
-        end
-        place.faces = v * 2
-    elseif k == "extra" then
-        if type(place.extra) == "table" then
-            for k2, v2 in pairs(place.extra) do
-                increase_attributes(k2, v2, place.extra)
-            end
-        else
-            if place.extra_dagonet == nil then
-                place.extra_dagonet = v
-            else
-                v = v - place.extra_dagonet
-                place.extra_dagonet = v
-            end
-            place.extra = v * 2
-        end
+        place[k] = v * 2
     end
 end
 
@@ -1834,7 +1602,7 @@ function SMODS.INIT.MikasModCollection()
             if context.end_of_round and not context.individual and not context.repetition then
                 self.ability.extra.every = self.ability.extra.every - 1
 
-                if self.ability.extra.every == 0 then
+                if self.ability.extra.every <= 0 then
                     G.E_MANAGER:add_event(Event({
                         func = function()
                             play_sound('tarot1')
