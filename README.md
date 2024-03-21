@@ -1,6 +1,12 @@
 # Mika's Balatro Mod Collection
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/).
 
+# Installation
+- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
+- Download the whole mod as a .zip file, then unzip it in `Balatro\Mods`.
+- For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
+- The mod has a config right at the top of the file, to disable any unwanted mods.
+
 # Decks
 
 ### Even Steven's Deck
@@ -56,6 +62,9 @@ _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
 ### Seal Collector
 Gains +25 Chips for every card with a seal, starting at 25 Chips.
 
+### The Stockpiler
+Gives +1 hand size for every 4 cards in your deck above 52.
+
 ### Suit Alley
 Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3 Mult when scored.
 
@@ -74,6 +83,9 @@ _Does not work on already enhanced cards_
 ### The Fisherman
 Gives +1 hand size per discard, -1 hand size per hand played _(but hand size effect can't be negative)_. Resets every round.
 
+### Football Card
+Gives +50 Chips for every Common Joker.
+
 ### The Gambler
 Retrigger all played **_Lucky_** cards.
 
@@ -85,6 +97,9 @@ Doubles the effect of all Seals.
 
 ### Shy Joker
 Gain X0.01 Mult for every card played, starting at X1 Mult.
+
+### Special Edition Joker
+Gains +2 Mult per Seal, +10 Chips per Enhancement and X0.1 Mult per Edition for every card in your deck.
 
 ### Statistic Joker
 If at least 4 poker hands have been played the same amount of times, gives X4 Mult.\
@@ -133,9 +148,3 @@ Gives X4 mult if the hand contains a straight and you have both the **_Odd Todd_
 ## Legendary
 ### Dagonet
 Doubles all base values on Jokers.
-
-# Installation
-- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
-- For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
-- Place both the `MikasModCollection.lua` file and the `assets` folder in `Balatro\Mods`.
-- The mod has a config right at the top of the file, to disable any unwanted mods.
