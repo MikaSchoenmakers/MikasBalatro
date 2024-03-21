@@ -1036,7 +1036,6 @@ local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(arg_56_0)
     Backapply_to_runRef(arg_56_0)
 
-    -- Even Steven Deck
     if arg_56_0.effect.config.mmc_only_evens then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1057,7 +1056,6 @@ function Back.apply_to_run(arg_56_0)
         }))
     end
 
-    -- Odd Todd Deck
     if arg_56_0.effect.config.mmc_only_odds then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1078,7 +1076,6 @@ function Back.apply_to_run(arg_56_0)
         }))
     end
 
-    -- Fibonacci Deck
     if arg_56_0.effect.config.mmc_only_fibo then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1099,7 +1096,6 @@ function Back.apply_to_run(arg_56_0)
         }))
     end
 
-    -- Prime Deck
     if arg_56_0.effect.config.mmc_only_prime then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1120,7 +1116,6 @@ function Back.apply_to_run(arg_56_0)
         }))
     end
 
-    -- Midas Deck
     if arg_56_0.effect.config.mmc_gold then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1144,7 +1139,6 @@ function Back.apply_to_run(arg_56_0)
         }))
     end
 
-    -- Jokers For Hire Deck
     if arg_56_0.effect.config.mmc_for_hire then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1161,7 +1155,6 @@ function Back.apply_to_run(arg_56_0)
         }))
     end
 
-    -- Jokers For Hire Deck
     if arg_56_0.effect.config.mmc_precision then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1999,8 +1992,8 @@ function SMODS.INIT.MikasModCollection()
             if context.individual and context.cardarea == G.play then
                 if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect == "Stone Card" then
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { context.other_card.ability.chips } },
-                        chips = context.other_card.ability.chips,
+                        message = localize { type = 'variable', key = 'a_chips', vars = { context.other_card.ability.bonus } },
+                        chips = context.other_card.ability.bonus,
                         card = self
                     }
                 elseif context.other_card.ability.effect == "Mult Card" then
