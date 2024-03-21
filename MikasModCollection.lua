@@ -49,7 +49,10 @@ local config = {
     whatAreTheOddsJoker = true,
     dagonetJoker = true,
     glueJoker = true,
-    sealEnthousiastJoker = true
+    sealEnthousiastJoker = true,
+    footballCardJoker = true,
+    specialEditionJoker = true,
+    stockpilerJoker = true
 }
 
 -- Helper functions
@@ -186,7 +189,7 @@ local attributes = {
 }
 
 -- Increase base attributes
-local function increase_attributes(k, v, place)
+local function increase_attributes(k, v, place, multiplier)
     local attr = attributes[k]
 
     if not attr or type(v) == "string" then
@@ -196,7 +199,7 @@ local function increase_attributes(k, v, place)
     -- Handle extra seperately
     if type(v) == "table" then
         for k2, v2 in pairs(place.extra) do
-            increase_attributes(k2, v2, place.extra)
+            increase_attributes(k2, v2, place.extra, multiplier)
         end
     elseif v > attr.min then
         if place[attr.key] == nil then
@@ -205,7 +208,7 @@ local function increase_attributes(k, v, place)
             v = v - place[attr.key]
             place[attr.key] = v
         end
-        place[k] = v * 2
+        place[k] = v * multiplier
     end
 end
 
@@ -547,6 +550,30 @@ local locs = {
         text = {
             "{C:attention}Doubles{} the effect",
             "of all {C:attention}Seals"
+        }
+    },
+    footballCardJoker = {
+        name = "Football Card",
+        text = {
+            "{C:blue}Common{} Jokers",
+            "each give {C:chips}+#1#{} Chips"
+        }
+    },
+    specialEditionJoker = {
+        name = "Special Edition Joker",
+        text = {
+            "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
+            "Chips and {X:mult,C:white}X#3#{} Mult on",
+            "the {C:attention}4th{} action",
+            "{C:inactive}(Current action: {C:attention}#4#{C:inactive})"
+        }
+    },
+    stockpilerJoker = {
+        name = "The Stockpiler",
+        text = {
+            "{C:attention}+#1#{} hand size for amount of",
+            "cards in deck above {C:attention}#3#",
+            "{C:inactive}(Current bonus: {C:attention}+#2#{C:inactive} hand size)"
         }
     }
 }
@@ -956,6 +983,39 @@ local jokers = {
         eternal_compat = true
     },
     sealEnthousiastJoker = {
+        ability_name = "MMC Seal Enthousiast",
+        slug = "mmc_seal_enthousiast",
+        ability = {},
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    footballCardJoker = {
+        ability_name = "MMC Football Card",
+        slug = "mmc_football_card",
+        ability = { chips = 50 },
+        rarity = 2,
+        cost = 7,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    specialEditionJoker = {
+        ability_name = "MMC Special Edition Joker",
+        slug = "mmc_special_edition",
+        ability = { extra = { Xmult = 1 } },
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    stockpilerJoker = {
         ability_name = "MMC Seal Enthousiast",
         slug = "mmc_seal_enthousiast",
         ability = { extra = 1 },
@@ -2126,7 +2186,7 @@ function SMODS.INIT.MikasModCollection()
                     if v ~= self then
                         -- Increase all numbers
                         for k2, v2 in pairs(v.ability) do
-                            increase_attributes(k2, v2, v.ability)
+                            increase_attributes(k2, v2, v.ability, 2)
                         end
                     end
                 end
@@ -2376,6 +2436,7 @@ function Card:remove_from_deck(from_debuff)
                 self.ability.extra.h_size = 0
             end
         end
+
         -- Rigged Joker
         if self.ability.name == 'MMC Rigged Joker' then
             -- Reset probabilities
@@ -2384,6 +2445,17 @@ function Card:remove_from_deck(from_debuff)
                     G.GAME.probabilities[k] = v - self.ability.extra.increase
                 end
                 self.ability.extra.increase = 0
+            end
+        end
+
+        if self.ability.name == 'MMC Dagonet' then
+            -- Return attributes to defaults
+            for _, v in ipairs(G.jokers.cards) do
+                if v ~= self then
+                    for k2, v2 in pairs(v.ability) do
+                        increase_attributes(k2, v2, v.ability, 1)
+                    end
+                end
             end
         end
     end
