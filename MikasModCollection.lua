@@ -208,6 +208,8 @@ local function increase_attributes(k, v, place, multiplier)
             place[attr.key] = v
         end
         place[k] = v * multiplier
+    elseif v == attr.min and place[attr.key] ~= nil then
+        place[attr.key] = 0
     end
 end
 
