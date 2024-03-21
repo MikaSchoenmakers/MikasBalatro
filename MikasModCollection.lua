@@ -176,7 +176,6 @@ local attributes = {
     h_mod = { key = 'h_mod_dagonet', min = 0 },
     h_plays = { key = 'h_plays_dagonet', min = 0 },
     discards = { key = 'discards_dagonet', min = 0 },
-    old = { key = 'old_dagonet', min = 0 },
     req = { key = 'req_dagonet', min = 0 },
     percentage = { key = 'percentage_dagonet', min = 0 },
     base = { key = 'base_dagonet', min = 0 },
@@ -2461,6 +2460,44 @@ function Card:add_to_deck(from_debuff)
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
             for_hire_counter = for_hire_counter + 1
         end
+
+        -- Glue
+        if self.ability.name == 'Half Joker' then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'MMC Glue' then
+                    v.ability.extra.half = true
+                    if v.ability.extra.incomplete then
+                        v.ability.extra.triggered = true
+                        G.jokers.config.card_limit = G.jokers.config.card_limit + 2
+                    end
+                end
+            end
+        end
+        if self.ability.name == 'MMC Incomplete Joker' then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'MMC Glue' then
+                    v.ability.extra.incomplete = true
+                    if v.ability.extra.half then
+                        v.ability.extra.triggered = true
+                        G.jokers.config.card_limit = G.jokers.config.card_limit + 2
+                    end
+                end
+            end
+        end
+        if self.ability.name == 'MMC Glue' then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'Half Joker' then
+                    self.ability.extra.half = true
+                end
+                if v.ability.name == 'MMC Incomplete Joker' then
+                    self.ability.extra.incomplete = true
+                end
+            end
+            if self.ability.extra.half and self.ability.extra.incomplete then
+                self.ability.extra.triggered = true
+                G.jokers.config.card_limit = G.jokers.config.card_limit + 2
+            end
+        end
     end
     add_to_deckref(self, from_debuff)
 end
@@ -2508,11 +2545,32 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
+        -- Glue
+        if self.ability.name == 'Half Joker' then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'MMC Glue' then
+                    v.ability.extra.half = false
+                    if v.ability.extra.triggered then
+                        v.ability.extra.triggered = false
+                        G.jokers.config.card_limit = G.jokers.config.card_limit - 2
+                    end
+                end
+            end
+        end
+        if self.ability.name == 'MMC Incomplete Joker' then
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'MMC Glue' then
+                    v.ability.extra.incomplete = false
+                    if v.ability.extra.triggered then
+                        v.ability.extra.triggered = false
+                        G.jokers.config.card_limit = G.jokers.config.card_limit - 2
+                    end
+                end
+            end
+        end
         if self.ability.name == 'MMC Glue' then
             if self.ability.extra.triggered then
                 self.ability.extra.triggered = false
-                self.ability.extra.half = false
-                self.ability.extra.incomplete = false
                 G.jokers.config.card_limit = G.jokers.config.card_limit - 2
             end
         end
@@ -2561,29 +2619,6 @@ function Card.update(self, dt)
                     -- Increase mult gain
                     self.ability.extra.mult_mod = self.ability.extra.mult_mod + 1
                 end
-            end
-        end
-
-        if self.ability.name == 'MMC Glue' then
-            -- Reset defaults
-            if self.ability.extra.triggered then
-                self.ability.extra.half = false
-                self.ability.extra.incomplete = false
-                self.ability.extra.triggered = false
-                G.jokers.config.card_limit = G.jokers.config.card_limit - 2
-            end
-            -- Check for Half and Incomplete Joker
-            for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'Half Joker' then
-                    self.ability.extra.half = true
-                elseif v.ability.name == 'MMC Incomplete Joker' then
-                    self.ability.extra.incomplete = true
-                end
-            end
-            -- Add 2 Joker slots
-            if self.ability.extra.half and self.ability.extra.incomplete and not self.ability.extra.triggered then
-                G.jokers.config.card_limit = G.jokers.config.card_limit + 2
-                self.ability.extra.triggered = true
             end
         end
 
