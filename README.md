@@ -1,6 +1,9 @@
 # Mika's Balatro Mod Collection
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/).
 
+# Mod Incompatibility
+This mod is **_not_** compatible with JellyMod. It won't crash anything, but multiple Jokers will not function correctly. This is because JellyMod overwrites some of the base game functionality, as stated on the [JellyMod GitHub](https://github.com/jamesthejellyfish/JellyMod/tree/main?tab=readme-ov-file#compatibility-warning) page. Unfortunately there is nothing I can do about this, so if you decide to use those mods together, be warned!
+
 # Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
 - Download the whole mod as a .zip file, then unzip it in `Balatro\Mods`.
@@ -63,7 +66,8 @@ _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
 Gains +25 Chips for every card with a seal, starting at 25 Chips.
 
 ### The Stockpiler
-Gives +1 hand size for every 4 cards in your deck above 52.
+Gives +1 hand size for every 4 cards in your deck above 52. Caps at the current Ante.
+_So at Ante 1 you can have at most +1 Hand size, at Ante 2 at most +2, etc..._
 
 ### Suit Alley
 Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3 Mult when scored.
@@ -89,11 +93,12 @@ Gives +50 Chips for every Common Joker.
 ### The Gambler
 Retrigger all played **_Lucky_** cards.
 
+### Harp Seal
+Doubles the effect of all Seals.
+_Art made by `Grassy`_
+
 ### Impatient Joker
 Gives +2 mult per discarded card. Resets every round.
-
-### Seal Enthousiast
-Doubles the effect of all Seals.
 
 ### Shy Joker
 Gain X0.01 Mult for every card played, starting at X1 Mult.
@@ -128,7 +133,7 @@ Gives 20 Mult, 100 Chips and X1.5 Mult on the 4th action.\
 _An action is either playing a hand or discarding_
 
 ### Historical Joker
-If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand.
+If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand. Caps at 25% of the current blind's Chips.
 
 ### The Show-Off
 Gains +X1 Mult a blind is finished with **_2x_** the chip requirement.

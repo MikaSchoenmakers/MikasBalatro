@@ -49,7 +49,7 @@ local config = {
     whatAreTheOddsJoker = true,
     dagonetJoker = true,
     glueJoker = true,
-    sealEnthousiastJoker = true,
+    harpSealJoker = true,
     footballCardJoker = true,
     specialEditionJoker = true,
     stockpilerJoker = true
@@ -162,7 +162,6 @@ local attributes = {
     t_mult = { key = 't_mult_dagonet', min = 0 },
     t_chips = { key = 't_chips_dagonet', min = 0 },
     s_mult = { key = 's_mult_dagonet', min = 0 },
-    j_slots = { key = 'j_slots_dagonet', min = 0 },
     dollars = { key = 'dollars_dagonet', min = 0 },
     hand_add = { key = 'hand_add_dagonet', min = 0 },
     discard_sub = { key = 'discard_sub_dagonet', min = 0 },
@@ -439,7 +438,8 @@ local locs = {
             "If scored cards have the",
             "same {C:attention}ranks{} and {C:attention}order{} as",
             "previous hand, add previous hands",
-            "{C:chips}Chips{} to the current hand"
+            "{C:chips}Chips{} to the current hand. Caps",
+            "at {C:attention}#1#%{} of current blind's Chips",
         }
     },
     suitAlleyJoker = {
@@ -547,11 +547,12 @@ local locs = {
             "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult"
         }
     },
-    sealEnthousiastJoker = {
-        name = "Seal Enthousiast",
+    harpSealJoker = {
+        name = "Harp Seal",
         text = {
             "{C:attention}Doubles{} the effect",
-            "of all {C:attention}Seals"
+            "of all {C:attention}Seals",
+            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
         }
     },
     footballCardJoker = {
@@ -574,7 +575,8 @@ local locs = {
         name = "The Stockpiler",
         text = {
             "{C:attention}+#2#{} hand size for every #4#",
-            "cards in deck above {C:attention}#3#",
+            "cards in deck above {C:attention}#3#{}.",
+            "Caps at the current Ante",
             "{C:inactive}(Current bonus: {C:attention}+#1#{C:inactive} hand size)"
         }
     }
@@ -822,7 +824,7 @@ local jokers = {
     planetaryAlignmentJoker = {
         ability_name = "MMC Planetary Alignment",
         slug = "mmc_planetary_alignment",
-        ability = { extra = { round = 1, every = 2 } },
+        ability = { extra = { round = 0, every = 2 } },
         rarity = 1,
         cost = 6,
         unlocked = true,
@@ -833,7 +835,7 @@ local jokers = {
     historicalJoker = {
         ability_name = "MMC Historical Joker",
         slug = "mmc_historical",
-        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0 } },
+        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0, percentage = 25 } },
         rarity = 3,
         cost = 9,
         unlocked = true,
@@ -984,9 +986,9 @@ local jokers = {
         blueprint_compat = false,
         eternal_compat = true
     },
-    sealEnthousiastJoker = {
-        ability_name = "MMC Seal Enthousiast",
-        slug = "mmc_seal_enthousiast",
+    harpSealJoker = {
+        ability_name = "MMC Harp Seal",
+        slug = "mmc_harp_seal",
         ability = {},
         rarity = 2,
         cost = 6,
@@ -1053,6 +1055,9 @@ function Back.apply_to_run(arg_56_0)
                 local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_even_steven', nil)
                 card:add_to_deck()
                 G.jokers:emplace(card)
+
+                -- Return
+                G.GAME.starting_deck_size = 20
                 return true
             end
         }))
@@ -1073,6 +1078,9 @@ function Back.apply_to_run(arg_56_0)
                 local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_odd_todd', nil)
                 card:add_to_deck()
                 G.jokers:emplace(card)
+
+                -- Return
+                G.GAME.starting_deck_size = 20
                 return true
             end
         }))
@@ -1093,6 +1101,9 @@ function Back.apply_to_run(arg_56_0)
                 local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_fibonacci', nil)
                 card:add_to_deck()
                 G.jokers:emplace(card)
+
+                -- Return
+                G.GAME.starting_deck_size = 20
                 return true
             end
         }))
@@ -1113,6 +1124,9 @@ function Back.apply_to_run(arg_56_0)
                 local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_prime', nil)
                 card:add_to_deck()
                 G.jokers:emplace(card)
+
+                -- Return
+                G.GAME.starting_deck_size = 20
                 return true
             end
         }))
@@ -1136,6 +1150,9 @@ function Back.apply_to_run(arg_56_0)
                 local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_midas_mask', nil)
                 card:add_to_deck()
                 G.jokers:emplace(card)
+
+                -- Return
+                G.GAME.starting_deck_size = 12
                 return true
             end
         }))
@@ -1810,6 +1827,9 @@ function SMODS.INIT.MikasModCollection()
             -- Calculate chip score
             if context.mmc_scored_chips then
                 self.ability.extra.chips = context.mmc_scored_chips
+                self.ability.extra.chips = math.ceil(math.min(
+                        G.GAME.blind.chips * self.ability.extra.percentage / 100,
+                        self.ability.extra.chips))
             end
 
             -- Apply chips if previous cards are the same as the current cards
@@ -2207,8 +2227,8 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.sealEnthousiastJoker then
-        SMODS.Jokers.j_mmc_seal_enthousiast.calculate = function(self, context)
+    if config.harpSealJoker then
+        SMODS.Jokers.j_mmc_harp_seal.calculate = function(self, context)
             -- Give $3 for each Gold Seal
             if context.individual and context.cardarea == G.play and not context.repetition then
                 if context.other_card.seal == 'Gold' then
@@ -2302,9 +2322,11 @@ function SMODS.INIT.MikasModCollection()
     if config.stockpilerJoker then
         SMODS.Jokers.j_mmc_stockpiler.calculate = function(self, context)
             if not context.repetition or context.individual then
+                -- Increase hand size based on number of cards in deck
                 local extra_cards = #G.playing_cards - self.ability.extra.base
                 if extra_cards > 0 then
                     local bonus = math.floor(extra_cards / self.ability.extra.every) * self.ability.extra.h_mod
+                    bonus = math.min(bonus, G.GAME.round_resets.ante)
                     if bonus ~= self.ability.extra.h_size then
                         G.hand:change_size(bonus - self.ability.extra.h_size)
                         self.ability.extra.h_size = bonus
@@ -2367,10 +2389,10 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.chips, self.ability.extra.percentage }
         elseif self.ability.name == 'MMC Finishing Blow' then
             loc_vars = { self.ability.extra.enhancement }
-        elseif self.ability.name == 'MMC Planery Alignment' then
+        elseif self.ability.name == 'MMC Planetary Alignment' then
             loc_vars = { self.ability.extra.every }
         elseif self.ability.name == 'MMC Historical Joker' then
-            loc_vars = {}
+            loc_vars = { self.ability.extra.percentage }
         elseif self.ability.name == 'MMC Suit Alley' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.mult }
         elseif self.ability.name == 'MMC The Printer' then
@@ -2397,7 +2419,7 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = {}
         elseif self.ability.name == 'MMC Glue' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.j_slots }
-        elseif self.ability.name == 'MMC Seal Enthousiast' then
+        elseif self.ability.name == 'MMC Harp Seal' then
             loc_vars = {}
         elseif self.ability.name == 'MMC Football Card' then
             loc_vars = { self.ability.extra.chips }
@@ -2667,7 +2689,7 @@ function Card.get_end_of_round_effect(self, context)
     if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
             -- Check for Planetary Alignment Joker and consumeable space
-            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % self.ability.extra.every == 0
+            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0
                 and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 -- Get most played hand
@@ -2705,7 +2727,7 @@ function Card.get_end_of_round_effect(self, context)
             end
 
             -- Create planet for each Blue Seal
-            if v.ability.name == 'MMC Seal Enthousiast' and
+            if v.ability.name == 'MMC Harp Seal' and
                 #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 -- Add card
