@@ -44,7 +44,8 @@ Earn $2 for every Gold Seal and Gold Card in your whole deck at the end of the r
 
 ### Bomb
 ![Bomb](./assets/2x/j_mmc_bomb.png)\
-Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.
+Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.\
+_Art made by `Grassy`_
 
 ### Glue
 ![Glue](./assets/2x/j_mmc_glue.png)\
@@ -68,7 +69,7 @@ Gives each played prime number _(2, 3, 5, 7, Ace)_ X1.2 mult when scored.
 
 ### Rigged Joker
 ![Rigged Joker](./assets/2x/j_mmc_rigged.png)\
-Once per hand, add +1 to all listed probabilities whenever a **_Lucky_** card does not trigger. Resets every round.
+Once per hand, add +1 to all listed probabilities whenever a **_Lucky_** card does not trigger. Resets every round.\
 _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
 
 ### Seal Collector
@@ -77,7 +78,7 @@ Gains +25 Chips for every card with a seal, starting at 25 Chips.
 
 ### The Stockpiler
 ![The Stockpiler](./assets/2x/j_mmc_stockpiler.png)\
-Gives +1 hand size for every 4 cards in your deck above 52. Caps at the current Ante.
+Gives +1 hand size for every 4 cards in your deck above 52. Caps at the current Ante.\
 _So at Ante 1 you can have at most +1 Hand size, at Ante 2 at most +2, etc..._
 
 ### Suit Alley
@@ -91,12 +92,12 @@ Every discarded card permanently gains +4 Chips.
 
 ### Blackjack Joker
 ![Blackjack Joker](./assets/2x/j_mmc_blackjack.png)\
-Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**.
+Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**.\
 _An Ace can be valued at either 1 or 11_
 
 ### Finishing Blow
 ![Finishing Blow](./assets/2x/j_mmc_finishing_blow.png)\
-If a blind is finished with a **_High Card_**, randomly enhance played cards.
+If a blind is finished with a **_High Card_**, randomly enhance played cards.\
 _Does not work on already enhanced cards_
 
 ### The Fisherman
@@ -113,7 +114,7 @@ Retrigger all played **_Lucky_** cards.
 
 ### Harp Seal
 ![Harp Seal](./assets/2x/j_mmc_harp_seal.png)\
-Doubles the effect of all Seals.
+Doubles the effect of all Seals.\
 _Art made by `Grassy`_
 
 ### Impatient Joker
@@ -135,13 +136,13 @@ _Does not count unplayed poker hands_
 
 ### What Are The Odds
 ![What Are The Odds](./assets/2x/j_mmc_what_are_the_odds.png)\
-If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.
+If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.\
 _If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_
 
 ## Rare
 ### Batman
 ![Batman](./assets/2x/j_mmc_batman.png)\
-Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 for every Joker with "Joker" in the name.
+Gains +1 Mult for every **_non lethal_** hand played. Mult gain increases by +1 for every Joker with "Joker" in the name.\
 _A non lethal hand is a hand that does not finish off a blind_
 
 ### Boating License
