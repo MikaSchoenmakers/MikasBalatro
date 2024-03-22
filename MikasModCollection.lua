@@ -393,7 +393,8 @@ local locs = {
         text = {
             "Gains {C:mult}+#2#{} Mult per round",
             "self destructs after {C:attention}#3#{} rounds",
-            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
+            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
         }
     },
     alphabetJoker = {
