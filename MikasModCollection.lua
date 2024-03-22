@@ -803,7 +803,7 @@ local jokers = {
     grudgefulJoker = {
         ability_name = "MMC Grudgeful Joker",
         slug = "mmc_grudgeful",
-        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, percentage = 25 } },
+        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, percentage = 10 } },
         rarity = 3,
         cost = 9,
         unlocked = true,
@@ -836,7 +836,7 @@ local jokers = {
     historicalJoker = {
         ability_name = "MMC Historical Joker",
         slug = "mmc_historical",
-        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0, percentage = 25 } },
+        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0, percentage = 10 } },
         rarity = 3,
         cost = 9,
         unlocked = true,

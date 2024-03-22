@@ -164,7 +164,7 @@ _An action is either playing a hand or discarding_
 
 ### Historical Joker
 ![Historical Joker](./assets/2x/j_mmc_historical.png)\
-If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand. Caps at 25% of the current blind's Chips.
+If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand. Caps at 10% of the current blind's Chips.
 
 ### The Show-Off
 ![The Show-Off](./assets/2x/j_mmc_showoff.png)\
@@ -172,7 +172,7 @@ Gains +X1 Mult a blind is finished with **_2x_** the chip requirement.
 
 ### Grudgeful Joker
 ![Grudgeful Joker](./assets/2x/j_mmc_grudgeful.png)\
-Add excess Chips from last blind to the first hand of the current round. Caps at 25% of the current blind's Chips.
+Add excess Chips from last blind to the first hand of the current round. Caps at 10% of the current blind's Chips.
 
 ### The Printer
 ![The Printer](./assets/2x/j_mmc_printer.png)\
