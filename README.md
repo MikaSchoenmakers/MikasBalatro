@@ -23,7 +23,7 @@ Only odd cards. Starts with the **_Odd Todd_** joker.
 Only cards from the Fibonacci Sequence _(Ace, 2, 3, 5, 8)_. Starts with the **_Fibonacci_** joker.
 
 ### Prime Deck
-Only prime cards _(2, 3, 5, 7, Ace)_. Starts with the **_Prime_** joker.
+Only prime cards _(2, 3, 5, 7, Ace)_. Starts with the **_Prime Time_** joker.
 
 ### Midas's Deck
 Only Gold Face cards. Starts with the **_Midas Mask_** joker.
@@ -68,8 +68,8 @@ Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
 ![Planetary Alignment](./assets/2x/j_mmc_planetary_alignment.png)\
 Once every 2 rounds, Blue Seals give 2 Planet cards. One of these will be for your most played poker hand.
 
-### Prime Joker
-![Prime Joker](./assets/2x/j_mmc_prime.png)\
+### Prime Time
+![Prime Time](./assets/2x/j_mmc_prime_time.png)\
 Gives each played prime number _(2, 3, 5, 7, Ace)_ X1.2 mult when scored.\
 _Art made by `Grassy`_
 
@@ -135,8 +135,8 @@ Gain X0.01 Mult for every card played, starting at X1 Mult.
 ![Special Edition Joker](./assets/2x/j_mmc_special_edition.png)\
 Gains +2 Mult per Seal, +10 Chips per Enhancement and X0.1 Mult per Edition for every card in your deck.
 
-### Statistic Joker
-![Statistic Joker](./assets/2x/j_mmc_statistic.png)\
+### Abbey Road
+![Abbey Road](./assets/2x/j_mmc_abbey_road.png)\
 If at least 4 poker hands have been played the same amount of times, gives X4 Mult.\
 _Does not count unplayed poker hands_
 
