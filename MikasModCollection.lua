@@ -52,7 +52,9 @@ local config = {
     harpSealJoker = true,
     footballCardJoker = true,
     specialEditionJoker = true,
-    stockpilerJoker = true
+    stockpilerJoker = true,
+    studentLoansJoker = true,
+    brokeJoker = true
 }
 
 -- Helper functions
@@ -281,7 +283,8 @@ local locs = {
         text = {
             "Each played {C:attention}2{},",
             "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
-            "{X:mult,C:white}X#1#{} Mult when scored"
+            "{X:mult,C:white}X#1#{} Mult when scored",
+            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
         }
     },
     straightNateJoker = {
@@ -569,7 +572,7 @@ local locs = {
             "Gains {C:mult}+#2#{} Mult per {C:attention}Seal{}, {C:chips}+#4#{}",
             "Chips per {C:attention}Enhancement{} and {X:mult,C:white}X#6#{} Mult",
             "per {C:attention}Edition{} for every card in deck",
-            "{C:inactive}(Currently: {C:mult}+#1#{C:inactive} Mult, {C:chips}+#3#{C:inactive}, Chips and {X:mult,C:white}X#5#{C:inactive} Mult)"
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult, {C:chips}+#3#{C:inactive}, Chips and {X:mult,C:white}X#5#{C:inactive} Mult)"
         }
     },
     stockpilerJoker = {
@@ -578,7 +581,24 @@ local locs = {
             "{C:attention}+#2#{} hand size for every #4#",
             "cards in deck above {C:attention}#3#{}.",
             "Caps at the current Ante",
-            "{C:inactive}(Current bonus: {C:attention}+#1#{C:inactive} hand size)"
+            "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
+        }
+    },
+    studentLoansJoker = {
+        name = "Student Loans",
+        text = {
+            "Go up to {C:red}-$#1#{} in debt.",
+            "Gives -#4# {C:red}discards{}",
+            "for every {C:red}-$#2#{} in debt",
+            "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
+        }
+    },
+    brokeJoker = {
+        name = "Broke Joker",
+        text = {
+            "Gains {C:mult}+#1#{} Mult",
+            "per {C:red}-$#3#",
+            "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
         }
     }
 }
@@ -803,7 +823,7 @@ local jokers = {
     grudgefulJoker = {
         ability_name = "MMC Grudgeful Joker",
         slug = "mmc_grudgeful",
-        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, percentage = 10 } },
+        ability = { extra = { chips = 0, total_chips = 0, old_chips = 0, percentage = 25 } },
         rarity = 3,
         cost = 9,
         unlocked = true,
@@ -836,7 +856,7 @@ local jokers = {
     historicalJoker = {
         ability_name = "MMC Historical Joker",
         slug = "mmc_historical",
-        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0, percentage = 10 } },
+        ability = { extra = { prev_cards = {}, current_cards = {}, chips = 0, percentage = 25 } },
         rarity = 3,
         cost = 9,
         unlocked = true,
@@ -1026,6 +1046,28 @@ local jokers = {
         ability = { extra = { h_size = 0, h_mod = 1, base = 52, every = 4 } },
         rarity = 1,
         cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    studentLoansJoker = {
+        ability_name = "MMC Student Loans",
+        slug = "mmc_student_loans",
+        ability = { extra = { negative_bal = 100, every = 20, discards = 0, discard_sub = 1 } },
+        rarity = 2,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
+    brokeJoker = {
+        ability_name = "MMC Broke Joker",
+        slug = "mmc_broke",
+        ability = { extra = { _mult = 0, mult_mod = 1, every = 2 } },
+        rarity = 1,
+        cost = 2,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
@@ -1829,8 +1871,8 @@ function SMODS.INIT.MikasModCollection()
             if context.mmc_scored_chips then
                 self.ability.extra.chips = context.mmc_scored_chips
                 self.ability.extra.chips = math.ceil(math.min(
-                        G.GAME.blind.chips * self.ability.extra.percentage / 100,
-                        self.ability.extra.chips))
+                    G.GAME.blind.chips * self.ability.extra.percentage / 100,
+                    self.ability.extra.chips))
             end
 
             -- Apply chips if previous cards are the same as the current cards
@@ -2336,6 +2378,43 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.studentLoansJoker then
+        SMODS.Jokers.j_mmc_student_loans.calculate = function(self, context)
+            if not context.repetition or context.individual then
+                -- Decrease discards based on negative balance
+                local negative_bal = G.GAME.dollars
+                if negative_bal < 0 then
+                    local debuffs = math.ceil(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
+                    if debuffs ~= self.ability.extra.discards then
+                        debuffs = debuffs - self.ability.extra.discards
+                        ease_discard(debuffs)
+                        G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
+                        self.ability.extra.discards = self.ability.extra.discards + debuffs
+                    end
+                end
+            end
+        end
+    end
+
+    if config.brokeJoker then
+        SMODS.Jokers.j_mmc_broke.calculate = function(self, context)
+            if SMODS.end_calculate_context(context) then
+                -- Apply mult
+                if self.ability.extra._mult > 0 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_mult',
+                            vars = { self.ability.extra._mult }
+                        },
+                        mult_mod = self.ability.extra._mult,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -2428,8 +2507,13 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.mult, self.ability.extra.mult_mod, self.ability.extra.chips,
                 self.ability.extra.chip_mod, self.ability.extra.Xmult, self.ability.extra.Xmult_mod }
         elseif self.ability.name == 'MMC The Stockpiler' then
-            loc_vars = { self.ability.extra.h_size, self.ability.extra.h_mod, self.ability.extra.base, self.ability
-                .extra.every }
+            loc_vars = { self.ability.extra.h_size, self.ability.extra.h_mod, self.ability.extra.base,
+                self.ability.extra.every }
+        elseif self.ability.name == 'MMC Student Loans' then
+            loc_vars = { self.ability.extra.negative_bal, self.ability.extra.every, self.ability.extra.discards,
+                self.ability.extra.discard_sub }
+        elseif self.ability.name == 'MMC Broke Joker' then
+            loc_vars = { self.ability.extra.mult_mod, self.ability.extra._mult, self.ability.extra.every }
         else
             customJoker = false
         end
@@ -2524,6 +2608,10 @@ function Card:add_to_deck(from_debuff)
                 G.jokers.config.card_limit = G.jokers.config.card_limit + self.ability.extra.j_slots
             end
         end
+
+        if self.ability.name == 'MMC Student Loans' then
+            G.GAME.bankrupt_at = G.GAME.bankrupt_at - self.ability.extra.negative_bal
+        end
     end
     add_to_deckref(self, from_debuff)
 end
@@ -2604,6 +2692,12 @@ function Card:remove_from_deck(from_debuff)
         if self.ability.name == 'MMC The Stockpiler' then
             G.hand:change_size(-self.ability.extra.h_size)
         end
+
+        if self.ability.name == 'MMC Student Loans' then
+            G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
+            ease_discard(-self.ability.extra.discards)
+            G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+        end
     end
     remove_from_deckref(self, from_debuff)
 end
@@ -2664,6 +2758,14 @@ function Card.update(self, dt)
                 if v.edition ~= nil then
                     self.ability.extra.Xmult = self.ability.extra.Xmult + self.ability.extra.Xmult_mod
                 end
+            end
+        end
+
+        if self.ability.name == 'MMC Broke Joker' then
+            -- Update mult based on negative balance
+            local negative_bal = G.GAME.dollars
+            if negative_bal < 0 then
+                self.ability.extra._mult = -1 * math.ceil(negative_bal / self.ability.extra.every) * self.ability.extra.mult_mod
             end
         end
     end
