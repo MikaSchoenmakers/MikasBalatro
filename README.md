@@ -92,14 +92,20 @@ _So at Ante 1 you can have at most +1 Hand size, at Ante 2 at most +2, etc..._
 Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3 Mult when scored.
 
 ## Uncommon
-### Camper
-![Camper](./assets/2x/j_mmc_camper.png)\
-Every discarded card permanently gains +4 Chips.
+### Abbey Road
+![Abbey Road](./assets/2x/j_mmc_abbey_road.png)\
+If at least 4 poker hands have been played the same amount of times, gives X4 Mult.\
+_Does not count unplayed poker hands_\
+_Art made by `Grassy`_
 
 ### Blackjack Joker
 ![Blackjack Joker](./assets/2x/j_mmc_blackjack.png)\
 Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**.\
 _An Ace can be valued at either 1 or 11_
+
+### Camper
+![Camper](./assets/2x/j_mmc_camper.png)\
+Every discarded card permanently gains +4 Chips.
 
 ### Finishing Blow
 ![Finishing Blow](./assets/2x/j_mmc_finishing_blow.png)\
@@ -135,11 +141,6 @@ Gain X0.01 Mult for every card played, starting at X1 Mult.
 ![Special Edition Joker](./assets/2x/j_mmc_special_edition.png)\
 Gains +2 Mult per Seal, +10 Chips per Enhancement and X0.1 Mult per Edition for every card in your deck.
 
-### Abbey Road
-![Abbey Road](./assets/2x/j_mmc_abbey_road.png)\
-If at least 4 poker hands have been played the same amount of times, gives X4 Mult.\
-_Does not count unplayed poker hands_
-
 ### Student Loans
 ![Student Loans](./assets/2x/j_mmc_student_loans.png)\
 Go up to -$100 in debt. Gives -1 discard for every -$25 in debt.
@@ -174,7 +175,8 @@ _An action is either playing a hand or discarding_
 
 ### Historical Joker
 ![Historical Joker](./assets/2x/j_mmc_historical.png)\
-If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand. Caps at 10% of the current blind's Chips.
+If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand. Caps at 10% of the current blind's Chips.\
+_Art made by `Grassy`_
 
 ### The Show-Off
 ![The Show-Off](./assets/2x/j_mmc_showoff.png)\
