@@ -181,6 +181,7 @@ local attributes = {
     req = { key = 'req_dagonet', min = 0 },
     percentage = { key = 'percentage_dagonet', min = 0 },
     base = { key = 'base_dagonet', min = 0 },
+    repetitions = { key = 'repetitions_dagonet', min = 0 },
     dollar_gain_one = { key = 'dollar_gain_one_dagonet', min = 0 },
     dollar_gain_two = { key = 'dollar_gain_two_dagonet', min = 0 },
     dollar_gain_three = { key = 'dollar_gain_three_dagonet', min = 0 },
