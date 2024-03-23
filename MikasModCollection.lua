@@ -12,12 +12,12 @@ local config = {
     evenStevenDeck = true,
     oddToddDeck = true,
     fibonacciDeck = true,
-    primeDeck = true, -- Do not enable without primeJoker
+    primeDeck = true, -- Do not enable without primeTimeJoker
     midasDeck = true,
     jokersForHireDeck = true,
     perfectPrecisionDeck = true, -- Do not enable without sniperJoker
     -- Jokers
-    primeJoker = true,
+    primeTimeJoker = true,
     straightNateJoker = true,
     fishermanJoker = true,
     impatientJoker = true,
@@ -41,7 +41,7 @@ local config = {
     shyJoker = true,
     gamblerJoker = true,
     incompleteJoker = true,
-    statisticJoker = true,
+    abbeyRoadJoker = true,
     boatingLicenseJoker = true,
     bankerJoker = true,
     riggedJoker = true,
@@ -204,31 +204,28 @@ local function increase_attributes(k, v, place, multiplier)
             increase_attributes(k2, v2, place.extra, multiplier)
         end
     elseif v > attr.min then
-        sendDebugMessage("Incoming key: " .. k)
         if place["prev_mult_dagonet"] == nil then place["prev_mult_dagonet"] = multiplier end
         if place[attr.key] == nil then
             -- Save base value
             place[attr.key] = v
-            sendDebugMessage("Saving base: " .. v)
         else
-            sendDebugMessage("Incoming value: " .. v)
-            if v / multiplier == place[attr.key] and place["prev_mult_dagonet"] == multiplier then
-            elseif (v / multiplier == place[attr.key] or v / place["prev_mult_dagonet"] == place[attr.key]) and place["prev_mult_dagonet"] ~= multiplier then
-            elseif v / multiplier ~= place[attr.key] and place["prev_mult_dagonet"] == multiplier then
-                local increase = (v / multiplier - place[attr.key]) * multiplier
-                place[attr.key] = place[attr.key] + increase
-            else
-                local increase = (v / place["prev_mult_dagonet"] - place[attr.key]) * place["prev_mult_dagonet"]
-                place[attr.key] = place[attr.key] + increase
+            if not (v / multiplier == place[attr.key] and place["prev_mult_dagonet"] == multiplier) then
+                if not (v / multiplier == place[attr.key] or v / place["prev_mult_dagonet"] == place[attr.key]) then
+                    if v / multiplier ~= place[attr.key] and place["prev_mult_dagonet"] == multiplier then
+                        -- Update base based on current multiplier
+                        local increase = (v / multiplier - place[attr.key]) * multiplier
+                        place[attr.key] = place[attr.key] + increase
+                    else
+                        -- Update base based on previous multiplier
+                        local increase = (v / place["prev_mult_dagonet"] - place[attr.key]) * place["prev_mult_dagonet"]
+                        place[attr.key] = place[attr.key] + increase
+                    end
+                end
             end
         end
         -- Multiply attribute
         place[k] = place[attr.key] * multiplier
         place["prev_mult_dagonet"] = multiplier
-    elseif v == attr.min and place[attr.key] ~= nil then
-        sendDebugMessage("RESET SOMETHING")
-        -- Reset base value if incoming value reset
-        place[attr.key] = 0
     end
 end
 
@@ -264,7 +261,7 @@ local locs = {
         text = {
             "Start run with",
             "only {C:attention}prime cards{} and",
-            "the {C:attention}Prime{} joker"
+            "the {C:attention}Prime Time{} joker"
         }
     },
     midasDeck = {
@@ -295,8 +292,8 @@ local locs = {
         }
     },
     -- Jokers
-    primeJoker = {
-        name = "Prime Joker",
+    primeTimeJoker = {
+        name = "Prime Time",
         text = {
             "Each played {C:attention}2{},",
             "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
@@ -456,11 +453,12 @@ local locs = {
     historicalJoker = {
         name = "Historical Joker",
         text = {
-            "If scored cards have the",
-            "same {C:attention}ranks{} and {C:attention}order{} as",
-            "previous hand, add previous hands",
-            "{C:chips}Chips{} to the current hand. Caps",
-            "at {C:attention}#1#%{} of current blind's Chips",
+            "If scored cards have the same",
+            "{C:attention}ranks{} and {C:attention}order{} as previous",
+            "hand, add previous hands {C:chips}Chips{}",
+            "to the current hand. Caps at",
+            "{C:attention}#1#%{} of current blind's Chips",
+            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
         }
     },
     suitAlleyJoker = {
@@ -504,12 +502,13 @@ local locs = {
             "{C:attention}#2#{} or fewer cards"
         }
     },
-    statisticJoker = {
-        name = "Statistic Joker",
+    abbeyRoadJoker = {
+        name = "Abbey Road",
         text = {
-            "If at least {C:attention}#2#{} poker",
-            "hands have been played the same",
-            "amount of times, give {X:mult,C:white}X#1#{} Mult"
+            "If at least {C:attention}#2#{} poker hands",
+            "have been played the same",
+            "amount of times, give {X:mult,C:white}X#1#{} Mult",
+            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
         }
     },
     boatingLicenseJoker = {
@@ -662,9 +661,9 @@ local decks = {
 
 -- Create Jokers
 local jokers = {
-    primeJoker = {
-        ability_name = "MMC Prime Joker",
-        slug = "mmc_prime",
+    primeTimeJoker = {
+        ability_name = "MMC Prime Time",
+        slug = "mmc_prime_time",
         ability = { extra = { Xmult = 1.2 } },
         rarity = 1,
         cost = 4,
@@ -937,9 +936,9 @@ local jokers = {
         blueprint_compat = true,
         eternal_compat = true
     },
-    statisticJoker = {
-        ability_name = "MMC Statistic Joker",
-        slug = "mmc_statistic",
+    abbeyRoadJoker = {
+        ability_name = "MMC Abbey Road",
+        slug = "mmc_abbey_road",
         ability = { extra = { Xmult = 4, req = 4, hand_equal_count = {}, should_trigger = false } },
         rarity = 2,
         cost = 6,
@@ -1182,7 +1181,7 @@ function Back.apply_to_run(arg_56_0)
                 end
 
                 -- Add Prime Joker
-                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_prime', nil)
+                local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_prime_time', nil)
                 card:add_to_deck()
                 G.jokers:emplace(card)
 
@@ -1284,8 +1283,8 @@ function SMODS.INIT.MikasModCollection()
     end
 
     -- Joker calculations
-    if config.primeJoker then
-        SMODS.Jokers.j_mmc_prime.calculate = function(self, context)
+    if config.primeTimeJoker then
+        SMODS.Jokers.j_mmc_prime_time.calculate = function(self, context)
             -- For each played card, if card is prime, add xmult
             if context.individual and context.cardarea == G.play and (context.other_card:get_id() == 2 or
                     context.other_card:get_id() == 3 or
@@ -2032,8 +2031,8 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.statisticJoker then
-        SMODS.Jokers.j_mmc_statistic.calculate = function(self, context)
+    if config.abbeyRoadJoker then
+        SMODS.Jokers.j_mmc_abbey_road.calculate = function(self, context)
             if context.after and context.cardarea == G.jokers then
                 -- Reset hand count
                 self.ability.extra.hand_equal_count = {}
@@ -2477,7 +2476,7 @@ function Card.generate_UIBox_ability_table(self)
     elseif self.ability.set == 'Joker' then
         local customJoker = true
 
-        if self.ability.name == 'MMC Prime Joker' then
+        if self.ability.name == 'MMC Prime Time' then
             loc_vars = { self.ability.extra.Xmult }
         elseif self.ability.name == 'MMC Straight Nate' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.j_slots }
@@ -2528,7 +2527,7 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = {}
         elseif self.ability.name == 'MMC Incomplete Joker' then
             loc_vars = { self.ability.extra.chips, self.ability.extra.req }
-        elseif self.ability.name == 'MMC Statistic Joker' then
+        elseif self.ability.name == 'MMC Abbey Road' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.req }
         elseif self.ability.name == 'MMC Boating License' then
             loc_vars = {}
