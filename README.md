@@ -2,7 +2,8 @@
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/).
 
 # Mod Incompatibility
-This mod is **_not_** compatible with JellyMod. It won't crash anything, but multiple Jokers will not function correctly. This is because JellyMod overwrites some of the base game functionality, as stated on the [JellyMod GitHub](https://github.com/jamesthejellyfish/JellyMod/tree/main?tab=readme-ov-file#compatibility-warning) page. Unfortunately there is nothing I can do about this, so if you decide to use those mods together, be warned!
+This mod is partially incompatible with JellyMod, but there is a workaround. As long as you extract JellyMod into a seperate subfolder and keep MikasModCollection inside of the Mods folder, they should be mostly compatible. Your final Mods folder should look something like this: `Appdata/Balatro/Mods` will have `MikasModCollection.lua` and the `assets` folder. Put the JellyMod zip in a new folder `Appdata/Balatro/Mods/JellyMod`, and then extract `JellyMod.zip` there. The Scout Joker from JellyMod break things again, but everything else should work.\
+_Thanks to `@Mastahcheech` and `@Cr4zZyBipBiip` for figuring this out_
 
 # Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
@@ -47,6 +48,10 @@ Earn $2 for every Gold Seal and Gold Card in your whole deck at the end of the r
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.\
 _Art made by `Grassy`_
 
+### Broke Joker
+![Broke](./assets/2x/j_mmc_broke.png)\
+Gains +1 Mult per -$2.
+
 ### Glue
 ![Glue](./assets/2x/j_mmc_glue.png)\
 If you have both the Half Joker and the Incomplete Joker, give +2 Joker slots and X5 Mult.
@@ -65,7 +70,8 @@ Once every 2 rounds, Blue Seals give 2 Planet cards. One of these will be for yo
 
 ### Prime Joker
 ![Prime Joker](./assets/2x/j_mmc_prime.png)\
-Gives each played prime number _(2, 3, 5, 7, Ace)_ X1.2 mult when scored.
+Gives each played prime number _(2, 3, 5, 7, Ace)_ X1.2 mult when scored.\
+_Art made by `Grassy`_
 
 ### Rigged Joker
 ![Rigged Joker](./assets/2x/j_mmc_rigged.png)\
@@ -133,6 +139,10 @@ Gains +2 Mult per Seal, +10 Chips per Enhancement and X0.1 Mult per Edition for 
 ![Statistic Joker](./assets/2x/j_mmc_statistic.png)\
 If at least 4 poker hands have been played the same amount of times, gives X4 Mult.\
 _Does not count unplayed poker hands_
+
+### Student Loans
+![Student Loans](./assets/2x/j_mmc_student_loans.png)\
+Go up to -$100 in debt. Gives -1 discard for every -$25 in debt.
 
 ### What Are The Odds
 ![What Are The Odds](./assets/2x/j_mmc_what_are_the_odds.png)\

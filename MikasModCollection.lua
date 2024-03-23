@@ -588,7 +588,7 @@ local locs = {
         name = "Student Loans",
         text = {
             "Go up to {C:red}-$#1#{} in debt.",
-            "Gives -#4# {C:red}discards{}",
+            "Gives -#4# {C:red}discard{}",
             "for every {C:red}-$#2#{} in debt",
             "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
         }
@@ -1054,7 +1054,7 @@ local jokers = {
     studentLoansJoker = {
         ability_name = "MMC Student Loans",
         slug = "mmc_student_loans",
-        ability = { extra = { negative_bal = 100, every = 20, discards = 0, discard_sub = 1 } },
+        ability = { extra = { negative_bal = 100, every = 25, discards = 0, discard_sub = 1 } },
         rarity = 2,
         cost = 4,
         unlocked = true,
