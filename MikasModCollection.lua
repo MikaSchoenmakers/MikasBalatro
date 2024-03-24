@@ -2378,6 +2378,15 @@ function SMODS.INIT.MikasModCollection()
                     }
                 end
             end
+            if context.repetition and context.cardarea == G.hand then
+                if context.other_card.seal == 'Red' and (next(context.card_effects[1]) or #context.card_effects > 1) then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = 1,
+                        card = self
+                    }
+                end
+            end
 
             -- Create tarot card for each Purple Seal
             if context.discard then
