@@ -34,11 +34,6 @@ _All Jokers also remove the Joker slot again once sold_
 
 # Jokers
 ## Common
-### Alphabet Joker
-![Alphabet Joker](./assets/2x/j_mmc_alphabet.png)\
-Gives +20 Chips for every specific letter in all your Jokers. Letter changes when this Joker appears in the shop.\
-_An example: If the current letter is 'o' and you have "Cool Joker" and "Joker", you'd get a (3 * 20) + 20 = 80 chip bonus_
-
 ### The Banker
 ![The Banker](./assets/2x/j_mmc_banker.png)\
 Earn $2 for every Gold Seal and Gold Card in your whole deck at the end of the round.
@@ -51,6 +46,12 @@ _Art made by `Grassy`_
 ### Broke Joker
 ![Broke](./assets/2x/j_mmc_broke.png)\
 Gains +1 Mult per -$2.
+
+### Eye Chart
+![Eye Chart](./assets/2x/j_mmc_eye_chart.png)\
+Gives +20 Chips for every specific letter in all your Jokers. Letter changes when this Joker appears in the shop.\
+_An example: If the current letter is 'o' and you have "Cool Joker" and "Joker", you'd get a (3 * 20) + 20 = 80 chip bonus_\
+_Art made by `Grassy`_
 
 ### Glue
 ![Glue](./assets/2x/j_mmc_glue.png)\
@@ -100,7 +101,7 @@ _Art made by `Grassy`_
 
 ### Blackjack Joker
 ![Blackjack Joker](./assets/2x/j_mmc_blackjack.png)\
-Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**.\
+Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**. Gives -X0.5 Mult less for every point below 21.\
 _An Ace can be valued at either 1 or 11_
 
 ### Camper
@@ -192,7 +193,8 @@ If a hand scores more than the blind's required Chips, duplicate the played hand
 
 ### The Sniper
 ![The Sniper](./assets/2x/j_mmc_sniper.png)\
-Gains +X4 Mult when a blind is finished with the **_exact_** chip requirement.
+Gains +X4 Mult when a blind is finished within 5% of the **_exact_** chip requirement.\
+_Art made by `Grassy`_
 
 ### Straight Nate
 ![Straight Nate](./assets/2x/j_mmc_straight_nate.png)\
@@ -201,4 +203,5 @@ Gives X4 mult if the hand contains a straight and you have both the **_Odd Todd_
 ## Legendary
 ### Dagonet
 ![Dagonet](./assets/2x/j_mmc_dagonet.png)\
-Doubles all base values on Jokers.
+Doubles all base values on Jokers.\
+_Does not work with Cards like Juggler and Credit Card_
