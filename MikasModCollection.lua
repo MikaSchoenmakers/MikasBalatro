@@ -54,10 +54,17 @@ local config = {
     specialEditionJoker = true,
     stockpilerJoker = true,
     studentLoansJoker = true,
-    brokeJoker = true
+    brokeJoker = true,
+    goForBrokeJoker = true,
+    streetFighterJoker = true
 }
 
 -- Helper functions
+local function file_exists(name)
+    local f = io.open(name, "r")
+    return f ~= nil and io.close(f)
+end
+
 local function is_even(card)
     local id = card:get_id()
     return id <= 10 and id % 2 == 0
@@ -632,6 +639,22 @@ local locs = {
     },
     brokeJoker = {
         name = "Broke Joker",
+        text = {
+            "Gains {C:mult}+#1#{} Mult",
+            "per {C:red}-$#3#",
+            "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
+        }
+    },
+    goForBrokeJoker = {
+        name = "Go For Broke",
+        text = {
+            "Gains {C:mult}+#1#{} Mult",
+            "per {C:red}-$#3#",
+            "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
+        }
+    },
+    streetFighterJoker = {
+        name = "Street Fighter",
         text = {
             "Gains {C:mult}+#1#{} Mult",
             "per {C:red}-$#3#",
@@ -1296,9 +1319,16 @@ function SMODS.INIT.MikasModCollection()
             local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, { x = 0, y = 0 }, locs[k],
                 v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
             joker:register()
-            local sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
-                "j_" .. v.slug .. ".png", 71, 95, "asset_atli")
-            sprite:register()
+            local path = "j_" .. v.slug .. ".png"
+            local sprite
+            if file_exists(path) then
+                sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
+                path, 71, 95, "asset_atli")
+            else
+                sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
+                "j_mmc_missing_texture.png", 71, 95, "asset_atli")
+            end
+            sprite:register() 
         end
     end
 
