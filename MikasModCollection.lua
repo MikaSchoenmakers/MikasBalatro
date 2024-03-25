@@ -60,10 +60,8 @@ local config = {
 }
 
 -- Helper functions
-local function file_exists(name)
-    local f = io.open(name, "r")
-    return f ~= nil and io.close(f)
-end
+local no_art_yet = {
+}
 
 local function is_even(card)
     local id = card:get_id()
@@ -648,17 +646,17 @@ local locs = {
     goForBrokeJoker = {
         name = "Go For Broke",
         text = {
-            "Gains {C:mult}+#1#{} Mult",
+            "Gains {C:chips}+#1#{} Chips",
             "per {C:red}-$#3#",
-            "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
+            "{C:inactive}(Currently {C:chips}#2#{C:inactive} Chips)"
         }
     },
     streetFighterJoker = {
         name = "Street Fighter",
         text = {
-            "Gains {C:mult}+#1#{} Mult",
-            "per {C:red}-$#3#",
-            "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
+            "Gives {X:mult,C:white}X#1#{} Mult",
+            "when balance is",
+            "at or below {C:red}-$#2#"
         }
     }
 }
@@ -1132,6 +1130,28 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    goForBrokeJoker = {
+        ability_name = "MMC Go For Broke",
+        slug = "mmc_go_for_broke",
+        ability = { extra = { current_chips = 0, every = 1, chip_mod = 4 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    streetFighterJoker = {
+        ability_name = "MMC Street Fighter",
+        slug = "mmc_street_fighter",
+        ability = { extra = { Xmult = 4, req = 20 } },
+        rarity = 2,
+        cost = 7,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -1319,16 +1339,15 @@ function SMODS.INIT.MikasModCollection()
             local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, { x = 0, y = 0 }, locs[k],
                 v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
             joker:register()
-            local path = "j_" .. v.slug .. ".png"
             local sprite
-            if file_exists(path) then
+            if not_in_table(no_art_yet, k) then
                 sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
-                path, 71, 95, "asset_atli")
+                "j_" .. v.slug .. ".png", 71, 95, "asset_atli")
             else
                 sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
                 "j_mmc_missing_texture.png", 71, 95, "asset_atli")
             end
-            sprite:register() 
+            sprite:register()
         end
     end
 
@@ -2543,6 +2562,43 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.goForBrokeJoker then
+        SMODS.Jokers.j_mmc_go_for_broke.calculate = function(self, context)
+            if SMODS.end_calculate_context(context) then
+                -- Apply chips
+                if self.ability.extra.current_chips > 0 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.current_chips }
+                        },
+                        chip_mod = self.ability.extra.current_chips,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
+
+    if config.streetFighterJoker then
+        SMODS.Jokers.j_mmc_street_fighter.calculate = function(self, context)
+            if SMODS.end_calculate_context(context) then
+                -- Apply xmult if balance is below negative requirement
+                if G.GAME.dollars <= -1 * self.ability.extra.req then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.Xmult }
+                        },
+                        Xmult_mod = self.ability.extra.Xmult
+                    }
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -2642,6 +2698,10 @@ function Card.generate_UIBox_ability_table(self)
                 self.ability.extra.discard_sub }
         elseif self.ability.name == 'MMC Broke Joker' then
             loc_vars = { self.ability.extra.mult_mod, self.ability.extra.current_mult, self.ability.extra.every }
+        elseif self.ability.name == 'MMC Go For Broke' then
+            loc_vars = { self.ability.extra.chip_mod, self.ability.extra.current_chips, self.ability.extra.every }
+        elseif self.ability.name == 'MMC Street Fighter' then
+            loc_vars = { self.ability.extra.Xmult, self.ability.extra.req }
         else
             customJoker = false
         end
@@ -2944,6 +3004,15 @@ function Card.update(self, dt)
             if negative_bal < 0 then
                 self.ability.extra.current_mult = -1 * math.ceil(negative_bal / self.ability.extra.every) *
                     self.ability.extra.mult_mod
+            end
+        end
+
+        if self.ability.name == 'MMC Go For Broke' then
+            -- Update mult based on negative balance
+            local negative_bal = G.GAME.dollars
+            if negative_bal < 0 then
+                self.ability.extra.current_chips = -1 * math.ceil(negative_bal / self.ability.extra.every) *
+                    self.ability.extra.chip_mod
             end
         end
     end
