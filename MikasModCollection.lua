@@ -56,11 +56,17 @@ local config = {
     studentLoansJoker = true,
     brokeJoker = true,
     goForBrokeJoker = true,
-    streetFighterJoker = true
+    streetFighterJoker = true,
+    checklistJoker = true,
+    oneOfUsJoker = true,
+    investorJoker = true,
+    -- mountainClimberJoker = true,
+    shacklesJoker = true
 }
 
 -- Helper functions
 local no_art_yet = {
+    -- "mountainClimberJoker",
 }
 
 local function is_even(card)
@@ -133,6 +139,14 @@ local card_editions = {
     { polychrome = true }
 }
 
+local joker_editions = {
+    { foil = true },
+    { holo = true },
+    { polychrome = true },
+    { negative = true }
+}
+
+
 local seals = {
     "Gold",
     "Red",
@@ -178,7 +192,6 @@ local attributes = {
     min = { key = 'min_dagonet', prev_key = 'prev_min_dagonet', min = 0 },
     every = { key = 'every_dagonet', prev_key = 'prev_every_dagonet', min = 0 },
     increase = { key = 'increase_dagonet', prev_key = 'prev_increase_dagonet', min = 0 },
-    h_size = { key = 'h_size_dagonet', prev_key = 'prev_h_size_dagonet', min = 0 },
     d_size = { key = 'd_size_dagonet', prev_key = 'prev_d_size_dagonet', min = 0 },
     h_mod = { key = 'h_mod_dagonet', prev_key = 'prev_h_mod_dagonet', min = 0 },
     h_plays = { key = 'h_plays_dagonet', prev_key = 'prev_h_plays_dagonet', min = 0 },
@@ -657,6 +670,47 @@ local locs = {
             "Gives {X:mult,C:white}X#1#{} Mult",
             "when balance is",
             "at or below {C:red}-$#2#"
+        }
+    },
+    checklistJoker = {
+        name = "Checklist",
+        text = {
+            "Playing {C:attention}#1#{} upgrades",
+            "it by #2# level. Poker hand",
+            "changes when played"
+        }
+    },
+    oneOfUsJoker = {
+        name = "One Of Us",
+        text = {
+            "If played hand",
+            "contains {C:attention}#1# Enhanced cards,",
+            "Enhance a random {C:attention}Joker",
+        }
+    },
+    investorJoker = {
+        name = "The Investor",
+        text = {
+            "Gives {C:money}$#1#{} at end of",
+            "round. {C:green}#3# in #2#{} chance to",
+            "give {C:red}-$#1#{} instead"
+        }
+    },
+    -- mountainClimberJoker = {
+    --     name = "Mountain Climber",
+    --     text = {
+    --         "Every played {C:attention}card{}",
+    --         "permanently gains",
+    --         "{C:mult}+#1#{} Mult when scored"
+    --     }
+    -- },
+    shacklesJoker = {
+        name = "Shackles",
+        text = {
+            "{C:blue}+#1#{} hand, {C:red}+#2#{} discard,",
+            "{C:attention}+#3#{} hand size. Destroyed",
+            "if you play more than",
+            "{C:attention}#4#{} cards in one hand"
         }
     }
 }
@@ -1152,6 +1206,61 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    checklistJoker = {
+        ability_name = "MMC Checklist",
+        slug = "mmc_checklist",
+        ability = { extra = { poker_hand = "High Card", increase = 1 } },
+        rarity = 2,
+        cost = 7,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    oneOfUsJoker = {
+        ability_name = "MMC One Of Us",
+        slug = "mmc_one_of_us",
+        ability = { extra = { req = 5, enhanced_tally = 0 } },
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    investorJoker = {
+        ability_name = "MMC The Investor",
+        slug = "mmc_investor",
+        ability = { extra = { dollars = 5, odds = 4 } },
+        rarity = 1,
+        cost = 4,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
+    },
+    -- mountainClimberJoker = {
+    --     ability_name = "MMC Mountain Climber",
+    --     slug = "mmc_mountain_climber",
+    --     ability = { extra = { mult = 1 } },
+    --     rarity = 2,
+    --     cost = 5,
+    --     unlocked = true,
+    --     discovered = true,
+    --     blueprint_compat = true,
+    --     eternal_compat = true
+    -- },
+    shacklesJoker = {
+        ability_name = "MMC Shackles",
+        slug = "mmc_shackles",
+        ability = { extra = { _hand_add = 1, _h_size = 1, _discards = 1, req = 4 } },
+        rarity = 1,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -1342,10 +1451,10 @@ function SMODS.INIT.MikasModCollection()
             local sprite
             if not_in_table(no_art_yet, k) then
                 sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
-                "j_" .. v.slug .. ".png", 71, 95, "asset_atli")
+                    "j_" .. v.slug .. ".png", 71, 95, "asset_atli")
             else
                 sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
-                "j_mmc_missing_texture.png", 71, 95, "asset_atli")
+                    "j_mmc_missing_texture.png", 71, 95, "asset_atli")
             end
             sprite:register()
         end
@@ -1814,21 +1923,7 @@ function SMODS.INIT.MikasModCollection()
                     G.E_MANAGER:add_event(Event({
                         func = function()
                             play_sound('tarot1')
-                            self.T.r = -0.2
-                            self:juice_up(0.3, 0.4)
-                            self.states.drag.is = true
-                            self.children.center.pinch.x = true
-                            G.E_MANAGER:add_event(Event({
-                                trigger = 'after',
-                                delay = 0.3,
-                                blockable = false,
-                                func = function()
-                                    G.jokers:remove_card(self)
-                                    self:remove()
-                                    self = nil
-                                    return true;
-                                end
-                            }))
+                            self:start_dissolve()
                             return true
                         end
                     }))
@@ -2324,7 +2419,7 @@ function SMODS.INIT.MikasModCollection()
 
             -- Check for 5 lucky triggers
             if SMODS.end_calculate_context(context) then
-                if self.ability.extra.lucky_tally >= 4 then
+                if self.ability.extra.lucky_tally >= self.ability.extra.req then
                     -- Create new negative Joker based on Judgement Tarot card
                     G.E_MANAGER:add_event(Event({
                         func = function()
@@ -2599,6 +2694,119 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.checklistJoker then
+        SMODS.Jokers.j_mmc_checklist.calculate = function(self, context)
+            if context.before and context.scoring_name == self.ability.extra.poker_hand then
+                -- Get new random poker hand
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        local _poker_hands = {}
+                        for k, v in pairs(G.GAME.hands) do
+                            if v.visible and k ~= self.ability.extra.poker_hand then _poker_hands[#_poker_hands + 1] = k end
+                        end
+                        self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('checklist'))
+                        return true
+                    end
+                }))
+                -- Level up poker hand
+                card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})
+                level_up_hand(self, context.scoring_name, false, self.ability.extra.increase)
+            end
+        end
+    end
+
+    if config.oneOfUsJoker then
+        SMODS.Jokers.j_mmc_one_of_us.calculate = function(self, context)
+            -- Count enhanced cards
+            if context.individual and context.cardarea == G.play then
+                if context.other_card.ability.set == "Enhanced" then
+                    self.ability.extra.enhanced_tally = self.ability.extra.enhanced_tally + 1
+                end
+            end
+
+            -- Check for required enhanced cards
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.enhanced_tally >= self.ability.extra.req then
+                    self.ability.extra.enhanced_tally = 0
+
+                    local editionless_jokers = {}
+                    for _, v in pairs(G.jokers.cards) do
+                        if v.ability.set == 'Joker' and (not v.edition) then
+                            table.insert(editionless_jokers, v)
+                        end
+                    end
+                    if #editionless_jokers > 0 then
+                        local joker = pseudorandom_element(editionless_jokers, pseudoseed('one_of_us'))
+                        local edition = get_random_in_table(joker_editions)
+
+                        -- Animate card
+                        G.E_MANAGER:add_event(Event({
+                            delay = 0.5,
+                            func = function()
+                                joker:juice_up(0.3, 0.5)
+                                joker:set_edition(edition, true)
+                                return true
+                            end
+                        }))
+                        return {
+                            message = localize('k_mmc_upgrade'),
+                            colour = G.C.SECONDARY_SET.Tarot
+                        }
+                    end
+                end
+                self.ability.extra.enhanced_tally = 0
+            end
+        end
+    end
+
+    if config.investorJoker then
+        SMODS.Jokers.j_mmc_investor.calculate = function(self, context)
+            if context.end_of_round and not context.individual and not context.repetition then
+                -- Give money between min and max
+                local dollars = self.ability.extra.dollars
+                if pseudorandom('investor') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                    dollars = dollars * -1
+                end
+                ease_dollars(dollars)
+                return {
+                    message = localize('$') .. dollars,
+                    dollars = dollars,
+                    colour = G.C.MONEY
+                }
+            end
+        end
+    end
+
+    -- if config.mountainClimberJoker then
+    --     SMODS.Jokers.j_mmc_mountain_climber.calculate = function(self, context)
+    --         if context.individual and context.cardarea == G.play then
+    --             context.other_card.ability.mult = context.other_card.ability.mult or 0
+    --             context.other_card.ability.mult = context.other_card.ability.mult + self.ability.extra.mult
+    --             return {
+    --                 message = localize('k_mmc_upgrade'),
+    --                 colour = G.C.MULT,
+    --                 card = self
+    --             }
+    --         end
+    --     end
+    -- end
+
+    if config.shacklesJoker then
+        SMODS.Jokers.j_mmc_shackles.calculate = function(self, context)
+            if SMODS.end_calculate_context(context) then
+                if #context.full_hand > self.ability.extra.req then
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('tarot1')
+                            self:start_dissolve()
+                            return true
+                        end
+                    }))
+                end
+            end
+        end
+    end
 end
 
 -- Copied and modifed from LushMod
@@ -2702,6 +2910,18 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.chip_mod, self.ability.extra.current_chips, self.ability.extra.every }
         elseif self.ability.name == 'MMC Street Fighter' then
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.req }
+        elseif self.ability.name == 'MMC Checklist' then
+            loc_vars = { localize(self.ability.extra.poker_hand, 'poker_hands'), self.ability.extra.increase }
+        elseif self.ability.name == 'MMC One Of Us' then
+            loc_vars = { self.ability.extra.req }
+        elseif self.ability.name == 'MMC The Investor' then
+            loc_vars = { self.ability.extra.dollars, self.ability.extra.odds, '' ..
+            (G.GAME and G.GAME.probabilities.normal or 1) }
+            -- elseif self.ability.name == 'MMC Mountain Climber' then
+            --     loc_vars = { self.ability.extra.mult }
+        elseif self.ability.name == 'MMC Shackles' then
+            loc_vars = { self.ability.extra._hand_add, self.ability.extra._discards, self.ability.extra._h_size, self
+                .ability.extra.req }
         else
             customJoker = false
         end
@@ -2846,6 +3066,14 @@ function Card:add_to_deck(from_debuff)
         if self.ability.name == 'MMC Student Loans' then
             G.GAME.bankrupt_at = G.GAME.bankrupt_at - self.ability.extra.negative_bal
         end
+
+        if self.ability.name == 'MMC Shackles' then
+            ease_hands_played(self.ability.extra._hand_add)
+            G.GAME.round_resets.hands = G.GAME.round_resets.hands + self.ability.extra._hand_add
+            ease_discard(self.ability.extra._discards)
+            G.GAME.round_resets.discards = G.GAME.round_resets.discards + self.ability.extra._discards
+            G.hand:change_size(self.ability.extra._h_size)
+        end
     end
     add_to_deckref(self, from_debuff)
 end
@@ -2934,6 +3162,14 @@ function Card:remove_from_deck(from_debuff)
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
             ease_discard(-self.ability.extra.discards)
             G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+        end
+
+        if self.ability.name == 'MMC Shackles' then
+            ease_hands_played(-self.ability.extra._hand_add)
+            G.GAME.round_resets.hands = G.GAME.round_resets.hands - self.ability.extra._hand_add
+            ease_discard(-self.ability.extra._discards)
+            G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra._discards
+            G.hand:change_size(-self.ability.extra._h_size)
         end
     end
     remove_from_deckref(self, from_debuff)
