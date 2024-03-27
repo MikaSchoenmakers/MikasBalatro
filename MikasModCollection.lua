@@ -96,17 +96,6 @@ local function is_face(card)
     return id == 11 or id == 12 or id == 13
 end
 
-local function get_random_letter(letter)
-    -- 'A' to 'Z' is 65 to 95
-    local random_ascii = math.random(65, 90)
-    local new_letter = string.char(random_ascii)
-    if letter ~= new_letter then
-        return new_letter
-    else
-        return get_random_letter(letter)
-    end
-end
-
 local function remove_prefix(name, prefix)
     local start_pos, end_pos = string.find(name, prefix)
     if start_pos == 1 then
@@ -115,6 +104,9 @@ local function remove_prefix(name, prefix)
         return name
     end
 end
+
+local letters = { "a", "b", "c", "d", "e", "é", "f", "g", "h", "i", "j", "k",
+    "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w'", "x", "y", "z" }
 
 local function count_letters(str, letter)
     local count = 0
@@ -155,11 +147,6 @@ local seals = {
     "Blue",
     "Purple"
 }
-
-local function get_random_in_table(table)
-    local index = math.random(1, #table)
-    return table[index]
-end
 
 local function tables_equal(a, b)
     return table.concat(a) == table.concat(b)
@@ -2045,7 +2032,7 @@ function SMODS.INIT.MikasModCollection()
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.high_card then
                     for _, v in ipairs(self.ability.extra.card_refs) do
-                        v:set_ability(get_random_in_table(enhancements), nil, true)
+                        v:set_ability(pseudorandom_element(enhancements, pseudoseed('finishing_blow')), nil, true)
                         card_eval_status_text(self, 'extra', nil, nil, nil,
                             {
                                 message = localize('k_mmc_upgrade'),
@@ -2405,10 +2392,11 @@ function SMODS.INIT.MikasModCollection()
                                 _card:juice_up(0.3, 0.5)
                                 -- Add seal and edition
                                 if _card.ability.seal == nil then
-                                    _card:set_seal(get_random_in_table(seals), nil, true)
+                                    _card:set_seal(pseudorandom_element(seals, pseudoseed('commander')), nil, true)
                                 end
                                 if _card.edition == nil then
-                                    _card:set_edition(get_random_in_table(card_editions), nil, true)
+                                    _card:set_edition(pseudorandom_element(card_editions, pseudoseed('commander')), nil,
+                                        true)
                                 end
                                 return true
                             end
@@ -2416,7 +2404,7 @@ function SMODS.INIT.MikasModCollection()
 
                         -- Add enhancement, outside of animate because this has a delay for some reason
                         if _card.ability.effect == 'Base' then
-                            _card:set_ability(get_random_in_table(enhancements), nil, true)
+                            _card:set_ability(pseudorandom_element(enhancements, pseudoseed('commander')), nil, true)
                         end
 
                         -- Return message
@@ -2760,7 +2748,7 @@ function SMODS.INIT.MikasModCollection()
                     end
                     if #editionless_jokers > 0 then
                         local joker = pseudorandom_element(editionless_jokers, pseudoseed('one_of_us'))
-                        local edition = get_random_in_table(joker_editions)
+                        local edition = pseudorandom_element(joker_editions, pseudoseed('one_of_us'))
 
                         -- Animate card
                         G.E_MANAGER:add_event(Event({
@@ -3302,7 +3290,7 @@ local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
     if self.ability.name == 'MMC Eye Chart' and not self.added_to_deck then
-        self.ability.extra.letter = get_random_letter()
+        self.ability.extra.letter = pseudorandom_element(letters, pseudoseed('alphabet'))
     end
 
     if G.GAME.starting_params.mmc_for_hire and (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
