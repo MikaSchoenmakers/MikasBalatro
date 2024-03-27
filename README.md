@@ -65,7 +65,7 @@ _Art made by `Grassy`_
 If you have both the Half Joker and the Incomplete Joker, give +2 Joker slots and X5 Mult.
 
 ### Go For Broke
-![Go For Broke](./assets/2x/j_mmc_go_for_broke_.png)\
+![Go For Broke](./assets/2x/j_mmc_go_for_broke.png)\
 Gains +4 Chips per -$1.
 
 ### Gold Bar
