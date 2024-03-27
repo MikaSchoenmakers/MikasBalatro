@@ -61,12 +61,14 @@ local config = {
     oneOfUsJoker = true,
     investorJoker = true,
     -- mountainClimberJoker = true,
-    shacklesJoker = true
+    shacklesJoker = true,
+    buyOneGetOneJoker = true
 }
 
 -- Helper functions
 local no_art_yet = {
     -- "mountainClimberJoker",
+    "buyOneGetOneJoker"
 }
 
 local function is_even(card)
@@ -712,6 +714,15 @@ local locs = {
             "if you play more than",
             "{C:attention}#4#{} cards in one hand"
         }
+    },
+    buyOneGetOneJoker = {
+        name = "Buy One Get One",
+        text = {
+            "{C:green}#2# in #1#{} chance to",
+            "get a random {C:attention}extra card{}",
+            "of whatever you're buying",
+            "{C:inactive}(Must have room)"
+        }
     }
 }
 
@@ -1261,6 +1272,17 @@ local jokers = {
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
+    },
+    buyOneGetOneJoker = {
+        ability_name = "MMC Buy One Get One",
+        slug = "mmc_buy_one_get_one",
+        ability = { extra = { odds = 4 } },
+        rarity = 1,
+        cost = 5,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = true,
+        eternal_compat = true
     }
 }
 
@@ -1429,7 +1451,7 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_hand_up = "+ Hand Size!"
     G.localization.misc.dictionary.k_mmc_hand_down = "- Hand Size!"
     G.localization.misc.dictionary.k_mmc_tick = "Tick..."
-    G.localization.misc.dictionary.k_mmc_planet = "Planet!"
+    G.localization.misc.dictionary.k_mmc_plus_card = "Card!"
     G.localization.misc.dictionary.k_mmc_luck = "+ Luck!"
 
     init_localization()
@@ -2710,7 +2732,7 @@ function SMODS.INIT.MikasModCollection()
                     end
                 }))
                 -- Level up poker hand
-                card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})
+                card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') })
                 level_up_hand(self, context.scoring_name, false, self.ability.extra.increase)
             end
         end
@@ -2803,6 +2825,104 @@ function SMODS.INIT.MikasModCollection()
                             return true
                         end
                     }))
+                end
+            end
+        end
+    end
+
+    if config.buyOneGetOneJoker then
+        SMODS.Jokers.j_mmc_buy_one_get_one.calculate = function(self, context)
+            if context.buying_card then
+                if pseudorandom('lucky_money') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                    if context.card.ability.set == 'Joker' then
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                if #G.jokers.cards < G.jokers.config.card_limit then
+                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
+                                    card:add_to_deck()
+                                    G.jokers:emplace(card)
+                                    card:start_materialize()
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_plus_joker'), colour = G.C.BLUE })
+                                else
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_no_space_ex'), colour = G.C.RED })
+                                end
+                                return true
+                            end
+                        }))
+                    end
+                    if context.card.ability.set == 'Tarot' then
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                if G.consumeables.config.card_limit > #G.consumeables.cards then
+                                    play_sound('timpani')
+                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'emp')
+                                    card:add_to_deck()
+                                    G.consumeables:emplace(card)
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_plus_tarot'), colour = G.C.SECONDARY_SET.Tarot })
+                                else
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_no_space_ex'), colour = G.C.Red })
+                                end
+                                return true
+                            end
+                        }))
+                    end
+                    if context.card.ability.set == 'Spectral' then
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                if G.consumeables.config.card_limit > #G.consumeables.cards then
+                                    play_sound('timpani')
+                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'sea')
+                                    card:add_to_deck()
+                                    G.consumeables:emplace(card)
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_plus_spectral'), colour = G.C.SECONDARY_SET.Spectral })
+                                else
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_no_space_ex'), colour = G.C.Red })
+                                end
+                                return true
+                            end
+                        }))
+                    end
+                    if context.card.ability.set == 'Planet' then
+                        G.E_MANAGER:add_event(Event({
+                            func = (function()
+                                if G.consumeables.config.card_limit > #G.consumeables.cards then
+                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
+                                    card:add_to_deck()
+                                    G.consumeables:emplace(card)
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
+                                else
+                                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                                        { message = localize('k_no_space_ex'), colour = G.C.Red })
+                                end
+                                return true
+                            end)
+                        }))
+                    end
+                    if context.card.ability.set == 'Default' then
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                local _card = create_playing_card({
+                                    front = pseudorandom_element(G.P_CARDS, pseudoseed('bogo')),
+                                    center = G.P_CENTERS.c_base
+                                }, G.deck, nil, nil, { G.C.SECONDARY_SET.Enhanced })
+                                _card:add_to_deck()
+                                G.deck.config.card_limit = G.deck.config.card_limit + 1
+                                card_eval_status_text(self, 'extra', nil, nil, nil,
+                                    { message = localize('k_mmc_plus_card'), colour = G.C.Blue })
+                                return true
+                            end
+                        }))
+                    end
+                else
+                    card_eval_status_text(self, 'extra', nil, nil, nil,
+                        { message = localize('k_nope_ex'), colour = G.C.SECONDARY_SET.Tarot })
                 end
             end
         end
@@ -2922,6 +3042,8 @@ function Card.generate_UIBox_ability_table(self)
         elseif self.ability.name == 'MMC Shackles' then
             loc_vars = { self.ability.extra._hand_add, self.ability.extra._discards, self.ability.extra._h_size, self
                 .ability.extra.req }
+        elseif self.ability.name == 'MMC Buy One Get One' then
+            loc_vars = { self.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
         else
             customJoker = false
         end
@@ -3309,7 +3431,7 @@ function Card.get_end_of_round_effect(self, context)
 
                 -- Show message
                 card_eval_status_text(v, 'extra', nil, nil, nil,
-                    { message = localize('k_mmc_planet'), colour = G.C.SECONDARY_SET.Planet })
+                    { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
             end
 
             -- Create planet for each Blue Seal
@@ -3331,7 +3453,7 @@ function Card.get_end_of_round_effect(self, context)
 
                 -- Show message
                 card_eval_status_text(v, 'extra', nil, nil, nil,
-                    { message = localize('k_mmc_planet'), colour = G.C.SECONDARY_SET.Planet })
+                    { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
             end
         end
     end

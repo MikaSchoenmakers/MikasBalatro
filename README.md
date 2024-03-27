@@ -2,8 +2,11 @@
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/).
 
 # Mod Incompatibility
+### JellyMod
 This mod is partially incompatible with JellyMod, but there is a partial workaround. As long as you extract JellyMod into a seperate subfolder and keep MikasModCollection inside of the Mods folder, they should be mostly compatible. Your final Mods folder should look something like this: `Appdata/Balatro/Mods` will have `MikasModCollection.lua` and the `assets` folder. Put the JellyMod zip in a new folder `Appdata/Balatro/Mods/JellyMod`, and then extract `JellyMod.zip` there. The Scout Joker from JellyMod breaks things again, but things should be more compatible than before.\
 _Thanks to `@Mastahcheech` and `@Cr4zZyBipBiip` for figuring this out_
+### Divvy's Real-Time Score Preview
+This mod is also incompatible with Divvy's, with no possible fix.
 
 # Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
