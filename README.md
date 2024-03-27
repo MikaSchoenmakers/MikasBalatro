@@ -9,13 +9,12 @@ _Thanks to `@Mastahcheech` and `@Cr4zZyBipBiip` for figuring this out_
 This mod is also incompatible with Divvy's, with no possible fix.
 
 # Installation
-- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/).
+- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/) version 0.8.2.
 - Download the whole mod as a .zip file, then unzip it in `Balatro\Mods`.
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
-- The mod has a config right at the top of the file, to disable any unwanted mods.
+- The mod has a config right at the top of the file, in case you want to disable something in specific.
 
 # Decks
-
 ### Even Steven's Deck
 Only even cards. Starts with the **_Even Steven_** joker.
 
