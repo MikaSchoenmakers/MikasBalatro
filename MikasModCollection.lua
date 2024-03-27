@@ -1470,6 +1470,111 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
+    -- Initialize Joker localization variables
+    function SMODS.Jokers.j_mmc_prime_time:loc_def(card)
+        if card.ability.name == 'MMC Prime Time' then
+            return { card.ability.extra.Xmult }
+        elseif card.ability.name == 'MMC Straight Nate' then
+            return { card.ability.extra.Xmult, card.ability.extra.j_slots }
+        elseif card.ability.name == 'MMC The Fisherman' then
+            return { card.ability.extra.current_h_size, card.ability.extra.h_mod }
+        elseif card.ability.name == 'MMC Impatient Joker' then
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod }
+        elseif card.ability.name == 'MMC Cultist' then
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+        elseif card.ability.name == 'MMC Seal Collector' then
+            return { card.ability.extra.current_chips, card.ability.extra.chip_mod }
+        elseif card.ability.name == 'MMC Camper' then
+            return { card.ability.extra.chip_mod }
+        elseif card.ability.name == 'MMC Lucky Number Seven' then
+            return { card.ability.extra.dollar_gain_one, card.ability.extra.dollar_gain_two,
+                card.ability.extra.dollar_gain_three, card.ability.extra.dollar_gain_four,
+                card.ability.extra.dollar_gain_five }
+        elseif card.ability.name == 'MMC Delayed Joker' then
+            return { card.ability.extra.mult, card.ability.extra.chips, card.ability.extra.Xmult,
+                card.ability.extra.action_tally, card.ability.extra.every }
+        elseif card.ability.name == 'MMC The Show-Off' then
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.req }
+        elseif card.ability.name == 'MMC The Sniper' then
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.percentage }
+        elseif card.ability.name == 'MMC Blackjack Joker' then
+            return { card.ability.extra.Xmult, card.ability.extra.req, card.ability.extra.Xmult_mod }
+        elseif card.ability.name == 'MMC Batman' then
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod }
+        elseif card.ability.name == 'MMC Bomb' then
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod, card.ability.extra._every }
+        elseif card.ability.name == 'MMC Eye Chart' then
+            return { card.ability.extra.chips, card.ability.extra.letter }
+        elseif card.ability.name == 'MMC Grudgeful Joker' then
+            return { card.ability.extra.current_chips, card.ability.extra.percentage }
+        elseif card.ability.name == 'MMC Finishing Blow' then
+            return { card.ability.extra.enhancement }
+        elseif card.ability.name == 'MMC Planetary Alignment' then
+            return { card.ability.extra.every }
+        elseif card.ability.name == 'MMC Historical Joker' then
+            return { card.ability.extra.percentage }
+        elseif card.ability.name == 'MMC Suit Alley' then
+            return { card.ability.extra.chips, card.ability.extra.mult }
+        elseif card.ability.name == 'MMC The Printer' then
+            return {}
+        elseif card.ability.name == 'MMC Shy Joker' then
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+        elseif card.ability.name == 'MMC The Gambler' then
+            return {}
+        elseif card.ability.name == 'MMC Incomplete Joker' then
+            return { card.ability.extra.chips, card.ability.extra.req }
+        elseif card.ability.name == 'MMC Abbey Road' then
+            return { card.ability.extra.Xmult, card.ability.extra.req }
+        elseif card.ability.name == 'MMC Boating License' then
+            return {}
+        elseif card.ability.name == 'MMC Gold Bar' then
+            return { card.ability.extra.dollars }
+        elseif card.ability.name == 'MMC Rigged Joker' then
+            return { card.ability.extra.increase }
+        elseif card.ability.name == 'MMC The Commander' then
+            return {}
+        elseif card.ability.name == 'MMC What Are The Odds' then
+            return { card.ability.extra.req }
+        elseif card.ability.name == 'MMC Dagonet' then
+            return {}
+        elseif card.ability.name == 'MMC Glue' then
+            return { card.ability.extra.Xmult, card.ability.extra.j_slots }
+        elseif card.ability.name == 'MMC Harp Seal' then
+            return {}
+        elseif card.ability.name == 'MMC Football Card' then
+            return { card.ability.extra.chips }
+        elseif card.ability.name == 'MMC Special Edition Joker' then
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod, card.ability.extra.current_chips,
+                card.ability.extra.chip_mod, card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+        elseif card.ability.name == 'MMC The Stockpiler' then
+            return { card.ability.extra.current_h_size, card.ability.extra.h_mod, card.ability.extra.base,
+                card.ability.extra.every }
+        elseif card.ability.name == 'MMC Student Loans' then
+            return { card.ability.extra.negative_bal, card.ability.extra.every, card.ability.extra.discards,
+                card.ability.extra.discard_sub }
+        elseif card.ability.name == 'MMC Broke Joker' then
+            return { card.ability.extra.mult_mod, card.ability.extra.current_mult, card.ability.extra.every }
+        elseif card.ability.name == 'MMC Go For Broke' then
+            return { card.ability.extra.chip_mod, card.ability.extra.current_chips, card.ability.extra.every }
+        elseif card.ability.name == 'MMC Street Fighter' then
+            return { card.ability.extra.Xmult, card.ability.extra.req }
+        elseif card.ability.name == 'MMC Checklist' then
+            return { localize(card.ability.extra.poker_hand, 'poker_hands'), card.ability.extra.increase }
+        elseif card.ability.name == 'MMC One Of Us' then
+            return { card.ability.extra.req }
+        elseif card.ability.name == 'MMC The Investor' then
+            return { card.ability.extra.dollars, card.ability.extra.odds, '' ..
+            (G.GAME and G.GAME.probabilities.normal or 1) }
+            -- elseif card.ability.name == 'MMC Mountain Climber' then
+            --     return { card.ability.extra.mult }
+        elseif card.ability.name == 'MMC Shackles' then
+            return { card.ability.extra._hand_add, card.ability.extra._discards, card.ability.extra._h_size, card
+                .ability.extra.req }
+        elseif card.ability.name == 'MMC Buy One Get One' then
+            return { card.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
+        end
+    end
+
     -- Joker calculations
     if config.primeTimeJoker then
         SMODS.Jokers.j_mmc_prime_time.calculate = function(self, context)
@@ -2928,163 +3033,6 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
-end
-
--- Copied and modifed from LushMod
-local generate_UIBox_ability_tableref = Card.generate_UIBox_ability_table
-function Card.generate_UIBox_ability_table(self)
-    local card_type, hide_desc = self.ability.set or "None", nil
-    local loc_vars = nil
-    local main_start, main_end = nil, nil
-    local no_badge = nil
-
-    if self.config.center.unlocked == false and not self.bypass_lock then    -- For everyting that is locked
-    elseif card_type == 'Undiscovered' and not self.bypass_discovery_ui then -- Any Joker or tarot/planet/voucher that is not yet discovered
-    elseif self.debuff then
-    elseif card_type == 'Default' or card_type == 'Enhanced' then
-    elseif self.ability.set == 'Joker' then
-        local customJoker = true
-
-        if self.ability.name == 'MMC Prime Time' then
-            loc_vars = { self.ability.extra.Xmult }
-        elseif self.ability.name == 'MMC Straight Nate' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.j_slots }
-        elseif self.ability.name == 'MMC The Fisherman' then
-            loc_vars = { self.ability.extra.current_h_size, self.ability.extra.h_mod }
-        elseif self.ability.name == 'MMC Impatient Joker' then
-            loc_vars = { self.ability.extra.current_mult, self.ability.extra.mult_mod }
-        elseif self.ability.name == 'MMC Cultist' then
-            loc_vars = { self.ability.extra.current_Xmult, self.ability.extra.Xmult_mod }
-        elseif self.ability.name == 'MMC Seal Collector' then
-            loc_vars = { self.ability.extra.current_chips, self.ability.extra.chip_mod }
-        elseif self.ability.name == 'MMC Camper' then
-            loc_vars = { self.ability.extra.chip_mod }
-        elseif self.ability.name == 'MMC Lucky Number Seven' then
-            loc_vars = { self.ability.extra.dollar_gain_one, self.ability.extra.dollar_gain_two,
-                self.ability.extra.dollar_gain_three, self.ability.extra.dollar_gain_four,
-                self.ability.extra.dollar_gain_five }
-        elseif self.ability.name == 'MMC Delayed Joker' then
-            loc_vars = { self.ability.extra.mult, self.ability.extra.chips, self.ability.extra.Xmult,
-                self.ability.extra.action_tally, self.ability.extra.every }
-        elseif self.ability.name == 'MMC The Show-Off' then
-            loc_vars = { self.ability.extra.current_Xmult, self.ability.extra.Xmult_mod, self.ability.extra.req }
-        elseif self.ability.name == 'MMC The Sniper' then
-            loc_vars = { self.ability.extra.current_Xmult, self.ability.extra.Xmult_mod, self.ability.extra.percentage }
-        elseif self.ability.name == 'MMC Blackjack Joker' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.req, self.ability.extra.Xmult_mod }
-        elseif self.ability.name == 'MMC Batman' then
-            loc_vars = { self.ability.extra.current_mult, self.ability.extra.mult_mod }
-        elseif self.ability.name == 'MMC Bomb' then
-            loc_vars = { self.ability.extra.current_mult, self.ability.extra.mult_mod, self.ability.extra._every }
-        elseif self.ability.name == 'MMC Eye Chart' then
-            loc_vars = { self.ability.extra.chips, self.ability.extra.letter }
-        elseif self.ability.name == 'MMC Grudgeful Joker' then
-            loc_vars = { self.ability.extra.current_chips, self.ability.extra.percentage }
-        elseif self.ability.name == 'MMC Finishing Blow' then
-            loc_vars = { self.ability.extra.enhancement }
-        elseif self.ability.name == 'MMC Planetary Alignment' then
-            loc_vars = { self.ability.extra.every }
-        elseif self.ability.name == 'MMC Historical Joker' then
-            loc_vars = { self.ability.extra.percentage }
-        elseif self.ability.name == 'MMC Suit Alley' then
-            loc_vars = { self.ability.extra.chips, self.ability.extra.mult }
-        elseif self.ability.name == 'MMC The Printer' then
-            loc_vars = {}
-        elseif self.ability.name == 'MMC Shy Joker' then
-            loc_vars = { self.ability.extra.current_Xmult, self.ability.extra.Xmult_mod }
-        elseif self.ability.name == 'MMC The Gambler' then
-            loc_vars = {}
-        elseif self.ability.name == 'MMC Incomplete Joker' then
-            loc_vars = { self.ability.extra.chips, self.ability.extra.req }
-        elseif self.ability.name == 'MMC Abbey Road' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.req }
-        elseif self.ability.name == 'MMC Boating License' then
-            loc_vars = {}
-        elseif self.ability.name == 'MMC Gold Bar' then
-            loc_vars = { self.ability.extra.dollars }
-        elseif self.ability.name == 'MMC Rigged Joker' then
-            loc_vars = { self.ability.extra.increase }
-        elseif self.ability.name == 'MMC The Commander' then
-            loc_vars = {}
-        elseif self.ability.name == 'MMC What Are The Odds' then
-            loc_vars = { self.ability.extra.req }
-        elseif self.ability.name == 'MMC Dagonet' then
-            loc_vars = {}
-        elseif self.ability.name == 'MMC Glue' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.j_slots }
-        elseif self.ability.name == 'MMC Harp Seal' then
-            loc_vars = {}
-        elseif self.ability.name == 'MMC Football Card' then
-            loc_vars = { self.ability.extra.chips }
-        elseif self.ability.name == 'MMC Special Edition Joker' then
-            loc_vars = { self.ability.extra.current_mult, self.ability.extra.mult_mod, self.ability.extra.current_chips,
-                self.ability.extra.chip_mod, self.ability.extra.current_Xmult, self.ability.extra.Xmult_mod }
-        elseif self.ability.name == 'MMC The Stockpiler' then
-            loc_vars = { self.ability.extra.current_h_size, self.ability.extra.h_mod, self.ability.extra.base,
-                self.ability.extra.every }
-        elseif self.ability.name == 'MMC Student Loans' then
-            loc_vars = { self.ability.extra.negative_bal, self.ability.extra.every, self.ability.extra.discards,
-                self.ability.extra.discard_sub }
-        elseif self.ability.name == 'MMC Broke Joker' then
-            loc_vars = { self.ability.extra.mult_mod, self.ability.extra.current_mult, self.ability.extra.every }
-        elseif self.ability.name == 'MMC Go For Broke' then
-            loc_vars = { self.ability.extra.chip_mod, self.ability.extra.current_chips, self.ability.extra.every }
-        elseif self.ability.name == 'MMC Street Fighter' then
-            loc_vars = { self.ability.extra.Xmult, self.ability.extra.req }
-        elseif self.ability.name == 'MMC Checklist' then
-            loc_vars = { localize(self.ability.extra.poker_hand, 'poker_hands'), self.ability.extra.increase }
-        elseif self.ability.name == 'MMC One Of Us' then
-            loc_vars = { self.ability.extra.req }
-        elseif self.ability.name == 'MMC The Investor' then
-            loc_vars = { self.ability.extra.dollars, self.ability.extra.odds, '' ..
-            (G.GAME and G.GAME.probabilities.normal or 1) }
-            -- elseif self.ability.name == 'MMC Mountain Climber' then
-            --     loc_vars = { self.ability.extra.mult }
-        elseif self.ability.name == 'MMC Shackles' then
-            loc_vars = { self.ability.extra._hand_add, self.ability.extra._discards, self.ability.extra._h_size, self
-                .ability.extra.req }
-        elseif self.ability.name == 'MMC Buy One Get One' then
-            loc_vars = { self.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
-        else
-            customJoker = false
-        end
-
-        if customJoker then
-            local badges = {}
-            if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
-                badges.card_type = card_type
-            end
-            if self.ability.set == 'Joker' and self.bypass_discovery_ui and (not no_badge) then
-                badges.force_rarity = true
-            end
-            if self.edition then
-                if self.edition.type == 'negative' and self.ability.consumeable then
-                    badges[#badges + 1] = 'negative_consumable'
-                else
-                    badges[#badges + 1] = (self.edition.type == 'holo' and 'holographic' or self.edition.type)
-                end
-            end
-            if self.seal then
-                badges[#badges + 1] = string.lower(self.seal) .. '_seal'
-            end
-            if self.ability.eternal then
-                badges[#badges + 1] = 'eternal'
-            end
-            if self.pinned then
-                badges[#badges + 1] = 'pinned_left'
-            end
-
-            if self.sticker then
-                loc_vars = loc_vars or {};
-                loc_vars.sticker = self.sticker
-            end
-
-            return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, hide_desc, main_start,
-                main_end)
-        end
-    end
-
-    return generate_UIBox_ability_tableref(self)
 end
 
 -- Stretch card back of odd shaped Jokers
