@@ -550,7 +550,8 @@ local locs = {
         text = {
             "Earn {C:money}$#1#{} for every",
             "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
-            "at end of round"
+            "at end of round",
+            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
         }
     },
     riggedJoker = {
