@@ -35,12 +35,11 @@ Only Gold Face cards. Starts with the **_Midas Mask_** joker.
 All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**.\
 _All Jokers also remove the Joker slot again once sold_
 
+### Perfect Precision Deck
++1 hands, discards and hand size. Start with a negative **_The Sniper_** joker. Ante scales X1.5 as fast.
+
 # Jokers
 ## Common
-### The Banker
-![The Banker](./assets/2x/j_mmc_banker.png)\
-Earn $2 for every Gold Seal and Gold Card in your whole deck at the end of the round.
-
 ### Bomb
 ![Bomb](./assets/2x/j_mmc_bomb.png)\
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.\
@@ -49,6 +48,11 @@ _Art made by `Grassy`_
 ### Broke Joker
 ![Broke](./assets/2x/j_mmc_broke.png)\
 Gains +1 Mult per -$2.
+
+### Buy One Get One
+![Buy One Get One](./assets/2x/j_mmc_buy_one_get_one.png)\
+1 in 4 chance to get an extra card of whatever you're buying.\
+_Buying a Joker gives another random Joker, buying a Tarot card gives another random Tarot card, etc._
 
 ### Eye Chart
 ![Eye Chart](./assets/2x/j_mmc_eye_chart.png)\
@@ -60,9 +64,22 @@ _Art made by `Grassy`_
 ![Glue](./assets/2x/j_mmc_glue.png)\
 If you have both the Half Joker and the Incomplete Joker, give +2 Joker slots and X5 Mult.
 
+### Go For Broke
+![Go For Broke](./assets/2x/j_mmc_go_for_broke_.png)\
+Gains +4 Chips per -$1.
+
+### Gold Bar
+![Gold Bar](./assets/2x/j_mmc_gold_bar.png)\
+Earn $2 for every Gold Seal and Gold Card in your whole deck at the end of the round.\
+_Art made by `Grassy`_
+
 ### Incomplete Joker
 ![Incomplete Joker](./assets/2x/j_mmc_incomplete.png)\
 Give +100 Chips if played hand contains 3 or fewer cards.
+
+### The Investor
+![The Investor](./assets/2x/j_mmc_investor.png)\
+Gives $5 at the end of every round. 1 in 4 chance to give -$5 instead.
 
 ### Lucky Number Seven
 ![Lucky Number Seven](./assets/2x/j_mmc_lucky_number_seven.png)\
@@ -85,6 +102,10 @@ _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
 ### Seal Collector
 ![Seal Collector](./assets/2x/j_mmc_seal_collector.png)\
 Gains +25 Chips for every card with a seal, starting at 25 Chips.
+
+### Shackles
+![Shackles](./assets/2x/j_mmc_shackles.png)\
+Gives +1 hand, +1 discard and +1 hand size. Destroyed if you play more than 4 cards.
 
 ### The Stockpiler
 ![The Stockpiler](./assets/2x/j_mmc_stockpiler.png)\
@@ -110,6 +131,10 @@ _An Ace can be valued at either 1 or 11_
 ### Camper
 ![Camper](./assets/2x/j_mmc_camper.png)\
 Every discarded card permanently gains +4 Chips.
+
+### Checklist
+![Checklist](./assets/2x/j_mmc_checklist.png)\
+Playing High Card upgrades it by 1 level. Poker hand changes when played.
 
 ### Finishing Blow
 ![Finishing Blow](./assets/2x/j_mmc_finishing_blow.png)\
@@ -137,6 +162,10 @@ _Art made by `Grassy`_
 ![Impatient Joker](./assets/2x/j_mmc_impatient.png)\
 Gives +3 mult per discarded card. Resets every round.
 
+### One Of Us
+![One Of Us](./assets/2x/j_mmc_one_of_us.png)\
+If played hand contains 5 Enhanced cards, Enhance a random Joker.
+
 ### Shy Joker
 ![Shy Joker](./assets/2x/j_mmc_shy.png)\
 Gain X0.01 Mult for every card played, starting at X1 Mult.
@@ -144,6 +173,10 @@ Gain X0.01 Mult for every card played, starting at X1 Mult.
 ### Special Edition Joker
 ![Special Edition Joker](./assets/2x/j_mmc_special_edition.png)\
 Gains +2 Mult per Seal, +10 Chips per Enhancement and X0.1 Mult per Edition for every card in your deck.
+
+### Street Fighter
+![Street Fighter](./assets/2x/j_mmc_street_fighter.png)\
+Gives X4 Mult when balance is at or below -$20.
 
 ### Student Loans
 ![Student Loans](./assets/2x/j_mmc_student_loans.png)\

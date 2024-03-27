@@ -43,7 +43,7 @@ local config = {
     incompleteJoker = true,
     abbeyRoadJoker = true,
     boatingLicenseJoker = true,
-    bankerJoker = true,
+    goldBarJoker = true,
     riggedJoker = true,
     commanderJoker = true,
     whatAreTheOddsJoker = true,
@@ -106,7 +106,7 @@ local function remove_prefix(name, prefix)
 end
 
 local letters = { "a", "b", "c", "d", "e", "é", "f", "g", "h", "i", "j", "k",
-    "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w'", "x", "y", "z" }
+    "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" }
 
 local function count_letters(str, letter)
     local count = 0
@@ -545,8 +545,8 @@ local locs = {
             "scored {C:attention}Enhanced{} cards"
         }
     },
-    bankerJoker = {
-        name = "The Banker",
+    goldBarJoker = {
+        name = "Gold Bar",
         text = {
             "Earn {C:money}$#1#{} for every",
             "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
@@ -1051,9 +1051,9 @@ local jokers = {
         blueprint_compat = true,
         eternal_compat = true
     },
-    bankerJoker = {
-        ability_name = "MMC The Banker",
-        slug = "mmc_banker",
+    goldBarJoker = {
+        ability_name = "MMC Gold Bar",
+        slug = "mmc_gold_bar",
         ability = { extra = { dollars = 2 } },
         rarity = 1,
         cost = 5,
@@ -2306,9 +2306,8 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.bankerJoker then
-        SMODS.Jokers.j_mmc_banker.calculate = function(self, context)
-            -- Banker
+    if config.goldBarJoker then
+        SMODS.Jokers.j_mmc_gold_bar.calculate = function(self, context)
             if context.end_of_round and not context.individual and not context.repetition then
                 local gold_tally = 0
                 -- Count all Gold Cards and Gold Seals
@@ -2622,6 +2621,7 @@ function SMODS.INIT.MikasModCollection()
                         self.ability.extra.current_h_size = bonus
                     end
                 else
+                    -- Reset hand size
                     if self.ability.extra.current_h_size > 0 then
                         G.hand:change_size(-self.ability.extra.current_h_size)
                         self.ability.extra.current_h_size = 0
@@ -2735,17 +2735,19 @@ function SMODS.INIT.MikasModCollection()
                 end
             end
 
-            -- Check for required enhanced cards
             if SMODS.end_calculate_context(context) then
+                -- Check for required enhanced cards
                 if self.ability.extra.enhanced_tally >= self.ability.extra.req then
                     self.ability.extra.enhanced_tally = 0
 
+                    -- Get editionless Jokers
                     local editionless_jokers = {}
                     for _, v in pairs(G.jokers.cards) do
                         if v.ability.set == 'Joker' and (not v.edition) then
                             table.insert(editionless_jokers, v)
                         end
                     end
+                    -- Add edition to random Joker
                     if #editionless_jokers > 0 then
                         local joker = pseudorandom_element(editionless_jokers, pseudoseed('one_of_us'))
                         local edition = pseudorandom_element(joker_editions, pseudoseed('one_of_us'))
@@ -2765,6 +2767,7 @@ function SMODS.INIT.MikasModCollection()
                         }
                     end
                 end
+                -- Reset enhanced_tally
                 self.ability.extra.enhanced_tally = 0
             end
         end
@@ -2779,6 +2782,7 @@ function SMODS.INIT.MikasModCollection()
                     dollars = dollars * -1
                 end
                 ease_dollars(dollars)
+                -- Return message
                 return {
                     message = localize('$') .. dollars,
                     dollars = dollars,
@@ -2805,6 +2809,7 @@ function SMODS.INIT.MikasModCollection()
     if config.shacklesJoker then
         SMODS.Jokers.j_mmc_shackles.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
+                -- Destroy if more cards than required are played
                 if #context.full_hand > self.ability.extra.req then
                     G.E_MANAGER:add_event(Event({
                         func = function()
@@ -2821,8 +2826,10 @@ function SMODS.INIT.MikasModCollection()
     if config.buyOneGetOneJoker then
         SMODS.Jokers.j_mmc_buy_one_get_one.calculate = function(self, context)
             if context.buying_card then
+                -- Calculate odds
                 if pseudorandom('lucky_money') < G.GAME.probabilities.normal / self.ability.extra.odds then
                     if context.card.ability.set == 'Joker' then
+                        -- Give extra Joker
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if #G.jokers.cards < G.jokers.config.card_limit then
@@ -2841,6 +2848,7 @@ function SMODS.INIT.MikasModCollection()
                         }))
                     end
                     if context.card.ability.set == 'Tarot' then
+                        -- Give extra Tarot card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
@@ -2859,6 +2867,7 @@ function SMODS.INIT.MikasModCollection()
                         }))
                     end
                     if context.card.ability.set == 'Spectral' then
+                        -- Give extra Spectral card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
@@ -2878,6 +2887,7 @@ function SMODS.INIT.MikasModCollection()
                     end
                     if context.card.ability.set == 'Planet' then
                         G.E_MANAGER:add_event(Event({
+                            -- Give extra Planet card
                             func = (function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
@@ -2894,6 +2904,7 @@ function SMODS.INIT.MikasModCollection()
                         }))
                     end
                     if context.card.ability.set == 'Default' then
+                        -- Give extra Playing Card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 local _card = create_playing_card({
@@ -2909,6 +2920,7 @@ function SMODS.INIT.MikasModCollection()
                         }))
                     end
                 else
+                    -- Nope!
                     card_eval_status_text(self, 'extra', nil, nil, nil,
                         { message = localize('k_nope_ex'), colour = G.C.SECONDARY_SET.Tarot })
                 end
@@ -2987,7 +2999,7 @@ function Card.generate_UIBox_ability_table(self)
             loc_vars = { self.ability.extra.Xmult, self.ability.extra.req }
         elseif self.ability.name == 'MMC Boating License' then
             loc_vars = {}
-        elseif self.ability.name == 'MMC The Banker' then
+        elseif self.ability.name == 'MMC Gold Bar' then
             loc_vars = { self.ability.extra.dollars }
         elseif self.ability.name == 'MMC Rigged Joker' then
             loc_vars = { self.ability.extra.increase }
@@ -3135,10 +3147,11 @@ function Card:add_to_deck(from_debuff)
             for_hire_counter = for_hire_counter + 1
         end
 
-        -- Glue
         if self.ability.name == 'Half Joker' then
+            -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
                 if v.ability.name == 'MMC Glue' then
+                    -- Update Glue variables
                     v.ability.extra.half = true
                     if v.ability.extra.incomplete then
                         v.ability.extra.triggered = true
@@ -3148,8 +3161,10 @@ function Card:add_to_deck(from_debuff)
             end
         end
         if self.ability.name == 'MMC Incomplete Joker' then
+            -- Check for Glue  Joker
             for _, v in pairs(G.jokers.cards) do
                 if v.ability.name == 'MMC Glue' then
+                    -- Update Glue variables
                     v.ability.extra.incomplete = true
                     if v.ability.extra.half then
                         v.ability.extra.triggered = true
@@ -3159,6 +3174,7 @@ function Card:add_to_deck(from_debuff)
             end
         end
         if self.ability.name == 'MMC Glue' then
+            -- Check for Half and Incomplete Jokers
             for _, v in pairs(G.jokers.cards) do
                 if v.ability.name == 'Half Joker' then
                     self.ability.extra.half = true
@@ -3167,6 +3183,7 @@ function Card:add_to_deck(from_debuff)
                     self.ability.extra.incomplete = true
                 end
             end
+            -- Update Glue Variables
             if self.ability.extra.half and self.ability.extra.incomplete then
                 self.ability.extra.triggered = true
                 G.jokers.config.card_limit = G.jokers.config.card_limit + self.ability.extra.j_slots
@@ -3174,10 +3191,12 @@ function Card:add_to_deck(from_debuff)
         end
 
         if self.ability.name == 'MMC Student Loans' then
+            -- Lower bankrupt limit
             G.GAME.bankrupt_at = G.GAME.bankrupt_at - self.ability.extra.negative_bal
         end
 
         if self.ability.name == 'MMC Shackles' then
+            -- Add hands, discards and hand size
             ease_hands_played(self.ability.extra._hand_add)
             G.GAME.round_resets.hands = G.GAME.round_resets.hands + self.ability.extra._hand_add
             ease_discard(self.ability.extra._discards)
@@ -3234,10 +3253,11 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        -- Glue
         if self.ability.name == 'Half Joker' then
+            -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
                 if v.ability.name == 'MMC Glue' then
+                    -- Reset Glue variables
                     v.ability.extra.half = false
                     if v.ability.extra.triggered then
                         v.ability.extra.triggered = false
@@ -3247,8 +3267,10 @@ function Card:remove_from_deck(from_debuff)
             end
         end
         if self.ability.name == 'MMC Incomplete Joker' then
+            -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
                 if v.ability.name == 'MMC Glue' then
+                    -- Reset Glue variables
                     v.ability.extra.incomplete = false
                     if v.ability.extra.triggered then
                         v.ability.extra.triggered = false
@@ -3258,6 +3280,7 @@ function Card:remove_from_deck(from_debuff)
             end
         end
         if self.ability.name == 'MMC Glue' then
+            -- Reset Glue variables
             if self.ability.extra.triggered then
                 self.ability.extra.triggered = false
                 G.jokers.config.card_limit = G.jokers.config.card_limit - self.ability.extra.j_slots
@@ -3265,16 +3288,19 @@ function Card:remove_from_deck(from_debuff)
         end
 
         if self.ability.name == 'MMC The Stockpiler' then
+            -- Reset hand size
             G.hand:change_size(-self.ability.extra.current_h_size)
         end
 
         if self.ability.name == 'MMC Student Loans' then
+            -- Reset bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
             ease_discard(-self.ability.extra.discards)
             G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
         end
 
         if self.ability.name == 'MMC Shackles' then
+            -- Remove hands, discards and hand size
             ease_hands_played(-self.ability.extra._hand_add)
             G.GAME.round_resets.hands = G.GAME.round_resets.hands - self.ability.extra._hand_add
             ease_discard(-self.ability.extra._discards)
@@ -3290,7 +3316,8 @@ local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
     if self.ability.name == 'MMC Eye Chart' and not self.added_to_deck then
-        self.ability.extra.letter = pseudorandom_element(letters, pseudoseed('alphabet'))
+        -- Generate new letter
+        self.ability.extra.letter = string.upper(pseudorandom_element(letters, pseudoseed('eye_chart')))
     end
 
     if G.GAME.starting_params.mmc_for_hire and (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
@@ -3396,6 +3423,7 @@ function Card.get_end_of_round_effect(self, context)
                         _tally = G.GAME.hands[v].played
                     end
                 end
+                -- Get planet based on most played hand
                 if _hand then
                     for _, v in pairs(G.P_CENTER_POOLS.Planet) do
                         if v.config.hand_type == _hand then
