@@ -62,7 +62,11 @@ local config = {
     investorJoker = true,
     -- mountainClimberJoker = true,
     shacklesJoker = true,
-    buyOneGetOneJoker = true
+    buyOneGetOneJoker = true,
+    -- CustomSeals
+    black = false,
+    green = false,
+    silver = false
 }
 
 -- Helper functions
@@ -147,6 +151,13 @@ local seals = {
     "Blue",
     "Purple"
 }
+
+if config.black then
+    table.insert(seals, "Black")
+end 
+if config.green then
+    table.insert(seals, "Green")
+end 
 
 local function tables_equal(a, b)
     return table.concat(a) == table.concat(b)
@@ -2566,6 +2577,39 @@ function SMODS.INIT.MikasModCollection()
                     end
                 end
             end
+
+            -- Repeat Black seal
+            if if config.black and context and context.full_hand and (#context.full_hand or 0)==1 and context.scoring_hand and context.cardarea == G.play and not(context.repetition_only) then
+                if context.other_card.seal == 'Black' then
+                    HarpSealAdd_Negative_Random()
+                end
+            end
+
+            --Repeat Green seal
+            if context.discard and context.other_card.seal == 'Green' then
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.0,
+                    func = (function()
+                        if not G.GAME.round_resets.temp_handsize then
+                            G.GAME.round_resets.temp_handsize = 0
+                        end
+
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                G.hand.config.real_card_limit = (G.hand.config.real_card_limit or G.hand.config.card_limit) +
+                                    1
+                                G.hand.config.card_limit = math.max(0, G.hand.config.real_card_limit)
+                                check_for_unlock({ type = 'min_hand_size' })
+                                return true
+                            end
+                        }))
+                        G.GAME.round_resets.temp_handsize = G.GAME.round_resets.temp_handsize + 1
+                        return true
+                    end)
+                }))
+            end
+
         end
     end
 
@@ -3472,6 +3516,21 @@ function Card.get_end_of_round_effect(self, context)
                 card_eval_status_text(v, 'extra', nil, nil, nil,
                     { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
             end
+        end
+    end
+
+    --NewFunction for Harp Seal Black
+    function HarpSealAdd_Negative_Random()
+        local eligible_jokers = {}
+        for k, v in pairs(G.jokers.cards) do
+            if v.ability.set == 'Joker' and (not v.edition) then
+                table.insert(eligible_jokers, v)
+            end
+        end
+        --sendDebugMessage("Eligible jokers: " .. #eligible_jokers)
+        if #eligible_jokers>=1 then
+            local eligible_joker_card = pseudorandom_element(eligible_jokers, pseudoseed("blackseal"))
+            eligible_joker_card:set_edition({negative = true})
         end
     end
 
