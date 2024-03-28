@@ -2579,7 +2579,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Repeat Black seal
-            if if config.black and context and context.full_hand and (#context.full_hand or 0)==1 and context.scoring_hand and context.cardarea == G.play and not(context.repetition_only) then
+            if config.black and context and context.full_hand and (#context.full_hand or 0)==1 and context.scoring_hand and context.cardarea == G.play and not(context.repetition_only) then
                 if context.other_card.seal == 'Black' then
                     HarpSealAdd_Negative_Random()
                 end
