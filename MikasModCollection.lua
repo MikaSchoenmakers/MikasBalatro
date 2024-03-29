@@ -68,7 +68,6 @@ local config = {
 -- Helper functions
 local no_art_yet = {
     -- "mountainClimberJoker",
-    "buyOneGetOneJoker"
 }
 
 local function is_even(card)
@@ -105,8 +104,8 @@ local function remove_prefix(name, prefix)
     end
 end
 
-local letters = { "a", "b", "c", "d", "e", "é", "f", "g", "h", "i", "j", "k",
-    "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" }
+local letters = { "a", "b", "c", "d", "e", "é", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+    "t", "u", "v", "w", "x", "y", "z" }
 
 local function count_letters(str, letter)
     local count = 0
@@ -126,20 +125,6 @@ local enhancements = {
     G.P_CENTERS.m_gold,
     G.P_CENTERS.m_lucky
 }
-
-local card_editions = {
-    { foil = true },
-    { holo = true },
-    { polychrome = true }
-}
-
-local joker_editions = {
-    { foil = true },
-    { holo = true },
-    { polychrome = true },
-    { negative = true }
-}
-
 
 local seals = {
     "Gold",
@@ -162,39 +147,171 @@ end
 
 -- Save attributes
 local attributes = {
-    mult = { key = 'mult_dagonet', prev_key = 'prev_mult_dagonet', min = 0 },
-    mult_mod = { key = 'mult_mod_dagonet', prev_key = 'prev_mult_mod_dagonet', min = 0 },
-    chips = { key = 'chips_dagonet', prev_key = 'prev_chips_dagonet', min = 0 },
-    chip_mod = { key = 'chip_mod_dagonet', prev_key = 'prev_chips_mod_dagonet', min = 0 },
-    Xmult = { key = 'Xmult_dagonet', prev_key = 'prev_Xmult_dagonet', min = 1 },
-    Xmult_mod = { key = 'Xmult_mod_dagonet', prev_key = 'prev_Xmult_mod_dagonet', min = 0 },
-    x_mult = { key = 'x_mult_dagonet', prev_key = 'prev_x_mult_dagonet', min = 1 },
-    t_mult = { key = 't_mult_dagonet', prev_key = 'prev_t_mult_dagonet', min = 0 },
-    t_chips = { key = 't_chips_dagonet', prev_key = 'prev_t_chips_dagonet', min = 0 },
-    s_mult = { key = 's_mult_dagonet', prev_key = 'prev_s_mult_dagonet', min = 0 },
-    dollars = { key = 'dollars_dagonet', prev_key = 'prev_dollars_dagonet', min = 0 },
-    hand_add = { key = 'hand_add_dagonet', prev_key = 'prev_hand_add_dagonet', min = 0 },
-    discard_sub = { key = 'discard_sub_dagonet', prev_key = 'prev_discard_sub_dagonet', min = 0 },
-    odds = { key = 'odds_dagonet', prev_key = 'prev_odds_dagonet', min = 0 },
-    faces = { key = 'faces_dagonet', prev_key = 'prev_faces_dagonet', min = 0 },
-    max = { key = 'max_dagonet', prev_key = 'prev_max_dagonet', min = 0 },
-    min = { key = 'min_dagonet', prev_key = 'prev_min_dagonet', min = 0 },
-    every = { key = 'every_dagonet', prev_key = 'prev_every_dagonet', min = 0 },
-    increase = { key = 'increase_dagonet', prev_key = 'prev_increase_dagonet', min = 0 },
-    d_size = { key = 'd_size_dagonet', prev_key = 'prev_d_size_dagonet', min = 0 },
-    h_mod = { key = 'h_mod_dagonet', prev_key = 'prev_h_mod_dagonet', min = 0 },
-    h_plays = { key = 'h_plays_dagonet', prev_key = 'prev_h_plays_dagonet', min = 0 },
-    discards = { key = 'discards_dagonet', prev_key = 'prev_discards_dagonet', min = 0 },
-    req = { key = 'req_dagonet', prev_key = 'prev_req_dagonet', min = 0 },
-    percentage = { key = 'percentage_dagonet', prev_key = 'prev_percentage_dagonet', min = 0 },
-    base = { key = 'base_dagonet', prev_key = 'prev_base_dagonet', min = 0 },
-    repetitions = { key = 'repetitions_dagonet', prev_key = 'prev_repetitions_dagonet', min = 0 },
-    dollar_gain_one = { key = 'dollar_gain_one_dagonet', prev_key = 'prev_dollar_gain_one_dagonet', min = 0 },
-    dollar_gain_two = { key = 'dollar_gain_two_dagonet', prev_key = 'prev_dollar_gain_two_dagonet', min = 0 },
-    dollar_gain_three = { key = 'dollar_gain_three_dagonet', prev_key = 'prev_dollar_gain_three_dagonet', min = 0 },
-    dollar_gain_four = { key = 'dollar_gain_four_dagonet', prev_key = 'prev_dollar_gain_four_dagonet', min = 0 },
-    dollar_gain_five = { key = 'dollar_gain_five_dagonet', prev_key = 'prev_dollar_gain_five_dagonet', min = 0 },
-    extra = { key = 'extra_dagonet', prev_key = 'prev_extra_dagonet', min = 0 }
+    mult = {
+        key = 'mult_dagonet',
+        prev_key = 'prev_mult_dagonet',
+        min = 0
+    },
+    mult_mod = {
+        key = 'mult_mod_dagonet',
+        prev_key = 'prev_mult_mod_dagonet',
+        min = 0
+    },
+    chips = {
+        key = 'chips_dagonet',
+        prev_key = 'prev_chips_dagonet',
+        min = 0
+    },
+    chip_mod = {
+        key = 'chip_mod_dagonet',
+        prev_key = 'prev_chips_mod_dagonet',
+        min = 0
+    },
+    Xmult = {
+        key = 'Xmult_dagonet',
+        prev_key = 'prev_Xmult_dagonet',
+        min = 1
+    },
+    Xmult_mod = {
+        key = 'Xmult_mod_dagonet',
+        prev_key = 'prev_Xmult_mod_dagonet',
+        min = 0
+    },
+    x_mult = {
+        key = 'x_mult_dagonet',
+        prev_key = 'prev_x_mult_dagonet',
+        min = 1
+    },
+    t_mult = {
+        key = 't_mult_dagonet',
+        prev_key = 'prev_t_mult_dagonet',
+        min = 0
+    },
+    t_chips = {
+        key = 't_chips_dagonet',
+        prev_key = 'prev_t_chips_dagonet',
+        min = 0
+    },
+    s_mult = {
+        key = 's_mult_dagonet',
+        prev_key = 'prev_s_mult_dagonet',
+        min = 0
+    },
+    dollars = {
+        key = 'dollars_dagonet',
+        prev_key = 'prev_dollars_dagonet',
+        min = 0
+    },
+    hand_add = {
+        key = 'hand_add_dagonet',
+        prev_key = 'prev_hand_add_dagonet',
+        min = 0
+    },
+    discard_sub = {
+        key = 'discard_sub_dagonet',
+        prev_key = 'prev_discard_sub_dagonet',
+        min = 0
+    },
+    odds = {
+        key = 'odds_dagonet',
+        prev_key = 'prev_odds_dagonet',
+        min = 0
+    },
+    faces = {
+        key = 'faces_dagonet',
+        prev_key = 'prev_faces_dagonet',
+        min = 0
+    },
+    max = {
+        key = 'max_dagonet',
+        prev_key = 'prev_max_dagonet',
+        min = 0
+    },
+    min = {
+        key = 'min_dagonet',
+        prev_key = 'prev_min_dagonet',
+        min = 0
+    },
+    every = {
+        key = 'every_dagonet',
+        prev_key = 'prev_every_dagonet',
+        min = 0
+    },
+    increase = {
+        key = 'increase_dagonet',
+        prev_key = 'prev_increase_dagonet',
+        min = 0
+    },
+    d_size = {
+        key = 'd_size_dagonet',
+        prev_key = 'prev_d_size_dagonet',
+        min = 0
+    },
+    h_mod = {
+        key = 'h_mod_dagonet',
+        prev_key = 'prev_h_mod_dagonet',
+        min = 0
+    },
+    h_plays = {
+        key = 'h_plays_dagonet',
+        prev_key = 'prev_h_plays_dagonet',
+        min = 0
+    },
+    discards = {
+        key = 'discards_dagonet',
+        prev_key = 'prev_discards_dagonet',
+        min = 0
+    },
+    req = {
+        key = 'req_dagonet',
+        prev_key = 'prev_req_dagonet',
+        min = 0
+    },
+    percentage = {
+        key = 'percentage_dagonet',
+        prev_key = 'prev_percentage_dagonet',
+        min = 0
+    },
+    base = {
+        key = 'base_dagonet',
+        prev_key = 'prev_base_dagonet',
+        min = 0
+    },
+    repetitions = {
+        key = 'repetitions_dagonet',
+        prev_key = 'prev_repetitions_dagonet',
+        min = 0
+    },
+    dollar_gain_one = {
+        key = 'dollar_gain_one_dagonet',
+        prev_key = 'prev_dollar_gain_one_dagonet',
+        min = 0
+    },
+    dollar_gain_two = {
+        key = 'dollar_gain_two_dagonet',
+        prev_key = 'prev_dollar_gain_two_dagonet',
+        min = 0
+    },
+    dollar_gain_three = {
+        key = 'dollar_gain_three_dagonet',
+        prev_key = 'prev_dollar_gain_three_dagonet',
+        min = 0
+    },
+    dollar_gain_four = {
+        key = 'dollar_gain_four_dagonet',
+        prev_key = 'prev_dollar_gain_four_dagonet',
+        min = 0
+    },
+    dollar_gain_five = {
+        key = 'dollar_gain_five_dagonet',
+        prev_key = 'prev_dollar_gain_five_dagonet',
+        min = 0
+    },
+    extra = {
+        key = 'extra_dagonet',
+        prev_key = 'prev_extra_dagonet',
+        min = 0
+    }
 }
 
 local dagonet_blacklist = {
@@ -220,7 +337,9 @@ local function increase_attributes(k, v, place, multiplier)
             increase_attributes(k2, v2, place.extra, multiplier)
         end
     elseif v > attr.min then
-        if place[attr.prev_key] == nil then place[attr.prev_key] = multiplier end
+        if place[attr.prev_key] == nil then
+            place[attr.prev_key] = multiplier
+        end
         if place[attr.key] == nil then
             -- Save base value
             place[attr.key] = v
@@ -247,518 +366,169 @@ end
 
 local function not_in_table(table, value)
     for _, v in ipairs(table) do
-        if v == value then return false end
+        if v == value then
+            return false
+        end
     end
     return true
 end
 
--- Create Localization
-local locs = {
-    -- Decks
-    evenStevenDeck = {
-        name = "Even Steven's Deck",
-        text = {
-            "Start run with only",
-            "{C:attention}even cards{} and",
-            "the {C:attention}Even Steven{} joker"
-        }
-    },
-    oddToddDeck = {
-        name = "Odd Todd's Deck",
-        text = {
-            "Start run with only",
-            "{C:attention}odd cards{} and",
-            "the {C:attention}Odd Todd{} joker"
-        }
-    },
-    fibonacciDeck = {
-        name = "Fibonacci Deck",
-        text = {
-            "Start run with only",
-            "{C:attention}Fibonacci cards{} and",
-            "the {C:attention}Fibonacci{} joker"
-        }
-    },
-    primeDeck = {
-        name = "Prime Deck",
-        text = {
-            "Start run with",
-            "only {C:attention}prime cards{} and",
-            "the {C:attention}Prime Time{} joker"
-        }
-    },
-    midasDeck = {
-        name = "Midas's Deck",
-        text = {
-            "Start run with only",
-            "{C:attention}Gold Face cards{} and",
-            "the {C:attention}Midas Mask{} joker"
-        }
-    },
-    jokersForHireDeck = {
-        name = "\"Jokers for Hire\" Deck",
-        text = {
-            "All Jokers give {C:dark_edition}+1{}",
-            "Joker slot. Price of",
-            "{C:attention}Jokers{} and {C:attention}Buffoon Packs",
-            "increase {C:red}exponentially"
-        }
-    },
-    perfectPrecisionDeck = {
-        name = "Perfect Precision Deck",
-        text = {
-            "+1 {C:blue}hands{}, {C:red}discards{} and",
-            "{C:attention}hand size{}. Start with",
-            "a {C:dark_edition}negative {C:attention}The Sniper{}",
-            "Joker. Ante scales {C:attention}X1.5{}",
-            "as fast"
-        }
-    },
-    -- Jokers
-    primeTimeJoker = {
-        name = "Prime Time",
-        text = {
-            "Each played {C:attention}2{},",
-            "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
-            "{X:mult,C:white}X#1#{} Mult when scored",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    straightNateJoker = {
-        name = "Straight Nate",
-        text = {
-            "{X:mult,C:white} X#1# {} Mult if played hand",
-            "contains a {C:attention}Straight{} and you have",
-            "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
-            "Also gives {C:dark_edition}+#2#{} Joker slot"
-        }
-    },
-    fishermanJoker = {
-        name = "The Fisherman",
-        text = {
-            "{C:attention}+#2#{} hand size per discard",
-            "{C:attention}-#2#{} hand size per hand played",
-            "Resets every round",
-            "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
-        }
-    },
-    impatientJoker = {
-        name = "Impatient Joker",
-        text = {
-            "{C:mult}+#2#{} Mult per card discarded",
-            "Resets every round",
-            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
-        }
-    },
-    cultistJoker = {
-        name = "Cultist",
-        text = {
-            "{X:mult,C:white}X#2#{} Mult per hand played",
-            "Resets every round",
-            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
-        }
-    },
-    sealCollectorJoker = {
-        name = "Seal Collector",
-        text = {
-            "Gains {C:chips}+#2#{} Chips for",
-            "every card with a {C:attention}seal",
-            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
-        }
-    },
-    camperJoker = {
-        name = "Camper",
-        text = {
-            "Every discarded {C:attention}card{}",
-            "permanently gains",
-            "{C:chips}+#1#{} Chips"
-        }
-    },
-    luckyNumberSevenJoker = {
-        name = "Lucky Number Seven",
-        text = {
-            "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
-            "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
-            "{C:attention}7 cards{} are scored,",
-            "respectively"
-        }
-    },
-    delayedJoker = {
-        name = "Delayed Joker",
-        text = {
-            "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
-            "Chips and {X:mult,C:white}X#3#{} Mult on",
-            "the {C:attention}#5#th{} action",
-            "{C:inactive}(Current action: {C:attention}#4#{C:inactive} )"
-        }
-    },
-    showoffJoker = {
-        name = "The Show-Off",
-        text = {
-            "Gains {X:mult,C:white}X#2#{} Mult when",
-            "a blind is finished with",
-            "{C:attention}X#3#{} the chip requirement",
-            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
-        }
-    },
-    sniperJoker = {
-        name = "The Sniper",
-        text = {
-            "Gains {X:mult,C:white}X#2#{} Mult when a",
-            "blind is finished within {C:attention}#3#%{} of",
-            "the {C:attention}exact{} chip requirement",
-            "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    blackjackJoker = {
-        name = "Blackjack Joker",
-        text = {
-            "Gives {X:mult,C:white}X#1#{} Mult when",
-            "the ranks of all played",
-            "cards is {C:attention}exactly #2#",
-            "Gives {X:mult,C:white}X#3#{} Mult less for",
-            "every point below #2#"
-        }
-    },
-    batmanJoker = {
-        name = "Batman",
-        text = {
-            "Gains {C:mult}+#2#{} Mult for",
-            "every {C:attention}non-lethal{} hand played.",
-            "Mult gain increases for every",
-            "Joker with {C:attention}\"Joker\"{} in the name",
-            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
-        }
-    },
-    bombJoker = {
-        name = "Bomb",
-        text = {
-            "Gains {C:mult}+#2#{} Mult per round",
-            "self destructs after {C:attention}#3#{} rounds",
-            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    eyeChartJoker = {
-        name = "Eye Chart",
-        text = {
-            "Gives {C:chips}+#1#{} Chips for every",
-            "letter {C:attention}\"#2#\"{} in your Jokers.",
-            "Letter changes when this",
-            "Joker appears in the shop",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    grudgefulJoker = {
-        name = "Grudgeful Joker",
-        text = {
-            "Adds {C:attention}excess Chips{} from last",
-            "blind to the first hand",
-            "of the current round. Caps",
-            "at {C:attention}#2#%{} of current blind's Chips",
-            "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
-        }
-    },
-    finishingBlowJoker = {
-        name = "Finishing Blow",
-        text = {
-            "If a blind is finished",
-            "with a {C:attention}High Card{}, randomly",
-            "{C:attention}Enhance{} scored cards"
-        }
-    },
-    planetaryAlignmentJoker = {
-        name = "Planetary Alignment",
-        text = {
-            "Once every #1# rounds",
-            "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
-            "one of them will be for your",
-            "most played {C:attention}poker hand{}"
-        }
-    },
-    historicalJoker = {
-        name = "Historical Joker",
-        text = {
-            "If scored cards have the same",
-            "{C:attention}ranks{} and {C:attention}order{} as previous",
-            "hand, add previous hands {C:chips}Chips{}",
-            "to the current hand. Caps at",
-            "{C:attention}#1#%{} of current blind's Chips",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    suitAlleyJoker = {
-        name = "Suit Alley",
-        text = {
-            "{C:diamonds}Diamond{} and {C:clubs}Club{} cards",
-            "gain {C:chips}+#1#{} Chips when scored",
-            "{C:hearts}Heart{} and {C:spades}Spade{} cards",
-            "gain {C:mult}+#2#{} Mult when scored"
-        }
-    },
-    printerJoker = {
-        name = "The Printer",
-        text = {
-            "If hand scores more than",
-            "blind's Chips, {C:attention}duplicate{}",
-            "your hand and add duplicated",
-            "cards to your hand"
-        }
-    },
-    shyJoker = {
-        name = "Shy Joker",
-        text = {
-            "{X:mult,C:white}X#1#{} Mult,",
-            "gains {X:mult,C:white}X#2#{} Mult",
-            "per {C:attention}card{} scored",
-        }
-    },
-    gamblerJoker = {
-        name = "The Gambler",
-        text = {
-            "Retrigger all",
-            "scored {C:attention}Lucky{} cards"
-        }
-    },
-    incompleteJoker = {
-        name = "Incomplete Joker",
-        text = {
-            "{C:chips}+#1#{} Chips if played",
-            "hand contains",
-            "{C:attention}#2#{} or fewer cards"
-        }
-    },
-    abbeyRoadJoker = {
-        name = "Abbey Road",
-        text = {
-            "If at least {C:attention}#2#{} poker hands",
-            "have been played the same",
-            "amount of times, give {X:mult,C:white}X#1#{} Mult",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    boatingLicenseJoker = {
-        name = "Boating License",
-        text = {
-            "{C:attention}Copies{} effects of all",
-            "scored {C:attention}Enhanced{} cards"
-        }
-    },
-    goldBarJoker = {
-        name = "Gold Bar",
-        text = {
-            "Earn {C:money}$#1#{} for every",
-            "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
-            "at end of round",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    riggedJoker = {
-        name = "Rigged Joker",
-        text = {
-            "Once per hand, add {C:attention}+#1#{} to all",
-            "listed {C:green,E:1,S:1.1}probabilities{} whenever a",
-            "{C:attention}Lucky{} card does not trigger.",
-            "Resets every round"
-        }
-    },
-    commanderJoker = {
-        name = "The Commander",
-        text = {
-            "If {C:attention}first hand{} of round",
-            "has only {C:attention}1{} card, give it a",
-            "random {C:attention}Enhancement{}, {C:attention}Seal",
-            "and {C:attention}Edition"
-        }
-    },
-    whatAreTheOddsJoker = {
-        name = "What Are The Odds",
-        text = {
-            "If {C:attention}#1# Lucky cards{} trigger",
-            "in one hand, create a",
-            "random {C:dark_edition}negative{} Joker"
-        }
-    },
-    dagonetJoker = {
-        name = "Dagonet",
-        text = {
-            "{C:attention}Doubles{} all base values",
-            "on other Jokers",
-            "{C:inactive}(If possible)"
-        }
-    },
-    glueJoker = {
-        name = "Glue",
-        text = {
-            "If you have both {C:attention}Half",
-            "and {C:attention}Incomplete Joker{}, give",
-            "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult"
-        }
-    },
-    harpSealJoker = {
-        name = "Harp Seal",
-        text = {
-            "{C:attention}Doubles{} the effect",
-            "of all {C:attention}Seals",
-            "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-        }
-    },
-    footballCardJoker = {
-        name = "Football Card",
-        text = {
-            "{C:blue}Common{} Jokers",
-            "each give {C:chips}+#1#{} Chips"
-        }
-    },
-    specialEditionJoker = {
-        name = "Special Edition Joker",
-        text = {
-            "Gains {C:mult}+#2#{} Mult per {C:attention}Seal{}, {C:chips}+#4#{}",
-            "Chips per {C:attention}Enhancement{} and {X:mult,C:white}X#6#{} Mult",
-            "per {C:attention}Edition{} for every card in deck",
-            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult, {C:chips}+#3#{C:inactive}, Chips and {X:mult,C:white}X#5#{C:inactive} Mult)"
-        }
-    },
-    stockpilerJoker = {
-        name = "The Stockpiler",
-        text = {
-            "{C:attention}+#2#{} hand size for every #4#",
-            "cards in deck above {C:attention}#3#{}.",
-            "Caps at the current Ante",
-            "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
-        }
-    },
-    studentLoansJoker = {
-        name = "Student Loans",
-        text = {
-            "Go up to {C:red}-$#1#{} in debt.",
-            "Gives -#4# {C:red}discard{}",
-            "for every {C:red}-$#2#{} in debt",
-            "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
-        }
-    },
-    brokeJoker = {
-        name = "Broke Joker",
-        text = {
-            "Gains {C:mult}+#1#{} Mult",
-            "per {C:red}-$#3#",
-            "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
-        }
-    },
-    goForBrokeJoker = {
-        name = "Go For Broke",
-        text = {
-            "Gains {C:chips}+#1#{} Chips",
-            "per {C:red}-$#3#",
-            "{C:inactive}(Currently {C:chips}#2#{C:inactive} Chips)"
-        }
-    },
-    streetFighterJoker = {
-        name = "Street Fighter",
-        text = {
-            "Gives {X:mult,C:white}X#1#{} Mult",
-            "when balance is",
-            "at or below {C:red}-$#2#"
-        }
-    },
-    checklistJoker = {
-        name = "Checklist",
-        text = {
-            "Playing {C:attention}#1#{} upgrades",
-            "it by #2# level. Poker hand",
-            "changes when played"
-        }
-    },
-    oneOfUsJoker = {
-        name = "One Of Us",
-        text = {
-            "If played hand",
-            "contains {C:attention}#1# Enhanced cards,",
-            "Enhance a random {C:attention}Joker",
-        }
-    },
-    investorJoker = {
-        name = "The Investor",
-        text = {
-            "Gives {C:money}$#1#{} at end of",
-            "round. {C:green}#3# in #2#{} chance to",
-            "give {C:red}-$#1#{} instead"
-        }
-    },
-    -- mountainClimberJoker = {
-    --     name = "Mountain Climber",
-    --     text = {
-    --         "Every played {C:attention}card{}",
-    --         "permanently gains",
-    --         "{C:mult}+#1#{} Mult when scored"
-    --     }
-    -- },
-    shacklesJoker = {
-        name = "Shackles",
-        text = {
-            "{C:blue}+#1#{} hand, {C:red}+#2#{} discard,",
-            "{C:attention}+#3#{} hand size. Destroyed",
-            "if you play more than",
-            "{C:attention}#4#{} cards in one hand"
-        }
-    },
-    buyOneGetOneJoker = {
-        name = "Buy One Get One",
-        text = {
-            "{C:green}#2# in #1#{} chance to",
-            "get a random {C:attention}extra card{}",
-            "of whatever you're buying",
-            "{C:inactive}(Must have room)"
-        }
-    }
-}
-
 -- Create Decks
 local decks = {
     evenStevenDeck = {
-        name = "Even Steven's Deck",
-        config = { mmc_only_evens = true },
-        sprite = { x = 5, y = 2 }
+        loc = {
+            name = "Even Steven's Deck",
+            text = {
+                "Start run with only",
+                "{C:attention}even cards{} and",
+                "the {C:attention}Even Steven{} joker"
+            }
+        },
+        ability_name = "MMC Even Steven's Deck",
+        config = {
+            mmc_only_evens = true
+        },
+        sprite = {
+            x = 5,
+            y = 2
+        }
     },
     oddToddDeck = {
-        name = "Odd Todd's Deck",
-        config = { mmc_only_odds = true },
-        sprite = { x = 5, y = 2 }
+        loc = {
+            name = "Odd Todd's Deck",
+            text = {
+                "Start run with only",
+                "{C:attention}odd cards{} and",
+                "the {C:attention}Odd Todd{} joker"
+            }
+        },
+        ability_name = "MMC Odd Todd's Deck",
+        config = {
+            mmc_only_odds = true
+        },
+        sprite = {
+            x = 5,
+            y = 2
+        }
     },
     fibonacciDeck = {
-        name = "Fibonacci Deck",
-        config = { mmc_only_fibo = true },
-        sprite = { x = 5, y = 2 }
+        loc = {
+            name = "Fibonacci Deck",
+            text = {
+                "Start run with only",
+                "{C:attention}Fibonacci cards{} and",
+                "the {C:attention}Fibonacci{} joker"
+            }
+        },
+        ability_name = "MMC Fibonacci Deck",
+        config = {
+            mmc_only_fibo = true
+        },
+        sprite = {
+            x = 5,
+            y = 2
+        }
     },
     primeDeck = {
-        name = "Prime Deck",
-        config = { mmc_only_prime = true },
-        sprite = { x = 5, y = 2 }
+        loc = {
+            name = "Prime Deck",
+            text = {
+                "Start run with",
+                "only {C:attention}prime cards{} and",
+                "the {C:attention}Prime Time{} joker"
+            }
+        },
+        ability_name = "MMC Prime Deck",
+        config = {
+            mmc_only_prime = true
+        },
+        sprite = {
+            x = 5,
+            y = 2
+        }
     },
     midasDeck = {
-        name = "Midas's Deck",
-        config = { mmc_gold = true },
-        sprite = { x = 6, y = 0 }
+        loc = {
+            name = "Midas's Deck",
+            text = {
+                "Start run with only",
+                "{C:attention}Gold Face cards{} and",
+                "the {C:attention}Midas Mask{} joker"
+            }
+        },
+        ability_name = "MMC Midas's Deck",
+        config = {
+            mmc_gold = true
+        },
+        sprite = {
+            x = 6,
+            y = 0
+        }
     },
     jokersForHireDeck = {
-        name = "Jokers for Hire",
-        config = { mmc_for_hire = true },
-        sprite = { x = 6, y = 0 }
+        loc = {
+            name = "\"Jokers for Hire\" Deck",
+            text = {
+                "All Jokers give {C:dark_edition}+1{}",
+                "Joker slot. Price of",
+                "{C:attention}Jokers{} and {C:attention}Buffoon Packs",
+                "increases {C:red}linearly"
+            }
+        },
+        ability_name = "MMC Jokers for Hire",
+        config = {
+            mmc_for_hire = true
+        },
+        sprite = {
+            x = 6,
+            y = 0
+        }
     },
     perfectPrecisionDeck = {
-        name = "Perfect Precision",
-        config = { mmc_precision = true, ante_scaling = 1.5, discards = 1, hands = 1, hand_size = 1 },
-        sprite = { x = 5, y = 2 }
+        loc = {
+            name = "Perfect Precision Deck",
+            text = {
+                "+1 {C:blue}hands{}, {C:red}discards{} and",
+                "{C:attention}hand size{}. Start with",
+                "a {C:dark_edition}negative {C:attention}The Sniper{}",
+                "Joker. Ante scales {C:attention}X1.5{}",
+                "as fast"
+            }
+        },
+        ability_name = "MMC Perfect Precision",
+        config = {
+            mmc_precision = true,
+            ante_scaling = 1.5,
+            discards = 1,
+            hands = 1,
+            hand_size = 1
+        },
+        sprite = {
+            x = 5,
+            y = 2
+        },
     }
 }
 
 -- Create Jokers
 local jokers = {
     primeTimeJoker = {
+        loc = {
+            name = "Prime Time",
+            text = {
+                "Each played {C:attention}2{},",
+                "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
+                "{X:mult,C:white}X#1#{} Mult when scored",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC Prime Time",
         slug = "mmc_prime_time",
-        ability = { extra = { Xmult = 1.2 } },
+        ability = {
+            extra = {
+                Xmult = 1.2
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -767,9 +537,23 @@ local jokers = {
         eternal_compat = true
     },
     straightNateJoker = {
+        loc = {
+            name = "Straight Nate",
+            text = {
+                "{X:mult,C:white} X#1# {} Mult if played hand",
+                "contains a {C:attention}Straight{} and you have",
+                "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
+                "Also gives {C:dark_edition}+#2#{} Joker slot"
+            }
+        },
         ability_name = "MMC Straight Nate",
         slug = "mmc_straight_nate",
-        ability = { extra = { Xmult = 4, j_slots = 1 } },
+        ability = {
+            extra = {
+                Xmult = 4,
+                j_slots = 1
+            }
+        },
         rarity = 3,
         cost = 7,
         unlocked = true,
@@ -778,9 +562,23 @@ local jokers = {
         eternal_compat = true
     },
     fishermanJoker = {
+        loc = {
+            name = "The Fisherman",
+            text = {
+                "{C:attention}+#2#{} hand size per discard",
+                "{C:attention}-#2#{} hand size per hand played",
+                "Resets every round",
+                "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
+            }
+        },
         ability_name = "MMC The Fisherman",
         slug = "mmc_fisherman",
-        ability = { extra = { current_h_size = 0, h_mod = 1 } },
+        ability = {
+            extra = {
+                current_h_size = 0,
+                h_mod = 1
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -789,20 +587,47 @@ local jokers = {
         eternal_compat = true
     },
     impatientJoker = {
+        loc = {
+            name = "Impatient Joker",
+            text = {
+                "{C:mult}+#2#{} Mult per card discarded",
+                "Resets every round",
+                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+            }
+        },
         ability_name = "MMC Impatient Joker",
         slug = "mmc_impatient",
-        ability = { extra = { mult_mod = 3, current_mult = 0 } },
+        ability = {
+            extra = {
+                mult_mod = 3,
+                current_mult = 0
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
         discovered = true,
-        blueprint_compat = false,
+        blueprint_compat = true,
         eternal_compat = true
     },
     cultistJoker = {
+        loc = {
+            name = "Cultist",
+            text = {
+                "{X:mult,C:white}X#2#{} Mult per hand played",
+                "Resets every round",
+                "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+            }
+        },
         ability_name = "MMC Cultist",
         slug = "mmc_cultist",
-        ability = { extra = { current_Xmult = 1, Xmult_mod = 1, old = 0 } },
+        ability = {
+            extra = {
+                current_Xmult = 1,
+                Xmult_mod = 1,
+                old = 0
+            }
+        },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -811,9 +636,23 @@ local jokers = {
         eternal_compat = true
     },
     sealCollectorJoker = {
+        loc = {
+            name = "Seal Collector",
+            text = {
+                "Gains {C:chips}+#2#{} Chips for",
+                "every card with a {C:attention}seal",
+                "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+            }
+        },
         ability_name = "MMC Seal Collector",
         slug = "mmc_seal_collector",
-        ability = { extra = { current_chips = 25, chip_mod = 25, base = 25 } },
+        ability = {
+            extra = {
+                current_chips = 25,
+                chip_mod = 25,
+                base = 25
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -822,9 +661,21 @@ local jokers = {
         eternal_compat = true
     },
     camperJoker = {
+        loc = {
+            name = "Camper",
+            text = {
+                "Every discarded {C:attention}card{}",
+                "permanently gains",
+                "{C:chips}+#1#{} Chips"
+            }
+        },
         ability_name = "MMC Camper",
         slug = "mmc_camper",
-        ability = { extra = { chip_mod = 4 } },
+        ability = {
+            extra = {
+                chip_mod = 4
+            }
+        },
         rarity = 2,
         cost = 5,
         unlocked = true,
@@ -833,6 +684,15 @@ local jokers = {
         eternal_compat = true
     },
     luckyNumberSevenJoker = {
+        loc = {
+            name = "Lucky Number Seven",
+            text = {
+                "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
+                "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
+                "{C:attention}7 cards{} are scored,",
+                "respectively"
+            }
+        },
         ability_name = "MMC Lucky Number Seven",
         slug = "mmc_lucky_number_seven",
         ability = {
@@ -855,9 +715,26 @@ local jokers = {
         eternal_compat = true
     },
     delayedJoker = {
+        loc = {
+            name = "Delayed Joker",
+            text = {
+                "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
+                "Chips and {X:mult,C:white}X#3#{} Mult on",
+                "the {C:attention}#5#th{} action",
+                "{C:inactive}(Current action: {C:attention}#4#{C:inactive} )"
+            }
+        },
         ability_name = "MMC Delayed Joker",
         slug = "mmc_delayed",
-        ability = { extra = { mult = 20, chips = 100, Xmult = 1.5, every = 4, action_tally = 1 } },
+        ability = {
+            extra = {
+                mult = 20,
+                chips = 100,
+                Xmult = 1.5,
+                every = 4,
+                action_tally = 1
+            }
+        },
         rarity = 2,
         cost = 7,
         unlocked = true,
@@ -866,9 +743,25 @@ local jokers = {
         eternal_compat = true
     },
     showoffJoker = {
+        loc = {
+            name = "The Show-Off",
+            text = {
+                "Gains {X:mult,C:white}X#2#{} Mult when",
+                "a blind is finished with",
+                "{C:attention}X#3#{} the chip requirement",
+                "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+            }
+        },
         ability_name = "MMC The Show-Off",
         slug = "mmc_showoff",
-        ability = { extra = { current_Xmult = 1, Xmult_mod = 1, req = 2, total_chips = 0 } },
+        ability = {
+            extra = {
+                current_Xmult = 1,
+                Xmult_mod = 0.25,
+                req = 2,
+                total_chips = 0
+            }
+        },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -877,9 +770,26 @@ local jokers = {
         eternal_compat = true
     },
     sniperJoker = {
+        loc = {
+            name = "The Sniper",
+            text = {
+                "Gains {X:mult,C:white}X#2#{} Mult when a",
+                "blind is finished within {C:attention}#3#%{} of",
+                "the {C:attention}exact{} chip requirement",
+                "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC The Sniper",
         slug = "mmc_sniper",
-        ability = { extra = { current_Xmult = 1, Xmult_mod = 4, percentage = 5, total_chips = 0 } },
+        ability = {
+            extra = {
+                current_Xmult = 1,
+                Xmult_mod = 4,
+                percentage = 5,
+                total_chips = 0
+            }
+        },
         rarity = 3,
         cost = 10,
         unlocked = true,
@@ -888,9 +798,27 @@ local jokers = {
         eternal_compat = true
     },
     blackjackJoker = {
+        loc = {
+            name = "Blackjack Joker",
+            text = {
+                "Gives {X:mult,C:white}X#1#{} Mult when",
+                "the ranks of all played",
+                "cards is {C:attention}exactly #2#",
+                "Gives {X:mult,C:white}X#3#{} Mult less for",
+                "every point below #2#"
+            }
+        },
         ability_name = "MMC Blackjack Joker",
         slug = "mmc_blackjack",
-        ability = { extra = { Xmult = 3, rank_tally = { 0 }, updated_rank_tally = {}, req = 21, Xmult_mod = 0.5 } },
+        ability = {
+            extra = {
+                Xmult = 3,
+                rank_tally = { 0 },
+                updated_rank_tally = {},
+                req = 21,
+                Xmult_mod = 0.5
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -899,9 +827,26 @@ local jokers = {
         eternal_compat = true
     },
     batmanJoker = {
+        loc = {
+            name = "Batman",
+            text = {
+                "Gains {C:mult}+#2#{} Mult for",
+                "every {C:attention}non-lethal{} hand played.",
+                "Mult gain increases for every",
+                "Joker with {C:attention}\"Joker\"{} in the name",
+                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+            }
+        },
         ability_name = "MMC Batman",
         slug = "mmc_batman",
-        ability = { extra = { current_mult = 1, mult_mod = 1, total_chips = 0, base = 1 } },
+        ability = {
+            extra = {
+                current_mult = 1,
+                mult_mod = 1,
+                total_chips = 0,
+                base = 1
+            }
+        },
         rarity = 3,
         cost = 8,
         unlocked = true,
@@ -910,9 +855,23 @@ local jokers = {
         eternal_compat = true
     },
     bombJoker = {
+        loc = {
+            name = "Bomb",
+            text = { "Gains {C:mult}+#2#{} Mult per round",
+                "self destructs after {C:attention}#3#{} rounds",
+                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC Bomb",
         slug = "mmc_bomb",
-        ability = { extra = { current_mult = 15, mult_mod = 15, _every = 3 } },
+        ability = {
+            extra = {
+                current_mult = 15,
+                mult_mod = 15,
+                _every = 3
+            }
+        },
         rarity = 1,
         cost = 5,
         unlocked = true,
@@ -921,42 +880,100 @@ local jokers = {
         eternal_compat = false
     },
     eyeChartJoker = {
+        loc = {
+            name = "Eye Chart",
+            text = {
+                "Gives {C:chips}+#1#{} Chips for every",
+                "letter {C:attention}\"#2#\"{} in your Jokers.",
+                "Letter changes when this",
+                "Joker appears in the shop",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy" }
+        },
         ability_name = "MMC Eye Chart",
         slug = "mmc_eye_chart",
-        ability = { extra = { chips = 20, letter = 'A' } },
+        ability = {
+            extra = {
+                chips = 20,
+                letter = 'A'
+            }
+        },
         rarity = 1,
         cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    grudgefulJoker = {
-        ability_name = "MMC Grudgeful Joker",
-        slug = "mmc_grudgeful",
-        ability = { extra = { current_chips = 0, total_chips = 0, old_chips = 0, percentage = 10 } },
-        rarity = 3,
-        cost = 9,
         unlocked = true,
         discovered = true,
         blueprint_compat = false,
         eternal_compat = true
     },
-    finishingBlowJoker = {
-        ability_name = "MMC Finishing Blow",
-        slug = "mmc_finishing_blow",
-        ability = { extra = { high_card = false, card_refs = {} } },
-        rarity = 2,
-        cost = 6,
+    grudgefulJoker = {
+        loc = {
+            name = "Grudgeful Joker",
+            text = {
+                "Adds {C:attention}excess Chips{} from last",
+                "blind to the first hand",
+                "of the current round. Caps",
+                "at {C:attention}#2#%{} of current blind's Chips",
+                "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+            }
+        },
+        ability_name = "MMC Grudgeful Joker",
+        slug = "mmc_grudgeful",
+        ability = {
+            extra = {
+                current_chips = 0,
+                total_chips = 0,
+                old_chips = 0,
+                percentage = 10
+            }
+        },
+        rarity = 3,
+        cost = 9,
         unlocked = true,
         discovered = true,
         blueprint_compat = true,
         eternal_compat = true
     },
+    finishingBlowJoker = {
+        loc = {
+            name = "Finishing Blow",
+            text = {
+                "If a blind is finished",
+                "with a {C:attention}High Card{}, randomly",
+                "{C:attention}Enhance{} scored cards"
+            }
+        },
+        ability_name = "MMC Finishing Blow",
+        slug = "mmc_finishing_blow",
+        ability = {
+            extra = {
+                high_card = false,
+                card_refs = {}
+            }
+        },
+        rarity = 2,
+        cost = 6,
+        unlocked = true,
+        discovered = true,
+        blueprint_compat = false,
+        eternal_compat = true
+    },
     planetaryAlignmentJoker = {
+        loc = {
+            name = "Planetary Alignment",
+            text = {
+                "Once every #1# rounds",
+                "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
+                "one of them will be for your",
+                "most played {C:attention}poker hand{}"
+            }
+        },
         ability_name = "MMC Planetary Alignment",
         slug = "mmc_planetary_alignment",
-        ability = { extra = { round = 0, every = 2 } },
+        ability = {
+            extra = {
+                round = 0,
+                every = 2
+            }
+        },
         rarity = 1,
         cost = 6,
         unlocked = true,
@@ -965,20 +982,52 @@ local jokers = {
         eternal_compat = true
     },
     historicalJoker = {
+        loc = {
+            name = "Historical Joker",
+            text = {
+                "If scored cards have the same",
+                "{C:attention}ranks{} and {C:attention}order{} as previous",
+                "hand, add previous hands {C:chips}Chips{}",
+                "to the current hand. Caps at",
+                "{C:attention}#1#%{} of current blind's Chips",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC Historical Joker",
         slug = "mmc_historical",
-        ability = { extra = { prev_cards = {}, current_cards = {}, current_chips = 0, percentage = 10 } },
+        ability = {
+            extra = {
+                prev_cards = {},
+                current_cards = {},
+                current_chips = 0,
+                percentage = 10
+            }
+        },
         rarity = 3,
         cost = 9,
         unlocked = true,
         discovered = true,
-        blueprint_compat = false,
+        blueprint_compat = true,
         eternal_compat = true
     },
     suitAlleyJoker = {
+        loc = {
+            name = "Suit Alley",
+            text = {
+                "{C:diamonds}Diamond{} and {C:clubs}Club{} cards",
+                "gain {C:chips}+#1#{} Chips when scored",
+                "{C:hearts}Heart{} and {C:spades}Spade{} cards",
+                "gain {C:mult}+#2#{} Mult when scored"
+            }
+        },
         ability_name = "MMC Suit Alley",
         slug = "mmc_suit_alley",
-        ability = { extra = { mult = 3, chips = 12 } },
+        ability = {
+            extra = {
+                mult = 3,
+                chips = 12
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -987,9 +1036,22 @@ local jokers = {
         eternal_compat = true
     },
     printerJoker = {
+        loc = {
+            name = "The Printer",
+            text = {
+                "If hand scores more than",
+                "blind's Chips, {C:attention}duplicate{}",
+                "your hand and add duplicated",
+                "cards to your hand"
+            }
+        },
         ability_name = "MMC The Printer",
         slug = "mmc_printer",
-        ability = { extra = { hand = {} } },
+        ability = {
+            extra = {
+                hand = {}
+            }
+        },
         rarity = 3,
         cost = 9,
         unlocked = true,
@@ -998,20 +1060,42 @@ local jokers = {
         eternal_compat = true
     },
     shyJoker = {
+        loc = {
+            name = "Shy Joker",
+            text = {
+                "{X:mult,C:white}X#1#{} Mult,",
+                "gains {X:mult,C:white}X#2#{} Mult",
+                "per {C:attention}card{} scored"
+            }
+        },
         ability_name = "MMC Shy Joker",
         slug = "mmc_shy",
-        ability = { extra = { current_Xmult = 1, Xmult_mod = 0.01 } },
+        ability = {
+            extra = {
+                current_Xmult = 1,
+                Xmult_mod = 0.01
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
         discovered = true,
-        blueprint_compat = false,
+        blueprint_compat = true,
         eternal_compat = true
     },
     gamblerJoker = {
+        loc = {
+            name = "The Gambler",
+            text = {
+                "Retrigger all",
+                "scored {C:attention}Lucky{} cards"
+            }
+        },
         ability_name = "MMC The Gambler",
         slug = "mmc_gambler",
-        ability = { extra = 1 },
+        ability = {
+            extra = 1
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -1020,9 +1104,22 @@ local jokers = {
         eternal_compat = true
     },
     incompleteJoker = {
+        loc = {
+            name = "Incomplete Joker",
+            text = {
+                "{C:chips}+#1#{} Chips if played",
+                "hand contains",
+                "{C:attention}#2#{} or fewer cards"
+            }
+        },
         ability_name = "MMC Incomplete Joker",
         slug = "mmc_incomplete",
-        ability = { extra = { chips = 100, req = 3 } },
+        ability = {
+            extra = {
+                chips = 100,
+                req = 3
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -1031,9 +1128,25 @@ local jokers = {
         eternal_compat = true
     },
     abbeyRoadJoker = {
+        loc = {
+            name = "Abbey Road",
+            text = {
+                "If at least {C:attention}#2#{} poker hands",
+                "have been played the same",
+                "amount of times, give {X:mult,C:white}X#1#{} Mult",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC Abbey Road",
         slug = "mmc_abbey_road",
-        ability = { extra = { Xmult = 4, req = 4, hand_equal_count = {}, should_trigger = false } },
+        ability = {
+            extra = {
+                Xmult = 4,
+                req = 4,
+                hand_equal_count = {},
+                should_trigger = false
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -1042,6 +1155,13 @@ local jokers = {
         eternal_compat = true
     },
     boatingLicenseJoker = {
+        loc = {
+            name = "Boating License",
+            text = {
+                "{C:attention}Copies{} effects of all",
+                "scored {C:attention}Enhanced{} cards"
+            }
+        },
         ability_name = "MMC Boating License",
         slug = "mmc_boating_license",
         ability = {},
@@ -1053,9 +1173,22 @@ local jokers = {
         eternal_compat = true
     },
     goldBarJoker = {
+        loc = {
+            name = "Gold Bar",
+            text = {
+                "Earn {C:money}$#1#{} for every",
+                "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
+                "at end of round",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC Gold Bar",
         slug = "mmc_gold_bar",
-        ability = { extra = { dollars = 2 } },
+        ability = {
+            extra = {
+                dollars = 2
+            }
+        },
         rarity = 1,
         cost = 5,
         unlocked = true,
@@ -1064,17 +1197,41 @@ local jokers = {
         eternal_compat = true
     },
     riggedJoker = {
+        loc = {
+            name = "Rigged Joker",
+            text = {
+                "Once per hand, add {C:attention}+#1#{} to all",
+                "listed {C:green,E:1,S:1.1}probabilities{} whenever a",
+                "{C:attention}Lucky{} card does not trigger.",
+                "Resets every round"
+            }
+        },
         ability_name = "MMC Rigged Joker",
         slug = "mmc_rigged",
-        ability = { extra = { probability = 0, increase = 1, has_triggered = false } },
+        ability = {
+            extra = {
+                probability = 0,
+                increase = 1,
+                has_triggered = false
+            }
+        },
         rarity = 1,
         cost = 5,
         unlocked = true,
         discovered = true,
-        blueprint_compat = false,
+        blueprint_compat = true,
         eternal_compat = true
     },
     commanderJoker = {
+        loc = {
+            name = "The Commander",
+            text = {
+                "If {C:attention}first hand{} of round",
+                "has only {C:attention}1{} card, give it a",
+                "random {C:attention}Enhancement{}, {C:attention}Seal",
+                "and {C:attention}Edition"
+            }
+        },
         ability_name = "MMC The Commander",
         slug = "mmc_commander",
         ability = {},
@@ -1086,9 +1243,22 @@ local jokers = {
         eternal_compat = true
     },
     whatAreTheOddsJoker = {
+        loc = {
+            name = "What Are The Odds",
+            text = {
+                "If {C:attention}#1# Lucky cards{} trigger",
+                "in one hand, create a",
+                "random {C:dark_edition}negative{} Joker"
+            }
+        },
         ability_name = "MMC What Are The Odds",
         slug = "mmc_what_are_the_odds",
-        ability = { extra = { req = 4, lucky_tally = 0 } },
+        ability = {
+            extra = {
+                req = 4,
+                lucky_tally = 0
+            }
+        },
         rarity = 2,
         cost = 8,
         unlocked = true,
@@ -1097,9 +1267,23 @@ local jokers = {
         eternal_compat = true
     },
     dagonetJoker = {
+        loc = {
+            name = "Dagonet",
+            text = {
+                "{C:attention}Doubles{} all base values",
+                "on other Jokers",
+                "{C:inactive}(If possible)"
+            }
+        },
         ability_name = "MMC Dagonet",
         slug = "mmc_dagonet",
-        ability = { extra = { _mult = 2, _base = 2, triggered = false } },
+        ability = {
+            extra = {
+                _mult = 2,
+                _base = 2,
+                triggered = false
+            }
+        },
         rarity = 4,
         cost = 20,
         unlocked = true,
@@ -1108,17 +1292,41 @@ local jokers = {
         eternal_compat = true
     },
     glueJoker = {
+        loc = {
+            name = "Glue",
+            text = {
+                "If you have both {C:attention}Half",
+                "and {C:attention}Incomplete Joker{}, give",
+                "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult"
+            }
+        },
         ability_name = "MMC Glue",
         slug = "mmc_glue",
-        ability = { extra = { Xmult = 5, j_slots = 2, half = false, incomplete = false, triggered = false } },
+        ability = {
+            extra = {
+                Xmult = 5,
+                j_slots = 2,
+                half = false,
+                incomplete = false,
+                triggered = false
+            }
+        },
         rarity = 1,
         cost = 5,
         unlocked = true,
         discovered = true,
-        blueprint_compat = false,
+        blueprint_compat = true,
         eternal_compat = true
     },
     harpSealJoker = {
+        loc = {
+            name = "Harp Seal",
+            text = {
+                "{C:attention}Doubles{} the effect",
+                "of all {C:attention}Seals",
+                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+            }
+        },
         ability_name = "MMC Harp Seal",
         slug = "mmc_harp_seal",
         ability = {},
@@ -1130,9 +1338,20 @@ local jokers = {
         eternal_compat = true
     },
     footballCardJoker = {
+        loc = {
+            name = "Football Card",
+            text = {
+                "{C:blue}Common{} Jokers",
+                "each give {C:chips}+#1#{} Chips"
+            }
+        },
         ability_name = "MMC Football Card",
         slug = "mmc_football_card",
-        ability = { extra = { chips = 50 } },
+        ability = {
+            extra = {
+                chips = 50
+            }
+        },
         rarity = 2,
         cost = 7,
         unlocked = true,
@@ -1141,9 +1360,28 @@ local jokers = {
         eternal_compat = true
     },
     specialEditionJoker = {
+        loc = {
+            name = "Special Edition Joker",
+            text = {
+                "Gains {C:mult}+#2#{} Mult per {C:attention}Seal{}, {C:chips}+#4#{}",
+                "Chips per {C:attention}Enhancement{} and {X:mult,C:white}X#6#{} Mult",
+                "per {C:attention}Edition{} for every card in deck",
+                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult, {C:chips}+#3#{C:inactive}, Chips and {X:mult,C:white}X#5#{C:inactive} Mult)"
+            }
+        },
         ability_name = "MMC Special Edition Joker",
         slug = "mmc_special_edition",
-        ability = { extra = { current_mult = 0, mult_mod = 2, current_chips = 0, chip_mod = 10, current_Xmult = 1, Xmult_mod = 0.1, base = 0 } },
+        ability = {
+            extra = {
+                current_mult = 0,
+                mult_mod = 2,
+                current_chips = 0,
+                chip_mod = 10,
+                current_Xmult = 1,
+                Xmult_mod = 0.1,
+                base = 0
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
@@ -1152,20 +1390,52 @@ local jokers = {
         eternal_compat = true
     },
     stockpilerJoker = {
+        loc = {
+            name = "The Stockpiler",
+            text = {
+                "{C:attention}+#2#{} hand size for every #4#",
+                "cards in deck above {C:attention}#3#{}.",
+                "Caps at the current Ante",
+                "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
+            }
+        },
         ability_name = "MMC The Stockpiler",
         slug = "mmc_stockpiler",
-        ability = { extra = { current_h_size = 0, h_mod = 1, base = 52, every = 4 } },
+        ability = {
+            extra = {
+                current_h_size = 0,
+                h_mod = 1,
+                base = 52,
+                every = 4
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
         discovered = true,
-        blueprint_compat = true,
+        blueprint_compat = false,
         eternal_compat = true
     },
     studentLoansJoker = {
+        loc = {
+            name = "Student Loans",
+            text = {
+                "Go up to {C:red}-$#1#{} in debt.",
+                "Gives -#4# {C:red}discard{}",
+                "for every {C:red}-$#2#{} in debt",
+                "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
+            }
+        },
         ability_name = "MMC Student Loans",
         slug = "mmc_student_loans",
-        ability = { extra = { negative_bal = 100, every = 25, discards = 0, discard_sub = 1 } },
+        ability = {
+            extra = {
+                negative_bal = 100,
+                every = 25,
+                discards = 0,
+                discard_sub = 1
+            }
+        },
         rarity = 2,
         cost = 4,
         unlocked = true,
@@ -1174,9 +1444,23 @@ local jokers = {
         eternal_compat = true
     },
     brokeJoker = {
+        loc = {
+            name = "Broke Joker",
+            text = {
+                "Gains {C:mult}+#1#{} Mult",
+                "per {C:red}-$#3#",
+                "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
+            }
+        },
         ability_name = "MMC Broke Joker",
         slug = "mmc_broke",
-        ability = { extra = { current_mult = 0, mult_mod = 1, every = 2 } },
+        ability = {
+            extra = {
+                current_mult = 0,
+                mult_mod = 1,
+                every = 2
+            }
+        },
         rarity = 1,
         cost = 2,
         unlocked = true,
@@ -1185,9 +1469,23 @@ local jokers = {
         eternal_compat = true
     },
     goForBrokeJoker = {
+        loc = {
+            name = "Go For Broke",
+            text = {
+                "Gains {C:chips}+#1#{} Chips",
+                "per {C:red}-$#3#",
+                "{C:inactive}(Currently {C:chips}#2#{C:inactive} Chips)"
+            }
+        },
         ability_name = "MMC Go For Broke",
         slug = "mmc_go_for_broke",
-        ability = { extra = { current_chips = 0, every = 1, chip_mod = 4 } },
+        ability = {
+            extra = {
+                current_chips = 0,
+                every = 1,
+                chip_mod = 4
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -1196,9 +1494,22 @@ local jokers = {
         eternal_compat = true
     },
     streetFighterJoker = {
+        loc = {
+            name = "Street Fighter",
+            text = {
+                "Gives {X:mult,C:white}X#1#{} Mult",
+                "when balance is",
+                "at or below {C:red}-$#2#"
+            }
+        },
         ability_name = "MMC Street Fighter",
         slug = "mmc_street_fighter",
-        ability = { extra = { Xmult = 4, req = 20 } },
+        ability = {
+            extra = {
+                Xmult = 4,
+                req = 20
+            }
+        },
         rarity = 2,
         cost = 7,
         unlocked = true,
@@ -1207,9 +1518,22 @@ local jokers = {
         eternal_compat = true
     },
     checklistJoker = {
+        loc = {
+            name = "Checklist",
+            text = {
+                "Playing {C:attention}#1#{} upgrades",
+                "it by #2# level. Poker hand",
+                "changes when played"
+            }
+        },
         ability_name = "MMC Checklist",
         slug = "mmc_checklist",
-        ability = { extra = { poker_hand = "High Card", increase = 1 } },
+        ability = {
+            extra = {
+                poker_hand = "High Card",
+                increase = 1
+            }
+        },
         rarity = 2,
         cost = 7,
         unlocked = true,
@@ -1218,20 +1542,45 @@ local jokers = {
         eternal_compat = true
     },
     oneOfUsJoker = {
+        loc = {
+            name = "One Of Us",
+            text = {
+                "If played hand",
+                "contains {C:attention}#1# Enhanced cards,",
+                "Enhance a random {C:attention}Joker"
+            }
+        },
         ability_name = "MMC One Of Us",
         slug = "mmc_one_of_us",
-        ability = { extra = { req = 5, enhanced_tally = 0 } },
+        ability = {
+            extra = {
+                req = 5
+            }
+        },
         rarity = 2,
         cost = 6,
         unlocked = true,
         discovered = true,
-        blueprint_compat = true,
+        blueprint_compat = false,
         eternal_compat = true
     },
     investorJoker = {
+        loc = {
+            name = "The Investor",
+            text = {
+                "Gives {C:money}$#1#{} at end of",
+                "round. {C:green}#3# in #2#{} chance to",
+                "give {C:red}-$#1#{} instead"
+            }
+        },
         ability_name = "MMC The Investor",
         slug = "mmc_investor",
-        ability = { extra = { dollars = 5, odds = 4 } },
+        ability = {
+            extra = {
+                dollars = 5,
+                odds = 4
+            }
+        },
         rarity = 1,
         cost = 4,
         unlocked = true,
@@ -1240,6 +1589,14 @@ local jokers = {
         eternal_compat = true
     },
     -- mountainClimberJoker = {
+    --     loc = {
+    --         name = "Mountain Climber",
+    --         text = {
+    --             "Every played {C:attention}card{}",
+    --             "permanently gains",
+    --             "{C:mult}+#1#{} Mult when scored"
+    --         }
+    --     },
     --     ability_name = "MMC Mountain Climber",
     --     slug = "mmc_mountain_climber",
     --     ability = { extra = { mult = 1 } },
@@ -1251,20 +1608,49 @@ local jokers = {
     --     eternal_compat = true
     -- },
     shacklesJoker = {
+        loc = {
+            name = "Shackles",
+            text = {
+                "{C:blue}+#1#{} hand, {C:red}+#2#{} discard,",
+                "{C:attention}+#3#{} hand size. Destroyed",
+                "if you play more than",
+                "{C:attention}#4#{} cards in one hand"
+            }
+        },
         ability_name = "MMC Shackles",
         slug = "mmc_shackles",
-        ability = { extra = { _hand_add = 1, _h_size = 1, _discards = 1, req = 4 } },
+        ability = {
+            extra = {
+                _hand_add = 1,
+                _h_size = 1,
+                _discards = 1,
+                req = 4
+            }
+        },
         rarity = 1,
         cost = 5,
         unlocked = true,
         discovered = true,
-        blueprint_compat = true,
+        blueprint_compat = false,
         eternal_compat = true
     },
     buyOneGetOneJoker = {
+        loc = {
+            name = "Buy One Get One",
+            text = {
+                "{C:green}#2# in #1#{} chance to",
+                "get a random {C:attention}extra card{}",
+                "of whatever you're buying",
+                "{C:inactive}(Must have room)"
+            }
+        },
         ability_name = "MMC Buy One Get One",
         slug = "mmc_buy_one_get_one",
-        ability = { extra = { odds = 4 } },
+        ability = {
+            extra = {
+                odds = 4
+            }
+        },
         rarity = 1,
         cost = 5,
         unlocked = true,
@@ -1275,7 +1661,7 @@ local jokers = {
 }
 
 -- Local variables
-local for_hire_counter = 0
+local for_hire_counter = 1
 
 -- Initialize deck effect
 local Backapply_to_runRef = Back.apply_to_run
@@ -1410,7 +1796,7 @@ function Back.apply_to_run(arg_56_0)
                 G.GAME.starting_params.mmc_for_hire = true
 
                 -- Reset counter
-                for_hire_counter = 0
+                for_hire_counter = 1
                 return true
             end
         }))
@@ -1421,7 +1807,9 @@ function Back.apply_to_run(arg_56_0)
             func = function()
                 -- Add The Sniper Joker
                 local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_mmc_sniper', nil)
-                card:set_edition({ negative = true })
+                card:set_edition({
+                    negative = true
+                })
                 card:add_to_deck()
                 G.jokers:emplace(card)
                 return true
@@ -1447,7 +1835,7 @@ function SMODS.INIT.MikasModCollection()
     -- Initialize Decks
     for k, v in pairs(decks) do
         if config[k] then
-            local newDeck = SMODS.Deck:new(v.name, k, v.config, v.sprite, locs[k])
+            local newDeck = SMODS.Deck:new(v.name, k, v.config, v.sprite, v.loc)
             newDeck:register()
         end
     end
@@ -1455,13 +1843,15 @@ function SMODS.INIT.MikasModCollection()
     -- Initialize Jokers
     for k, v in pairs(jokers) do
         if config[k] then
-            local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, { x = 0, y = 0 }, locs[k],
-                v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
+            local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, {
+                x = 0,
+                y = 0
+            }, v.locs, v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
             joker:register()
             local sprite
             if not_in_table(no_art_yet, k) then
-                sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
-                    "j_" .. v.slug .. ".png", 71, 95, "asset_atli")
+                sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path, "j_" .. v.slug .. ".png",
+                    71, 95, "asset_atli")
             else
                 sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
                     "j_mmc_missing_texture.png", 71, 95, "asset_atli")
@@ -1563,13 +1953,13 @@ function SMODS.INIT.MikasModCollection()
         elseif card.ability.name == 'MMC One Of Us' then
             return { card.ability.extra.req }
         elseif card.ability.name == 'MMC The Investor' then
-            return { card.ability.extra.dollars, card.ability.extra.odds, '' ..
-            (G.GAME and G.GAME.probabilities.normal or 1) }
+            return { card.ability.extra.dollars, card.ability.extra.odds,
+                '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
             -- elseif card.ability.name == 'MMC Mountain Climber' then
             --     return { card.ability.extra.mult }
         elseif card.ability.name == 'MMC Shackles' then
-            return { card.ability.extra._hand_add, card.ability.extra._discards, card.ability.extra._h_size, card
-                .ability.extra.req }
+            return { card.ability.extra._hand_add, card.ability.extra._discards, card.ability.extra._h_size,
+                card.ability.extra.req }
         elseif card.ability.name == 'MMC Buy One Get One' then
             return { card.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
         end
@@ -1579,11 +1969,9 @@ function SMODS.INIT.MikasModCollection()
     if config.primeTimeJoker then
         SMODS.Jokers.j_mmc_prime_time.calculate = function(self, context)
             -- For each played card, if card is prime, add xmult
-            if context.individual and context.cardarea == G.play and (context.other_card:get_id() == 2 or
-                    context.other_card:get_id() == 3 or
-                    context.other_card:get_id() == 5 or
-                    context.other_card:get_id() == 7 or
-                    context.other_card:get_id() == 14) then
+            if context.individual and context.cardarea == G.play and
+                (context.other_card:get_id() == 2 or context.other_card:get_id() == 3 or context.other_card:get_id() ==
+                    5 or context.other_card:get_id() == 7 or context.other_card:get_id() == 14) then
                 return {
                     message = localize {
                         type = 'variable',
@@ -1635,12 +2023,13 @@ function SMODS.INIT.MikasModCollection()
             -- Decrease hand size
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.current_h_size > 0 then
-                    self.ability.extra.current_h_size = math.max(0,
-                        self.ability.extra.current_h_size - self.ability.extra.h_mod)
+                    self.ability.extra.current_h_size = math.max(0, self.ability.extra.current_h_size -
+                        self.ability.extra.h_mod)
                     G.hand:change_size(-self.ability.extra.h_mod)
                     -- Decrease message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_hand_down') })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_hand_down')
+                    })
                 end
             end
 
@@ -1649,8 +2038,9 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.current_h_size = self.ability.extra.current_h_size + self.ability.extra.h_mod
                 G.hand:change_size(self.ability.extra.h_mod)
                 -- Increase message
-                card_eval_status_text(self, 'extra', nil, nil, nil,
-                    { message = localize('k_mmc_hand_up') })
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize('k_mmc_hand_up')
+                })
             end
 
             -- Reset hand size
@@ -1659,8 +2049,9 @@ function SMODS.INIT.MikasModCollection()
                     G.hand:change_size(-self.ability.extra.current_h_size)
                     self.ability.extra.current_h_size = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_reset') })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_reset')
+                    })
                 end
             end
         end
@@ -1684,22 +2075,27 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Increase mult for each discarded card
-            if context.discard then
+            if context.discard and not context.blueprint then
                 self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
                 return {
-                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult_mod } },
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_mult',
+                        vars = { self.ability.extra.mult_mod }
+                    },
                     colour = G.C.RED,
                     card = self
                 }
             end
 
             -- Reset mult
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 if self.ability.extra.current_mult ~= 0 then
                     self.ability.extra.current_mult = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_reset') })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_reset')
+                    })
                 end
             end
         end
@@ -1707,13 +2103,14 @@ function SMODS.INIT.MikasModCollection()
 
     if config.cultistJoker then
         SMODS.Jokers.j_mmc_cultist.calculate = function(self, context)
-            -- If hand played
-            if SMODS.end_calculate_context(context) then
-                -- Increment Xmult
+            -- Increment Xmult
+            if context.before and not context.blueprint then
                 self.ability.extra.old = self.ability.extra.current_Xmult
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
+            end
 
-                -- Apply xmult
+            -- Apply xmult
+            if SMODS.end_calculate_context(context) then
                 if self.ability.extra.old > 1 then
                     return {
                         message = localize {
@@ -1728,12 +2125,13 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Reset mult
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 if self.ability.extra.current_Xmult ~= 1 then
                     self.ability.extra.current_Xmult = 1
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_reset') })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_reset')
+                    })
                 end
             end
         end
@@ -1776,12 +2174,13 @@ function SMODS.INIT.MikasModCollection()
     if config.luckyNumberSevenJoker then
         SMODS.Jokers.j_mmc_lucky_number_seven.calculate = function(self, context)
             -- Count sevens
-            if context.individual and context.cardarea == G.play and context.other_card:get_id() == 7 then
+            if context.individual and context.cardarea == G.play and context.other_card:get_id() == 7 and
+                not context.blueprint then
                 self.ability.extra.seven_tally = self.ability.extra.seven_tally + 1
             end
 
             if SMODS.end_calculate_context(context) then
-                -- Set dollars
+                -- Set dollars depending on amount of 7s
                 if self.ability.extra.seven_tally == 1 then
                     self.ability.extra.dollars = self.ability.extra.dollar_gain_one
                 elseif self.ability.extra.seven_tally == 2 then
@@ -1794,12 +2193,10 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.dollars = self.ability.extra.dollar_gain_five
                 end
 
-                -- Give money and reset
+                -- Give money
                 if self.ability.extra.seven_tally >= 1 then
                     ease_dollars(self.ability.extra.dollars)
                     self.ability.extra.old = self.ability.extra.dollars
-                    self.ability.extra.dollars = 0
-                    self.ability.extra.seven_tally = 0
                     return {
                         message = localize('$') .. self.ability.extra.old,
                         dollars = self.ability.extra.old,
@@ -1807,16 +2204,25 @@ function SMODS.INIT.MikasModCollection()
                     }
                 end
             end
+
+            -- Reset
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                self.ability.extra.dollars = 0
+                self.ability.extra.seven_tally = 0
+            end
         end
     end
 
     if config.delayedJoker then
         SMODS.Jokers.j_mmc_delayed.calculate = function(self, context)
+            -- Increment action tally
+            if context.before and not context.blueprint then
+                self.ability.extra.action_tally = self.ability.extra.action_tally + 1
+            end
+
             -- Apply mult, chips and xmult
             if SMODS.end_calculate_context(context) then
-                self.ability.extra.action_tally = self.ability.extra.action_tally + 1
                 if self.ability.extra.action_tally == self.ability.extra.every + 1 then
-                    self.ability.extra.action_tally = 1
                     return {
                         -- Return bonus message and apply bonus
                         mult_mod = self.ability.extra.mult,
@@ -1825,7 +2231,7 @@ function SMODS.INIT.MikasModCollection()
                         message = localize('k_mmc_bonus'),
                         card = self
                     }
-                else
+                elseif not context.blueprint then
                     -- Return charging message
                     return {
                         message = localize('k_mmc_charging'),
@@ -1835,17 +2241,27 @@ function SMODS.INIT.MikasModCollection()
                 end
             end
 
+            -- Reset action tally
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                if self.ability.extra.action_tally == self.ability.extra.every + 1 then
+                    self.ability.extra.action_tally = 1
+                end
+            end
+
             -- Increment action tally
-            if context.pre_discard then
+            if context.pre_discard and not context.blueprint then
                 self.ability.extra.action_tally = (self.ability.extra.action_tally % self.ability.extra.every) + 1
                 if self.ability.extra.action_tally == 1 then
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_reset') })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_reset')
+                    })
                 else
                     -- Charging message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_charging'), colour = G.C.JOKER_GREY })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_charging'),
+                        colour = G.C.JOKER_GREY
+                    })
                 end
             end
         end
@@ -1869,17 +2285,19 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Add scored chips to total
-            if context.mmc_scored_chips then
+            if context.mmc_scored_chips and not context.blueprint then
                 self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
             end
 
             -- See if total scored chips > 2 * blind chips, then increment xmult
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 if self.ability.extra.total_chips > (self.ability.extra.req * G.GAME.blind.chips) then
                     self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
 
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_upgrade'), colour = G.C.RED })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_upgrade'),
+                        colour = G.C.RED
+                    })
                 end
                 -- Reset total chip count
                 self.ability.extra.total_chips = 0
@@ -1905,17 +2323,19 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Add scored chips to total
-            if context.mmc_scored_chips then
+            if context.mmc_scored_chips and not context.blueprint then
                 self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
             end
 
             -- See if total scored chips == blind chips, then increment xmult
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 if self.ability.extra.total_chips <= G.GAME.blind.chips * (1 + self.ability.extra.percentage / 100) then
                     self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
 
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_upgrade'), colour = G.C.RED })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_upgrade'),
+                        colour = G.C.RED
+                    })
                 end
                 -- Reset total chip count
                 self.ability.extra.total_chips = 0
@@ -1926,7 +2346,7 @@ function SMODS.INIT.MikasModCollection()
     if config.blackjackJoker then
         SMODS.Jokers.j_mmc_blackjack.calculate = function(self, context)
             -- For full hand
-            if context.before then
+            if context.before and not context.blueprint then
                 -- For every played card
                 for _, v in ipairs(context.full_hand) do
                     local id = v:get_id()
@@ -1969,9 +2389,8 @@ function SMODS.INIT.MikasModCollection()
                     end
                 end
 
-                -- Apply Xmut and reset rank_tally
+                -- Apply Xmult
                 if Xmult > 1 then
-                    self.ability.extra.rank_tally = { 0 }
                     return {
                         message = localize {
                             type = 'variable',
@@ -1982,6 +2401,10 @@ function SMODS.INIT.MikasModCollection()
                         card = self
                     }
                 end
+            end
+
+            -- Reset rank_tally
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
                 self.ability.extra.rank_tally = { 0 }
             end
         end
@@ -1993,13 +2416,17 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 -- Apply mult
                 return {
-                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.current_mult } },
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_mult',
+                        vars = { self.ability.extra.current_mult }
+                    },
                     mult_mod = self.ability.extra.current_mult
                 }
             end
 
             -- Add scored chips to total
-            if context.mmc_scored_chips then
+            if context.mmc_scored_chips and not context.blueprint then
                 self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
 
                 if self.ability.extra.total_chips < G.GAME.blind.chips then
@@ -2008,7 +2435,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Reset total chip count
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 -- Reset total chip count
                 self.ability.extra.total_chips = 0
             end
@@ -2031,7 +2458,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Decrease round_left counter or destroy
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 self.ability.extra._every = self.ability.extra._every - 1
 
                 if self.ability.extra._every <= 0 then
@@ -2045,8 +2472,10 @@ function SMODS.INIT.MikasModCollection()
                 else
                     -- Increase mult
                     self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_tick'), colour = G.C.RED })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_tick'),
+                        colour = G.C.RED
+                    })
                 end
             end
         end
@@ -2078,7 +2507,11 @@ function SMODS.INIT.MikasModCollection()
                     }))
                     -- Apply chips
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips * letter_tally } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.chips * letter_tally }
+                        },
                         chip_mod = self.ability.extra.chips * letter_tally
                     }
                 end
@@ -2088,34 +2521,47 @@ function SMODS.INIT.MikasModCollection()
 
     if config.grudgefulJoker then
         SMODS.Jokers.j_mmc_grudgeful.calculate = function(self, context)
-            -- Apply chips and reset
+            -- Add scored chips to total
+            if context.mmc_scored_chips and not context.blueprint then
+                self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
+            end
+
+            -- Apply chips
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.current_chips > 0 then
-                    self.ability.extra.old_chips = self.ability.extra.current_chips
-                    self.ability.extra.current_chips = 0
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.old_chips } },
-                        chip_mod = self.ability.extra.old_chips
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.current_chips }
+                        },
+                        chip_mod = self.ability.extra.current_chips
                     }
                 end
             end
 
-            -- Add scored chips to total
-            if context.mmc_scored_chips then
-                self.ability.extra.total_chips = self.ability.extra.total_chips + context.mmc_scored_chips
+            -- Reset chips
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                self.ability.extra.current_chips = 0
             end
 
-            if context.end_of_round and not context.individual and not context.repetition then
+            if context.end_of_round and not context.individual and not context.repetition and not context.blueprint then
                 -- Add excess chips to bonus
                 if self.ability.extra.total_chips >= G.GAME.blind.chips then
                     self.ability.extra.current_chips = self.ability.extra.total_chips - G.GAME.blind.chips
-                    self.ability.extra.current_chips = math.ceil(math.min(
-                        G.GAME.blind.chips * self.ability.extra.percentage / 100,
+                    self.ability.extra.current_chips = math.ceil(math.min(G.GAME.blind.chips *
+                        self.ability.extra.percentage / 100,
                         self.ability.extra.current_chips))
+                    -- Return message
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.current_chips }
+                        },
+                        colour = G.C.CHIPS
+                    })
                 end
-
-                -- Reset chip count
-                self.ability.extra.total_chips = 0
             end
         end
     end
@@ -2139,11 +2585,10 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.high_card then
                     for _, v in ipairs(self.ability.extra.card_refs) do
                         v:set_ability(pseudorandom_element(enhancements, pseudoseed('finishing_blow')), nil, true)
-                        card_eval_status_text(self, 'extra', nil, nil, nil,
-                            {
-                                message = localize('k_mmc_upgrade'),
-                                delay = 0.45
-                            })
+                        card_eval_status_text(self, 'extra', nil, nil, nil, {
+                            message = localize('k_mmc_upgrade'),
+                            delay = 0.45
+                        })
                     end
                 end
                 -- Reset card_refs
@@ -2164,33 +2609,38 @@ function SMODS.INIT.MikasModCollection()
     if config.historicalJoker then
         SMODS.Jokers.j_mmc_historical.calculate = function(self, context)
             -- Save previous cards
-            if context.before then
+            if context.before and not context.blueprint then
+                sendDebugMessage("Save hand")
                 for _, v in ipairs(context.full_hand) do
                     table.insert(self.ability.extra.current_cards, v.base.id)
                 end
             end
 
             -- Calculate chip score
-            if context.mmc_scored_chips then
+            if context.mmc_scored_chips and not context.blueprint then
                 self.ability.extra.current_chips = context.mmc_scored_chips
                 self.ability.extra.current_chips = math.ceil(math.min(
-                    G.GAME.blind.chips * self.ability.extra.percentage / 100,
-                    self.ability.extra.current_chips))
+                    G.GAME.blind.chips * self.ability.extra.percentage / 100, self.ability.extra.current_chips))
             end
 
             -- Apply chips if previous cards are the same as the current cards
             if SMODS.end_calculate_context(context) then
                 if tables_equal(self.ability.extra.prev_cards, self.ability.extra.current_cards) then
-                    self.ability.extra.prev_cards = tables_copy(self.ability.extra.current_cards)
-                    self.ability.extra.current_cards = {}
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.current_chips } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.current_chips }
+                        },
                         chip_mod = self.ability.extra.current_chips
                     }
-                else
-                    self.ability.extra.prev_cards = tables_copy(self.ability.extra.current_cards)
-                    self.ability.extra.current_cards = {}
                 end
+            end
+
+            -- Save previous hand
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                self.ability.extra.prev_cards = tables_copy(self.ability.extra.current_cards)
+                self.ability.extra.current_cards = {}
             end
         end
     end
@@ -2276,13 +2726,16 @@ function SMODS.INIT.MikasModCollection()
     if config.shyJoker then
         SMODS.Jokers.j_mmc_shy.calculate = function(self, context)
             -- Add xmult for every played card
-            if context.individual and context.cardarea == G.play then
+            if context.individual and context.cardarea == G.play and not context.blueprint then
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
-                card_eval_status_text(self, 'extra', nil, nil, nil,
-                    {
-                        message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.current_Xmult } },
-                        colour = G.C.MULT
-                    })
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.current_Xmult }
+                    },
+                    colour = G.C.MULT
+                })
             end
 
             -- Apply xmult
@@ -2321,7 +2774,11 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 if #context.full_hand <= self.ability.extra.req then
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.chips }
+                        },
                         chip_mod = self.ability.extra.chips
                     }
                 end
@@ -2331,7 +2788,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.abbeyRoadJoker then
         SMODS.Jokers.j_mmc_abbey_road.calculate = function(self, context)
-            if context.after and context.cardarea == G.jokers then
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
                 -- Reset hand count
                 self.ability.extra.hand_equal_count = {}
 
@@ -2341,8 +2798,9 @@ function SMODS.INIT.MikasModCollection()
                         if self.ability.extra.hand_equal_count[G.GAME.hands[v].played] == nil then
                             self.ability.extra.hand_equal_count[G.GAME.hands[v].played] = 1
                         else
-                            self.ability.extra.hand_equal_count[G.GAME.hands[v].played] =
-                                self.ability.extra.hand_equal_count[G.GAME.hands[v].played] + 1
+                            self.ability.extra.hand_equal_count[G.GAME.hands[v].played] = self.ability.extra
+                                .hand_equal_count[G.GAME
+                                .hands[v].played] + 1
                         end
                     end
                 end
@@ -2355,15 +2813,24 @@ function SMODS.INIT.MikasModCollection()
                 end
             end
 
+            -- Apply Xmult
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.should_trigger then
-                    self.ability.extra.should_trigger = false
                     return {
-                        message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.Xmult } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.Xmult }
+                        },
                         Xmult_mod = self.ability.extra.Xmult,
                         card = self
                     }
                 end
+            end
+
+            -- Reset
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                self.ability.extra.should_trigger = false
             end
         end
     end
@@ -2371,38 +2838,54 @@ function SMODS.INIT.MikasModCollection()
     if config.boatingLicenseJoker then
         SMODS.Jokers.j_mmc_boating_license.calculate = function(self, context)
             if context.individual and context.cardarea == G.play then
-                if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect == "Stone Card" then
+                if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect ==
+                    "Stone Card" then
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { context.other_card.ability.bonus } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { context.other_card.ability.bonus }
+                        },
                         chips = context.other_card.ability.bonus,
                         card = self
                     }
                 elseif context.other_card.ability.effect == "Mult Card" then
                     return {
-                        message = localize { type = 'variable', key = 'a_mult', vars = { context.other_card.ability.mult } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_mult',
+                            vars = { context.other_card.ability.mult }
+                        },
                         mult = context.other_card.ability.mult,
                         card = self
                     }
                 elseif context.other_card.ability.effect == "Glass Card" then
                     return {
-                        message = localize { type = 'variable', key = 'Xmult', vars = { context.other_card.ability.Xmult } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'Xmult',
+                            vars = { context.other_card.ability.Xmult }
+                        },
                         Xmult = context.other_card.ability.Xmult,
                         card = self
                     }
                 elseif context.other_card.ability.effect == "Lucky Card" then
                     if pseudorandom('lucky_money') < G.GAME.probabilities.normal / 15 then
                         ease_dollars(context.other_card.ability.p_dollars)
-                        card_eval_status_text(self, 'extra', nil, nil, nil,
-                            {
-                                message = localize('$') .. context.other_card.ability.p_dollars,
-                                dollars = context.other_card.ability.p_dollars,
-                                colour = G.C.MONEY,
-                                delay = 0.45
-                            })
+                        card_eval_status_text(self, 'extra', nil, nil, nil, {
+                            message = localize('$') .. context.other_card.ability.p_dollars,
+                            dollars = context.other_card.ability.p_dollars,
+                            colour = G.C.MONEY,
+                            delay = 0.45
+                        })
                     end
                     if pseudorandom('lucky_mult') < G.GAME.probabilities.normal / 5 then
                         return {
-                            message = localize { type = 'variable', key = 'a_mult', vars = { context.other_card.ability.mult } },
+                            message = localize {
+                                type = 'variable',
+                                key = 'a_mult',
+                                vars = { context.other_card.ability.mult }
+                            },
                             mult = context.other_card.ability.mult,
                             card = self
                         }
@@ -2427,7 +2910,7 @@ function SMODS.INIT.MikasModCollection()
                 end
 
                 -- Give money and reset
-                if gold_tally >= 1 then
+                if gold_tally > 0 then
                     ease_dollars(gold_tally * self.ability.extra.dollars)
                     return {
                         message = localize('$') .. gold_tally * self.ability.extra.dollars,
@@ -2442,7 +2925,8 @@ function SMODS.INIT.MikasModCollection()
     if config.riggedJoker then
         SMODS.Jokers.j_mmc_rigged.calculate = function(self, context)
             -- Check if lucky card does not trigger
-            if context.individual and context.cardarea == G.play and context.other_card.ability.effect == "Lucky Card" then
+            if context.individual and context.cardarea == G.play and context.other_card.ability.effect == "Lucky Card" and
+                not context.blueprint then
                 if not context.other_card.lucky_trigger and not self.ability.extra.has_triggered then
                     self.ability.extra.has_triggered = true
                 end
@@ -2451,8 +2935,10 @@ function SMODS.INIT.MikasModCollection()
             -- Increase probabilities and reset has_triggered
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.has_triggered then
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_luck'), colour = G.C.GREEN })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_luck'),
+                        colour = G.C.GREEN
+                    })
                     self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.probability
                     for k, v in pairs(G.GAME.probabilities) do
                         G.GAME.probabilities[k] = v + self.ability.extra.probability
@@ -2469,8 +2955,9 @@ function SMODS.INIT.MikasModCollection()
                     end
                     self.ability.extra.probability = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_mmc_reset') })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_mmc_reset')
+                    })
                 end
             end
         end
@@ -2480,7 +2967,9 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_commander.calculate = function(self, context)
             -- Animate card
             if context.first_hand_drawn then
-                local eval = function() return G.GAME.current_round.hands_played == 0 end
+                local eval = function()
+                    return G.GAME.current_round.hands_played == 0
+                end
                 juice_card_until(self, eval, true)
             end
 
@@ -2500,8 +2989,8 @@ function SMODS.INIT.MikasModCollection()
                                     _card:set_seal(pseudorandom_element(seals, pseudoseed('commander')), nil, true)
                                 end
                                 if _card.edition == nil then
-                                    _card:set_edition(pseudorandom_element(card_editions, pseudoseed('commander')), nil,
-                                        true)
+                                    local edition = poll_edition('commander', nil, true, true)
+                                    _card:set_edition(edition)
                                 end
                                 return true
                             end
@@ -2513,8 +3002,9 @@ function SMODS.INIT.MikasModCollection()
                         end
 
                         -- Return message
-                        card_eval_status_text(self, 'extra', nil, nil, nil,
-                            { message = localize('k_mmc_upgrade') })
+                        card_eval_status_text(self, 'extra', nil, nil, nil, {
+                            message = localize('k_mmc_upgrade')
+                        })
                     end
                 end
             end
@@ -2524,7 +3014,7 @@ function SMODS.INIT.MikasModCollection()
     if config.whatAreTheOddsJoker then
         SMODS.Jokers.j_mmc_what_are_the_odds.calculate = function(self, context)
             -- Count lucky triggers
-            if context.individual and context.cardarea == G.play then
+            if context.individual and context.cardarea == G.play and not context.blueprint then
                 for _, v in ipairs(context.full_hand) do
                     if v.lucky_trigger then
                         self.ability.extra.lucky_tally = self.ability.extra.lucky_tally + 1
@@ -2539,21 +3029,32 @@ function SMODS.INIT.MikasModCollection()
                     G.E_MANAGER:add_event(Event({
                         func = function()
                             local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
-                            card:set_edition({ negative = true })
+                            card:set_edition({
+                                negative = true
+                            })
                             card:add_to_deck()
                             G.jokers:emplace(card)
                             card:start_materialize()
                             return true
                         end
                     }))
-                    -- Reset mult and return message
-                    self.ability.extra.lucky_tally = 0
-                    return { message = localize('k_plus_joker'), colour = G.C.BLUE }
+                    -- Return message
+                    return {
+                        message = localize('k_plus_joker'),
+                        colour = G.C.BLUE
+                    }
                 else
                     -- Nope!
-                    self.ability.extra.lucky_tally = 0
-                    return { message = localize('k_nope_ex'), colour = G.C.SECONDARY_SET.Tarot }
+                    return {
+                        message = localize('k_nope_ex'),
+                        colour = G.C.SECONDARY_SET.Tarot
+                    }
                 end
+            end
+
+            -- Reset tally
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                self.ability.extra.lucky_tally = 0
             end
         end
     end
@@ -2666,8 +3167,10 @@ function SMODS.INIT.MikasModCollection()
                             end)
                         }))
                         -- Show message
-                        card_eval_status_text(self, 'extra', nil, nil, nil,
-                            { message = localize('k_plus_tarot'), colour = G.C.PURPLE })
+                        card_eval_status_text(self, 'extra', nil, nil, nil, {
+                            message = localize('k_plus_tarot'),
+                            colour = G.C.PURPLE
+                        })
                     end
                 end
             end
@@ -2687,7 +3190,11 @@ function SMODS.INIT.MikasModCollection()
                     }))
                     -- Apply chips
                     return {
-                        message = localize { type = 'variable', key = 'a_chips', vars = { self.ability.extra.chips } },
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.chips }
+                        },
                         chip_mod = self.ability.extra.chips
                     }
                 end
@@ -2698,9 +3205,8 @@ function SMODS.INIT.MikasModCollection()
     if config.specialEditionJoker then
         SMODS.Jokers.j_mmc_special_edition.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
-                -- Add xmult if we have both Half and Incomplete Joker
-                if self.ability.extra.current_mult > 0 or self.ability.extra.current_chips > 0
-                    or self.ability.extra.current_Xmult > 1 then
+                if self.ability.extra.current_mult > 0 or self.ability.extra.current_chips > 0 or
+                    self.ability.extra.current_Xmult > 1 then
                     return {
                         -- Return bonus message and apply bonus
                         mult_mod = self.ability.extra.current_mult,
@@ -2813,39 +3319,47 @@ function SMODS.INIT.MikasModCollection()
 
     if config.checklistJoker then
         SMODS.Jokers.j_mmc_checklist.calculate = function(self, context)
+            -- Level up poker hand
             if context.before and context.scoring_name == self.ability.extra.poker_hand then
-                -- Get new random poker hand
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        local _poker_hands = {}
-                        for k, v in pairs(G.GAME.hands) do
-                            if v.visible and k ~= self.ability.extra.poker_hand then _poker_hands[#_poker_hands + 1] = k end
-                        end
-                        self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('checklist'))
-                        return true
-                    end
-                }))
-                -- Level up poker hand
-                card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') })
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize('k_upgrade_ex')
+                })
                 level_up_hand(self, context.scoring_name, false, self.ability.extra.increase)
+            end
+
+            -- Get new random poker hand if triggered
+            if context.after and not context.blueprint and context.cardarea == G.jokers then
+                if self.ability.extra.triggered then
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            local _poker_hands = {}
+                            for k, v in pairs(G.GAME.hands) do
+                                if v.visible and k ~= self.ability.extra.poker_hand then
+                                    _poker_hands[#_poker_hands + 1] = k
+                                end
+                            end
+                            self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('checklist'))
+                            return true
+                        end
+                    }))
+                end
             end
         end
     end
 
     if config.oneOfUsJoker then
         SMODS.Jokers.j_mmc_one_of_us.calculate = function(self, context)
-            -- Count enhanced cards
-            if context.individual and context.cardarea == G.play then
-                if context.other_card.ability.set == "Enhanced" then
-                    self.ability.extra.enhanced_tally = self.ability.extra.enhanced_tally + 1
-                end
-            end
-
             if SMODS.end_calculate_context(context) then
-                -- Check for required enhanced cards
-                if self.ability.extra.enhanced_tally >= self.ability.extra.req then
-                    self.ability.extra.enhanced_tally = 0
+                -- Count enhanced cards
+                local enhanced_tally = 0
+                for _, v in ipairs(context.full_hand) do
+                    if v.ability.set == "Enhanced" then
+                        enhanced_tally = enhanced_tally + 1
+                    end
+                end
 
+                -- Check for required enhanced cards
+                if enhanced_tally >= self.ability.extra.req then
                     -- Get editionless Jokers
                     local editionless_jokers = {}
                     for _, v in pairs(G.jokers.cards) do
@@ -2856,8 +3370,7 @@ function SMODS.INIT.MikasModCollection()
                     -- Add edition to random Joker
                     if #editionless_jokers > 0 then
                         local joker = pseudorandom_element(editionless_jokers, pseudoseed('one_of_us'))
-                        local edition = pseudorandom_element(joker_editions, pseudoseed('one_of_us'))
-
+                        local edition = poll_edition('one_of_us', nil, false, true)
                         -- Animate card
                         G.E_MANAGER:add_event(Event({
                             delay = 0.5,
@@ -2867,14 +3380,13 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
+                        -- Return message
                         return {
                             message = localize('k_mmc_upgrade'),
                             colour = G.C.SECONDARY_SET.Tarot
                         }
                     end
                 end
-                -- Reset enhanced_tally
-                self.ability.extra.enhanced_tally = 0
             end
         end
     end
@@ -2943,11 +3455,15 @@ function SMODS.INIT.MikasModCollection()
                                     card:add_to_deck()
                                     G.jokers:emplace(card)
                                     card:start_materialize()
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_plus_joker'), colour = G.C.BLUE })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_plus_joker'),
+                                        colour = G.C.BLUE
+                                    })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_no_space_ex'), colour = G.C.RED })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_no_space_ex'),
+                                        colour = G.C.RED
+                                    })
                                 end
                                 return true
                             end
@@ -2962,11 +3478,15 @@ function SMODS.INIT.MikasModCollection()
                                     local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'emp')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_plus_tarot'), colour = G.C.SECONDARY_SET.Tarot })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_plus_tarot'),
+                                        colour = G.C.SECONDARY_SET.Tarot
+                                    })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_no_space_ex'), colour = G.C.Red })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_no_space_ex'),
+                                        colour = G.C.Red
+                                    })
                                 end
                                 return true
                             end
@@ -2981,11 +3501,15 @@ function SMODS.INIT.MikasModCollection()
                                     local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'sea')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_plus_spectral'), colour = G.C.SECONDARY_SET.Spectral })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_plus_spectral'),
+                                        colour = G.C.SECONDARY_SET.Spectral
+                                    })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_no_space_ex'), colour = G.C.Red })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_no_space_ex'),
+                                        colour = G.C.Red
+                                    })
                                 end
                                 return true
                             end
@@ -2999,11 +3523,15 @@ function SMODS.INIT.MikasModCollection()
                                     local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_plus_planet'),
+                                        colour = G.C.SECONDARY_SET.Planet
+                                    })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                                        { message = localize('k_no_space_ex'), colour = G.C.Red })
+                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                        message = localize('k_no_space_ex'),
+                                        colour = G.C.Red
+                                    })
                                 end
                                 return true
                             end)
@@ -3019,16 +3547,20 @@ function SMODS.INIT.MikasModCollection()
                                 }, G.deck, nil, nil, { G.C.SECONDARY_SET.Enhanced })
                                 _card:add_to_deck()
                                 G.deck.config.card_limit = G.deck.config.card_limit + 1
-                                card_eval_status_text(self, 'extra', nil, nil, nil,
-                                    { message = localize('k_mmc_plus_card'), colour = G.C.Blue })
+                                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                    message = localize('k_mmc_plus_card'),
+                                    colour = G.C.Blue
+                                })
                                 return true
                             end
                         }))
                     end
                 else
                     -- Nope!
-                    card_eval_status_text(self, 'extra', nil, nil, nil,
-                        { message = localize('k_nope_ex'), colour = G.C.SECONDARY_SET.Tarot })
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_nope_ex'),
+                        colour = G.C.SECONDARY_SET.Tarot
+                    })
                 end
             end
         end
@@ -3056,26 +3588,17 @@ function Card:flip()
 end
 
 -- Center odd shaped Jokers
-local set_abilityref = Card.set_ability
-function Card:set_ability(center, initial, delay_sprites)
-    local X, Y, W, H = self.T.x, self.T.y, self.T.w, self.T.h
-
-    if center.name == "MMC Incomplete Joker" and (center.discovered or self.bypass_discovery_center) then
-        H = H / 1.7
-        self.T.h = H
-    end
-
-    set_abilityref(self, center, initial, delay_sprites)
-end
-
 local set_spritesref = Card.set_sprites
 function Card:set_sprites(_center, _front)
     set_spritesref(self, _center, _front)
+    local X, Y, W, H = self.T.x, self.T.y, self.T.w, self.T.h
 
     if _center then
         if _center.set then
             if _center.name == 'MMC Incomplete Joker' and (_center.discovered or self.bypass_discovery_center) then
                 self.children.center.scale.y = self.children.center.scale.y / 1.7
+                H = H / 1.7
+                self.T.h = H
             end
         end
     end
@@ -3269,9 +3792,15 @@ function Card.set_cost(self)
         self.ability.extra.letter = string.upper(pseudorandom_element(letters, pseudoseed('eye_chart')))
     end
 
-    if G.GAME.starting_params.mmc_for_hire and (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
-        -- Multiply cost exponentially with counter
-        self.cost = self.cost * 2 ^ for_hire_counter
+    if G.GAME.starting_params.mmc_for_hire and
+        (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
+        -- Multiply cost linearly with counter
+        self.cost = self.cost * for_hire_counter
+
+        if self.ability.name == 'Riff-raff' then
+            -- No fun allowed
+            self.cost = 1000000000
+        end
     end
 end
 
@@ -3347,8 +3876,11 @@ function G.FUNCS.evaluate_play(self, e)
     evaluate_playref(self, e)
 
     for i = 1, #G.jokers.cards do
-        local effects = eval_card(G.jokers.cards[i],
-            { card = G.consumeables, after = true, mmc_scored_chips = hand_chips * mult })
+        local effects = eval_card(G.jokers.cards[i], {
+            card = G.consumeables,
+            after = true,
+            mmc_scored_chips = hand_chips * mult
+        })
         if effects.jokers then
             card_eval_status_text(G.jokers.cards[i], 'jokers', nil, 0.3, nil, effects.jokers)
         end
@@ -3361,8 +3893,8 @@ function Card.get_end_of_round_effect(self, context)
     if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
             -- Check for Planetary Alignment Joker and consumeable space
-            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0
-                and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0 and
+                #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
@@ -3395,13 +3927,15 @@ function Card.get_end_of_round_effect(self, context)
                 }))
 
                 -- Show message
-                card_eval_status_text(v, 'extra', nil, nil, nil,
-                    { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
+                card_eval_status_text(v, 'extra', nil, nil, nil, {
+                    message = localize('k_plus_planet'),
+                    colour = G.C.SECONDARY_SET.Planet
+                })
             end
 
             -- Create planet for each Blue Seal
-            if v.ability.name == 'MMC Harp Seal' and
-                #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+            if v.ability.name == 'MMC Harp Seal' and #G.consumeables.cards + G.GAME.consumeable_buffer <
+                G.consumeables.config.card_limit then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 -- Add card
                 G.E_MANAGER:add_event(Event({
@@ -3417,8 +3951,10 @@ function Card.get_end_of_round_effect(self, context)
                 }))
 
                 -- Show message
-                card_eval_status_text(v, 'extra', nil, nil, nil,
-                    { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
+                card_eval_status_text(v, 'extra', nil, nil, nil, {
+                    message = localize('k_plus_planet'),
+                    colour = G.C.SECONDARY_SET.Planet
+                })
             end
         end
     end

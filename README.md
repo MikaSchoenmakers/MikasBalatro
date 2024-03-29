@@ -31,7 +31,7 @@ Only prime cards _(2, 3, 5, 7, Ace)_. Starts with the **_Prime Time_** joker.
 Only Gold Face cards. Starts with the **_Midas Mask_** joker.
 
 ### "Jokers for Hire" Deck
-All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_exponentially_**.\
+All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs increase **_linearly_**.\
 _All Jokers also remove the Joker slot again once sold_
 
 ### Perfect Precision Deck
@@ -216,7 +216,7 @@ _Art made by `Grassy`_
 
 ### The Show-Off
 ![The Show-Off](./assets/2x/j_mmc_showoff.png)\
-Gains +X1 Mult a blind is finished with **_2x_** the chip requirement.
+Gains +X0.25 Mult whenever a blind is finished with **_2x_** the chip requirement.
 
 ### Grudgeful Joker
 ![Grudgeful Joker](./assets/2x/j_mmc_grudgeful.png)\
