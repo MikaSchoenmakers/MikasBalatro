@@ -1846,7 +1846,7 @@ function SMODS.INIT.MikasModCollection()
             local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, {
                 x = 0,
                 y = 0
-            }, v.locs, v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
+            }, v.loc, v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
             joker:register()
             local sprite
             if not_in_table(no_art_yet, k) then
