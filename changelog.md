@@ -5,7 +5,7 @@
 * Fixed Incomplete Joker stretching on reload.
 ### Balance changes
 * Showoff Joker now gains X0.25 Mult instead of X1 Mult.
-* Jokers For Hire deck now has a linear cost increase, instead of an exponential one. Example: 2nd joker will cost 2x the base price, 3rd joker will cost 3x the base price, etc.
+* Jokers For Hire deck now has a X2 linear cost increase, instead of an exponential one. Example: 2nd joker will cost X4 the base price, 3rd joker will cost X6 the base price, etc.
     - Riff-raff now costs $1.000.000.000.
 ### Other
 * Changed Jokers (where applicable) to use in game functions to pick random editions, to be more in line with the base game, this means the odds will be the same as the base game as well instead of being evenly spread.

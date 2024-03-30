@@ -60,7 +60,7 @@ local config = {
     checklistJoker = true,
     oneOfUsJoker = true,
     investorJoker = true,
-    -- mountainClimberJoker = true,
+    mountainClimberJoker = false, -- Not working correctly, do not enable
     shacklesJoker = true,
     buyOneGetOneJoker = true
 }
@@ -468,7 +468,7 @@ local decks = {
                 "All Jokers give {C:dark_edition}+1{}",
                 "Joker slot. Price of",
                 "{C:attention}Jokers{} and {C:attention}Buffoon Packs",
-                "increases {C:red}linearly"
+                "{C:red}increases{} per Joker"
             }
         },
         ability_name = "MMC Jokers for Hire",
@@ -5280,7 +5280,7 @@ function Card.set_cost(self)
     if G.GAME.starting_params.mmc_for_hire and
         (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
         -- Multiply cost linearly with counter
-        self.cost = self.cost * for_hire_counter
+        self.cost = self.cost * for_hire_counter * 2
 
         if self.ability.name == 'Riff-raff' then
             -- No fun allowed
