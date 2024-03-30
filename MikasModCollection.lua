@@ -66,10 +66,6 @@ local config = {
 }
 
 -- Helper functions
-local no_art_yet = {
-    -- "mountainClimberJoker",
-}
-
 local function is_even(card)
     local id = card:get_id()
     return id <= 10 and id % 2 == 0
@@ -510,1156 +506,6 @@ local decks = {
     }
 }
 
--- Create Jokers
-local jokers = {
-    primeTimeJoker = {
-        loc = {
-            name = "Prime Time",
-            text = {
-                "Each played {C:attention}2{},",
-                "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
-                "{X:mult,C:white}X#1#{} Mult when scored",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC Prime Time",
-        slug = "mmc_prime_time",
-        ability = {
-            extra = {
-                Xmult = 1.2
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    straightNateJoker = {
-        loc = {
-            name = "Straight Nate",
-            text = {
-                "{X:mult,C:white} X#1# {} Mult if played hand",
-                "contains a {C:attention}Straight{} and you have",
-                "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
-                "Also gives {C:dark_edition}+#2#{} Joker slot"
-            }
-        },
-        ability_name = "MMC Straight Nate",
-        slug = "mmc_straight_nate",
-        ability = {
-            extra = {
-                Xmult = 4,
-                j_slots = 1
-            }
-        },
-        rarity = 3,
-        cost = 7,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    fishermanJoker = {
-        loc = {
-            name = "The Fisherman",
-            text = {
-                "{C:attention}+#2#{} hand size per discard",
-                "{C:attention}-#2#{} hand size per hand played",
-                "Resets every round",
-                "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
-            }
-        },
-        ability_name = "MMC The Fisherman",
-        slug = "mmc_fisherman",
-        ability = {
-            extra = {
-                current_h_size = 0,
-                h_mod = 1
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    impatientJoker = {
-        loc = {
-            name = "Impatient Joker",
-            text = {
-                "{C:mult}+#2#{} Mult per card discarded",
-                "Resets every round",
-                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
-            }
-        },
-        ability_name = "MMC Impatient Joker",
-        slug = "mmc_impatient",
-        ability = {
-            extra = {
-                mult_mod = 3,
-                current_mult = 0
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    cultistJoker = {
-        loc = {
-            name = "Cultist",
-            text = {
-                "{X:mult,C:white}X#2#{} Mult per hand played",
-                "Resets every round",
-                "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
-            }
-        },
-        ability_name = "MMC Cultist",
-        slug = "mmc_cultist",
-        ability = {
-            extra = {
-                current_Xmult = 1,
-                Xmult_mod = 1,
-                old = 0
-            }
-        },
-        rarity = 3,
-        cost = 8,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    sealCollectorJoker = {
-        loc = {
-            name = "Seal Collector",
-            text = {
-                "Gains {C:chips}+#2#{} Chips for",
-                "every card with a {C:attention}seal",
-                "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
-            }
-        },
-        ability_name = "MMC Seal Collector",
-        slug = "mmc_seal_collector",
-        ability = {
-            extra = {
-                current_chips = 25,
-                chip_mod = 25,
-                base = 25
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    camperJoker = {
-        loc = {
-            name = "Camper",
-            text = {
-                "Every discarded {C:attention}card{}",
-                "permanently gains",
-                "{C:chips}+#1#{} Chips"
-            }
-        },
-        ability_name = "MMC Camper",
-        slug = "mmc_camper",
-        ability = {
-            extra = {
-                chip_mod = 4
-            }
-        },
-        rarity = 2,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    luckyNumberSevenJoker = {
-        loc = {
-            name = "Lucky Number Seven",
-            text = {
-                "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
-                "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
-                "{C:attention}7 cards{} are scored,",
-                "respectively"
-            }
-        },
-        ability_name = "MMC Lucky Number Seven",
-        slug = "mmc_lucky_number_seven",
-        ability = {
-            extra = {
-                dollar_gain_one = 1,
-                dollar_gain_two = 3,
-                dollar_gain_three = 10,
-                dollar_gain_four = 25,
-                dollar_gain_five = 50,
-                dollars = 0,
-                seven_tally = 0,
-                old = 0
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    delayedJoker = {
-        loc = {
-            name = "Delayed Joker",
-            text = {
-                "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
-                "Chips and {X:mult,C:white}X#3#{} Mult on",
-                "the {C:attention}#5#th{} action",
-                "{C:inactive}(Current action: {C:attention}#4#{C:inactive} )"
-            }
-        },
-        ability_name = "MMC Delayed Joker",
-        slug = "mmc_delayed",
-        ability = {
-            extra = {
-                mult = 20,
-                chips = 100,
-                Xmult = 1.5,
-                every = 4,
-                action_tally = 1
-            }
-        },
-        rarity = 2,
-        cost = 7,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    showoffJoker = {
-        loc = {
-            name = "The Show-Off",
-            text = {
-                "Gains {X:mult,C:white}X#2#{} Mult when",
-                "a blind is finished with",
-                "{C:attention}X#3#{} the chip requirement",
-                "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
-            }
-        },
-        ability_name = "MMC The Show-Off",
-        slug = "mmc_showoff",
-        ability = {
-            extra = {
-                current_Xmult = 1,
-                Xmult_mod = 0.25,
-                req = 2,
-                total_chips = 0
-            }
-        },
-        rarity = 3,
-        cost = 8,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    sniperJoker = {
-        loc = {
-            name = "The Sniper",
-            text = {
-                "Gains {X:mult,C:white}X#2#{} Mult when a",
-                "blind is finished within {C:attention}#3#%{} of",
-                "the {C:attention}exact{} chip requirement",
-                "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC The Sniper",
-        slug = "mmc_sniper",
-        ability = {
-            extra = {
-                current_Xmult = 1,
-                Xmult_mod = 4,
-                percentage = 5,
-                total_chips = 0
-            }
-        },
-        rarity = 3,
-        cost = 10,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    blackjackJoker = {
-        loc = {
-            name = "Blackjack Joker",
-            text = {
-                "Gives {X:mult,C:white}X#1#{} Mult when",
-                "the ranks of all played",
-                "cards is {C:attention}exactly #2#",
-                "Gives {X:mult,C:white}X#3#{} Mult less for",
-                "every point below #2#"
-            }
-        },
-        ability_name = "MMC Blackjack Joker",
-        slug = "mmc_blackjack",
-        ability = {
-            extra = {
-                Xmult = 3,
-                rank_tally = { 0 },
-                updated_rank_tally = {},
-                req = 21,
-                Xmult_mod = 0.5
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    batmanJoker = {
-        loc = {
-            name = "Batman",
-            text = {
-                "Gains {C:mult}+#2#{} Mult for",
-                "every {C:attention}non-lethal{} hand played.",
-                "Mult gain increases for every",
-                "Joker with {C:attention}\"Joker\"{} in the name",
-                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
-            }
-        },
-        ability_name = "MMC Batman",
-        slug = "mmc_batman",
-        ability = {
-            extra = {
-                current_mult = 1,
-                mult_mod = 1,
-                total_chips = 0,
-                base = 1
-            }
-        },
-        rarity = 3,
-        cost = 8,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    bombJoker = {
-        loc = {
-            name = "Bomb",
-            text = { "Gains {C:mult}+#2#{} Mult per round",
-                "self destructs after {C:attention}#3#{} rounds",
-                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC Bomb",
-        slug = "mmc_bomb",
-        ability = {
-            extra = {
-                current_mult = 15,
-                mult_mod = 15,
-                _every = 3
-            }
-        },
-        rarity = 1,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = false
-    },
-    eyeChartJoker = {
-        loc = {
-            name = "Eye Chart",
-            text = {
-                "Gives {C:chips}+#1#{} Chips for every",
-                "letter {C:attention}\"#2#\"{} in your Jokers.",
-                "Letter changes when this",
-                "Joker appears in the shop",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy" }
-        },
-        ability_name = "MMC Eye Chart",
-        slug = "mmc_eye_chart",
-        ability = {
-            extra = {
-                chips = 20,
-                letter = 'A'
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    grudgefulJoker = {
-        loc = {
-            name = "Grudgeful Joker",
-            text = {
-                "Adds {C:attention}excess Chips{} from last",
-                "blind to the first hand",
-                "of the current round. Caps",
-                "at {C:attention}#2#%{} of current blind's Chips",
-                "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
-            }
-        },
-        ability_name = "MMC Grudgeful Joker",
-        slug = "mmc_grudgeful",
-        ability = {
-            extra = {
-                current_chips = 0,
-                total_chips = 0,
-                old_chips = 0,
-                percentage = 10
-            }
-        },
-        rarity = 3,
-        cost = 9,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    finishingBlowJoker = {
-        loc = {
-            name = "Finishing Blow",
-            text = {
-                "If a blind is finished",
-                "with a {C:attention}High Card{}, randomly",
-                "{C:attention}Enhance{} scored cards"
-            }
-        },
-        ability_name = "MMC Finishing Blow",
-        slug = "mmc_finishing_blow",
-        ability = {
-            extra = {
-                high_card = false,
-                card_refs = {}
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    planetaryAlignmentJoker = {
-        loc = {
-            name = "Planetary Alignment",
-            text = {
-                "Once every #1# rounds",
-                "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
-                "one of them will be for your",
-                "most played {C:attention}poker hand{}"
-            }
-        },
-        ability_name = "MMC Planetary Alignment",
-        slug = "mmc_planetary_alignment",
-        ability = {
-            extra = {
-                round = 0,
-                every = 2
-            }
-        },
-        rarity = 1,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    historicalJoker = {
-        loc = {
-            name = "Historical Joker",
-            text = {
-                "If scored cards have the same",
-                "{C:attention}ranks{} and {C:attention}order{} as previous",
-                "hand, add previous hands {C:chips}Chips{}",
-                "to the current hand. Caps at",
-                "{C:attention}#1#%{} of current blind's Chips",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC Historical Joker",
-        slug = "mmc_historical",
-        ability = {
-            extra = {
-                prev_cards = {},
-                current_cards = {},
-                current_chips = 0,
-                percentage = 10
-            }
-        },
-        rarity = 3,
-        cost = 9,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    suitAlleyJoker = {
-        loc = {
-            name = "Suit Alley",
-            text = {
-                "{C:diamonds}Diamond{} and {C:clubs}Club{} cards",
-                "gain {C:chips}+#1#{} Chips when scored",
-                "{C:hearts}Heart{} and {C:spades}Spade{} cards",
-                "gain {C:mult}+#2#{} Mult when scored"
-            }
-        },
-        ability_name = "MMC Suit Alley",
-        slug = "mmc_suit_alley",
-        ability = {
-            extra = {
-                mult = 3,
-                chips = 12
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    printerJoker = {
-        loc = {
-            name = "The Printer",
-            text = {
-                "If hand scores more than",
-                "blind's Chips, {C:attention}duplicate{}",
-                "your hand and add duplicated",
-                "cards to your hand"
-            }
-        },
-        ability_name = "MMC The Printer",
-        slug = "mmc_printer",
-        ability = {
-            extra = {
-                hand = {}
-            }
-        },
-        rarity = 3,
-        cost = 9,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    shyJoker = {
-        loc = {
-            name = "Shy Joker",
-            text = {
-                "{X:mult,C:white}X#1#{} Mult,",
-                "gains {X:mult,C:white}X#2#{} Mult",
-                "per {C:attention}card{} scored"
-            }
-        },
-        ability_name = "MMC Shy Joker",
-        slug = "mmc_shy",
-        ability = {
-            extra = {
-                current_Xmult = 1,
-                Xmult_mod = 0.01
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    gamblerJoker = {
-        loc = {
-            name = "The Gambler",
-            text = {
-                "Retrigger all",
-                "scored {C:attention}Lucky{} cards"
-            }
-        },
-        ability_name = "MMC The Gambler",
-        slug = "mmc_gambler",
-        ability = {
-            extra = 1
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    incompleteJoker = {
-        loc = {
-            name = "Incomplete Joker",
-            text = {
-                "{C:chips}+#1#{} Chips if played",
-                "hand contains",
-                "{C:attention}#2#{} or fewer cards"
-            }
-        },
-        ability_name = "MMC Incomplete Joker",
-        slug = "mmc_incomplete",
-        ability = {
-            extra = {
-                chips = 100,
-                req = 3
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    abbeyRoadJoker = {
-        loc = {
-            name = "Abbey Road",
-            text = {
-                "If at least {C:attention}#2#{} poker hands",
-                "have been played the same",
-                "amount of times, give {X:mult,C:white}X#1#{} Mult",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC Abbey Road",
-        slug = "mmc_abbey_road",
-        ability = {
-            extra = {
-                Xmult = 4,
-                req = 4,
-                hand_equal_count = {},
-                should_trigger = false
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    boatingLicenseJoker = {
-        loc = {
-            name = "Boating License",
-            text = {
-                "{C:attention}Copies{} effects of all",
-                "scored {C:attention}Enhanced{} cards"
-            }
-        },
-        ability_name = "MMC Boating License",
-        slug = "mmc_boating_license",
-        ability = {},
-        rarity = 3,
-        cost = 8,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    goldBarJoker = {
-        loc = {
-            name = "Gold Bar",
-            text = {
-                "Earn {C:money}$#1#{} for every",
-                "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
-                "at end of round",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC Gold Bar",
-        slug = "mmc_gold_bar",
-        ability = {
-            extra = {
-                dollars = 2
-            }
-        },
-        rarity = 1,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    riggedJoker = {
-        loc = {
-            name = "Rigged Joker",
-            text = {
-                "Once per hand, add {C:attention}+#1#{} to all",
-                "listed {C:green,E:1,S:1.1}probabilities{} whenever a",
-                "{C:attention}Lucky{} card does not trigger.",
-                "Resets every round"
-            }
-        },
-        ability_name = "MMC Rigged Joker",
-        slug = "mmc_rigged",
-        ability = {
-            extra = {
-                probability = 0,
-                increase = 1,
-                has_triggered = false
-            }
-        },
-        rarity = 1,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    commanderJoker = {
-        loc = {
-            name = "The Commander",
-            text = {
-                "If {C:attention}first hand{} of round",
-                "has only {C:attention}1{} card, give it a",
-                "random {C:attention}Enhancement{}, {C:attention}Seal",
-                "and {C:attention}Edition"
-            }
-        },
-        ability_name = "MMC The Commander",
-        slug = "mmc_commander",
-        ability = {},
-        rarity = 3,
-        cost = 9,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    whatAreTheOddsJoker = {
-        loc = {
-            name = "What Are The Odds",
-            text = {
-                "If {C:attention}#1# Lucky cards{} trigger",
-                "in one hand, create a",
-                "random {C:dark_edition}negative{} Joker"
-            }
-        },
-        ability_name = "MMC What Are The Odds",
-        slug = "mmc_what_are_the_odds",
-        ability = {
-            extra = {
-                req = 4,
-                lucky_tally = 0
-            }
-        },
-        rarity = 2,
-        cost = 8,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    dagonetJoker = {
-        loc = {
-            name = "Dagonet",
-            text = {
-                "{C:attention}Doubles{} all base values",
-                "on other Jokers",
-                "{C:inactive}(If possible)"
-            }
-        },
-        ability_name = "MMC Dagonet",
-        slug = "mmc_dagonet",
-        ability = {
-            extra = {
-                _mult = 2,
-                _base = 2,
-                triggered = false
-            }
-        },
-        rarity = 4,
-        cost = 20,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    glueJoker = {
-        loc = {
-            name = "Glue",
-            text = {
-                "If you have both {C:attention}Half",
-                "and {C:attention}Incomplete Joker{}, give",
-                "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult"
-            }
-        },
-        ability_name = "MMC Glue",
-        slug = "mmc_glue",
-        ability = {
-            extra = {
-                Xmult = 5,
-                j_slots = 2,
-                half = false,
-                incomplete = false,
-                triggered = false
-            }
-        },
-        rarity = 1,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    harpSealJoker = {
-        loc = {
-            name = "Harp Seal",
-            text = {
-                "{C:attention}Doubles{} the effect",
-                "of all {C:attention}Seals",
-                "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
-            }
-        },
-        ability_name = "MMC Harp Seal",
-        slug = "mmc_harp_seal",
-        ability = {},
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    footballCardJoker = {
-        loc = {
-            name = "Football Card",
-            text = {
-                "{C:blue}Common{} Jokers",
-                "each give {C:chips}+#1#{} Chips"
-            }
-        },
-        ability_name = "MMC Football Card",
-        slug = "mmc_football_card",
-        ability = {
-            extra = {
-                chips = 50
-            }
-        },
-        rarity = 2,
-        cost = 7,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    specialEditionJoker = {
-        loc = {
-            name = "Special Edition Joker",
-            text = {
-                "Gains {C:mult}+#2#{} Mult per {C:attention}Seal{}, {C:chips}+#4#{}",
-                "Chips per {C:attention}Enhancement{} and {X:mult,C:white}X#6#{} Mult",
-                "per {C:attention}Edition{} for every card in deck",
-                "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult, {C:chips}+#3#{C:inactive}, Chips and {X:mult,C:white}X#5#{C:inactive} Mult)"
-            }
-        },
-        ability_name = "MMC Special Edition Joker",
-        slug = "mmc_special_edition",
-        ability = {
-            extra = {
-                current_mult = 0,
-                mult_mod = 2,
-                current_chips = 0,
-                chip_mod = 10,
-                current_Xmult = 1,
-                Xmult_mod = 0.1,
-                base = 0
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    stockpilerJoker = {
-        loc = {
-            name = "The Stockpiler",
-            text = {
-                "{C:attention}+#2#{} hand size for every #4#",
-                "cards in deck above {C:attention}#3#{}.",
-                "Caps at the current Ante",
-                "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
-            }
-        },
-        ability_name = "MMC The Stockpiler",
-        slug = "mmc_stockpiler",
-        ability = {
-            extra = {
-                current_h_size = 0,
-                h_mod = 1,
-                base = 52,
-                every = 4
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    studentLoansJoker = {
-        loc = {
-            name = "Student Loans",
-            text = {
-                "Go up to {C:red}-$#1#{} in debt.",
-                "Gives -#4# {C:red}discard{}",
-                "for every {C:red}-$#2#{} in debt",
-                "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
-            }
-        },
-        ability_name = "MMC Student Loans",
-        slug = "mmc_student_loans",
-        ability = {
-            extra = {
-                negative_bal = 100,
-                every = 25,
-                discards = 0,
-                discard_sub = 1
-            }
-        },
-        rarity = 2,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    brokeJoker = {
-        loc = {
-            name = "Broke Joker",
-            text = {
-                "Gains {C:mult}+#1#{} Mult",
-                "per {C:red}-$#3#",
-                "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
-            }
-        },
-        ability_name = "MMC Broke Joker",
-        slug = "mmc_broke",
-        ability = {
-            extra = {
-                current_mult = 0,
-                mult_mod = 1,
-                every = 2
-            }
-        },
-        rarity = 1,
-        cost = 2,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    goForBrokeJoker = {
-        loc = {
-            name = "Go For Broke",
-            text = {
-                "Gains {C:chips}+#1#{} Chips",
-                "per {C:red}-$#3#",
-                "{C:inactive}(Currently {C:chips}#2#{C:inactive} Chips)"
-            }
-        },
-        ability_name = "MMC Go For Broke",
-        slug = "mmc_go_for_broke",
-        ability = {
-            extra = {
-                current_chips = 0,
-                every = 1,
-                chip_mod = 4
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    streetFighterJoker = {
-        loc = {
-            name = "Street Fighter",
-            text = {
-                "Gives {X:mult,C:white}X#1#{} Mult",
-                "when balance is",
-                "at or below {C:red}-$#2#"
-            }
-        },
-        ability_name = "MMC Street Fighter",
-        slug = "mmc_street_fighter",
-        ability = {
-            extra = {
-                Xmult = 4,
-                req = 20
-            }
-        },
-        rarity = 2,
-        cost = 7,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    checklistJoker = {
-        loc = {
-            name = "Checklist",
-            text = {
-                "Playing {C:attention}#1#{} upgrades",
-                "it by #2# level. Poker hand",
-                "changes when played"
-            }
-        },
-        ability_name = "MMC Checklist",
-        slug = "mmc_checklist",
-        ability = {
-            extra = {
-                poker_hand = "High Card",
-                increase = 1
-            }
-        },
-        rarity = 2,
-        cost = 7,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    oneOfUsJoker = {
-        loc = {
-            name = "One Of Us",
-            text = {
-                "If played hand",
-                "contains {C:attention}#1# Enhanced cards,",
-                "Enhance a random {C:attention}Joker"
-            }
-        },
-        ability_name = "MMC One Of Us",
-        slug = "mmc_one_of_us",
-        ability = {
-            extra = {
-                req = 5
-            }
-        },
-        rarity = 2,
-        cost = 6,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    investorJoker = {
-        loc = {
-            name = "The Investor",
-            text = {
-                "Gives {C:money}$#1#{} at end of",
-                "round. {C:green}#3# in #2#{} chance to",
-                "give {C:red}-$#1#{} instead"
-            }
-        },
-        ability_name = "MMC The Investor",
-        slug = "mmc_investor",
-        ability = {
-            extra = {
-                dollars = 5,
-                odds = 4
-            }
-        },
-        rarity = 1,
-        cost = 4,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    },
-    -- mountainClimberJoker = {
-    --     loc = {
-    --         name = "Mountain Climber",
-    --         text = {
-    --             "Every played {C:attention}card{}",
-    --             "permanently gains",
-    --             "{C:mult}+#1#{} Mult when scored"
-    --         }
-    --     },
-    --     ability_name = "MMC Mountain Climber",
-    --     slug = "mmc_mountain_climber",
-    --     ability = { extra = { mult = 1 } },
-    --     rarity = 2,
-    --     cost = 5,
-    --     unlocked = true,
-    --     discovered = true,
-    --     blueprint_compat = true,
-    --     eternal_compat = true
-    -- },
-    shacklesJoker = {
-        loc = {
-            name = "Shackles",
-            text = {
-                "{C:blue}+#1#{} hand, {C:red}+#2#{} discard,",
-                "{C:attention}+#3#{} hand size. Destroyed",
-                "if you play more than",
-                "{C:attention}#4#{} cards in one hand"
-            }
-        },
-        ability_name = "MMC Shackles",
-        slug = "mmc_shackles",
-        ability = {
-            extra = {
-                _hand_add = 1,
-                _h_size = 1,
-                _discards = 1,
-                req = 4
-            }
-        },
-        rarity = 1,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = false,
-        eternal_compat = true
-    },
-    buyOneGetOneJoker = {
-        loc = {
-            name = "Buy One Get One",
-            text = {
-                "{C:green}#2# in #1#{} chance to",
-                "get a random {C:attention}extra card{}",
-                "of whatever you're buying",
-                "{C:inactive}(Must have room)"
-            }
-        },
-        ability_name = "MMC Buy One Get One",
-        slug = "mmc_buy_one_get_one",
-        ability = {
-            extra = {
-                odds = 4
-            }
-        },
-        rarity = 1,
-        cost = 5,
-        unlocked = true,
-        discovered = true,
-        blueprint_compat = true,
-        eternal_compat = true
-    }
-}
-
 -- Local variables
 local for_hire_counter = 1
 
@@ -1840,133 +686,67 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    -- Initialize Jokers
-    for k, v in pairs(jokers) do
-        if config[k] then
-            local joker = SMODS.Joker:new(v.ability_name, v.slug, v.ability, {
-                x = 0,
-                y = 0
-            }, v.loc, v.rarity, v.cost, v.unlocked, v.discovered, v.blueprint_compat, v.eternal_compat)
-            joker:register()
-            local sprite
-            if not_in_table(no_art_yet, k) then
-                sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path, "j_" .. v.slug .. ".png",
-                    71, 95, "asset_atli")
-            else
-                sprite = SMODS.Sprite:new("j_" .. v.slug, SMODS.findModByID("MikasMods").path,
-                    "j_mmc_missing_texture.png", 71, 95, "asset_atli")
-            end
-            sprite:register()
-        end
-    end
-
-    -- Initialize Joker localization variables
-    function SMODS.Jokers.j_mmc_prime_time:loc_def(card)
-        if card.ability.name == 'MMC Prime Time' then
-            return { card.ability.extra.Xmult }
-        elseif card.ability.name == 'MMC Straight Nate' then
-            return { card.ability.extra.Xmult, card.ability.extra.j_slots }
-        elseif card.ability.name == 'MMC The Fisherman' then
-            return { card.ability.extra.current_h_size, card.ability.extra.h_mod }
-        elseif card.ability.name == 'MMC Impatient Joker' then
-            return { card.ability.extra.current_mult, card.ability.extra.mult_mod }
-        elseif card.ability.name == 'MMC Cultist' then
-            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
-        elseif card.ability.name == 'MMC Seal Collector' then
-            return { card.ability.extra.current_chips, card.ability.extra.chip_mod }
-        elseif card.ability.name == 'MMC Camper' then
-            return { card.ability.extra.chip_mod }
-        elseif card.ability.name == 'MMC Lucky Number Seven' then
-            return { card.ability.extra.dollar_gain_one, card.ability.extra.dollar_gain_two,
-                card.ability.extra.dollar_gain_three, card.ability.extra.dollar_gain_four,
-                card.ability.extra.dollar_gain_five }
-        elseif card.ability.name == 'MMC Delayed Joker' then
-            return { card.ability.extra.mult, card.ability.extra.chips, card.ability.extra.Xmult,
-                card.ability.extra.action_tally, card.ability.extra.every }
-        elseif card.ability.name == 'MMC The Show-Off' then
-            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.req }
-        elseif card.ability.name == 'MMC The Sniper' then
-            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.percentage }
-        elseif card.ability.name == 'MMC Blackjack Joker' then
-            return { card.ability.extra.Xmult, card.ability.extra.req, card.ability.extra.Xmult_mod }
-        elseif card.ability.name == 'MMC Batman' then
-            return { card.ability.extra.current_mult, card.ability.extra.mult_mod }
-        elseif card.ability.name == 'MMC Bomb' then
-            return { card.ability.extra.current_mult, card.ability.extra.mult_mod, card.ability.extra._every }
-        elseif card.ability.name == 'MMC Eye Chart' then
-            return { card.ability.extra.chips, card.ability.extra.letter }
-        elseif card.ability.name == 'MMC Grudgeful Joker' then
-            return { card.ability.extra.current_chips, card.ability.extra.percentage }
-        elseif card.ability.name == 'MMC Finishing Blow' then
-            return { card.ability.extra.enhancement }
-        elseif card.ability.name == 'MMC Planetary Alignment' then
-            return { card.ability.extra.every }
-        elseif card.ability.name == 'MMC Historical Joker' then
-            return { card.ability.extra.percentage }
-        elseif card.ability.name == 'MMC Suit Alley' then
-            return { card.ability.extra.chips, card.ability.extra.mult }
-        elseif card.ability.name == 'MMC The Printer' then
-            return {}
-        elseif card.ability.name == 'MMC Shy Joker' then
-            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
-        elseif card.ability.name == 'MMC The Gambler' then
-            return {}
-        elseif card.ability.name == 'MMC Incomplete Joker' then
-            return { card.ability.extra.chips, card.ability.extra.req }
-        elseif card.ability.name == 'MMC Abbey Road' then
-            return { card.ability.extra.Xmult, card.ability.extra.req }
-        elseif card.ability.name == 'MMC Boating License' then
-            return {}
-        elseif card.ability.name == 'MMC Gold Bar' then
-            return { card.ability.extra.dollars }
-        elseif card.ability.name == 'MMC Rigged Joker' then
-            return { card.ability.extra.increase }
-        elseif card.ability.name == 'MMC The Commander' then
-            return {}
-        elseif card.ability.name == 'MMC What Are The Odds' then
-            return { card.ability.extra.req }
-        elseif card.ability.name == 'MMC Dagonet' then
-            return {}
-        elseif card.ability.name == 'MMC Glue' then
-            return { card.ability.extra.Xmult, card.ability.extra.j_slots }
-        elseif card.ability.name == 'MMC Harp Seal' then
-            return {}
-        elseif card.ability.name == 'MMC Football Card' then
-            return { card.ability.extra.chips }
-        elseif card.ability.name == 'MMC Special Edition Joker' then
-            return { card.ability.extra.current_mult, card.ability.extra.mult_mod, card.ability.extra.current_chips,
-                card.ability.extra.chip_mod, card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
-        elseif card.ability.name == 'MMC The Stockpiler' then
-            return { card.ability.extra.current_h_size, card.ability.extra.h_mod, card.ability.extra.base,
-                card.ability.extra.every }
-        elseif card.ability.name == 'MMC Student Loans' then
-            return { card.ability.extra.negative_bal, card.ability.extra.every, card.ability.extra.discards,
-                card.ability.extra.discard_sub }
-        elseif card.ability.name == 'MMC Broke Joker' then
-            return { card.ability.extra.mult_mod, card.ability.extra.current_mult, card.ability.extra.every }
-        elseif card.ability.name == 'MMC Go For Broke' then
-            return { card.ability.extra.chip_mod, card.ability.extra.current_chips, card.ability.extra.every }
-        elseif card.ability.name == 'MMC Street Fighter' then
-            return { card.ability.extra.Xmult, card.ability.extra.req }
-        elseif card.ability.name == 'MMC Checklist' then
-            return { localize(card.ability.extra.poker_hand, 'poker_hands'), card.ability.extra.increase }
-        elseif card.ability.name == 'MMC One Of Us' then
-            return { card.ability.extra.req }
-        elseif card.ability.name == 'MMC The Investor' then
-            return { card.ability.extra.dollars, card.ability.extra.odds,
-                '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
-            -- elseif card.ability.name == 'MMC Mountain Climber' then
-            --     return { card.ability.extra.mult }
-        elseif card.ability.name == 'MMC Shackles' then
-            return { card.ability.extra._hand_add, card.ability.extra._discards, card.ability.extra._h_size,
-                card.ability.extra.req }
-        elseif card.ability.name == 'MMC Buy One Get One' then
-            return { card.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
-        end
-    end
-
     -- Joker calculations
     if config.primeTimeJoker then
+        -- Create Joker
+        local prime = {
+            loc = {
+                name = "Prime Time",
+                text = {
+                    "Each played {C:attention}2{},",
+                    "{C:attention}3{}, {C:attention}5{}, {C:attention}7{} or {C:attention}Ace{}, gives",
+                    "{X:mult,C:white}X#1#{} Mult when scored",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC Prime Time",
+            slug = "mmc_prime_time",
+            ability = {
+                extra = {
+                    Xmult = 1.2
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            prime.ability_name,
+            prime.slug,
+            prime.ability,
+            { x = 0, y = 0 },
+            prime.loc,
+            prime.rarity,
+            prime.cost,
+            prime.unlocked,
+            prime.discovered,
+            prime.blueprint_compat,
+            prime.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. prime.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. prime.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_prime_time.loc_def(card)
+            return { card.ability.extra.Xmult }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_prime_time.calculate = function(self, context)
             -- For each played card, if card is prime, add xmult
             if context.individual and context.cardarea == G.play and
@@ -1986,6 +766,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.straightNateJoker then
+        -- Create Joker
+        local nate = {
+            loc = {
+                name = "Straight Nate",
+                text = {
+                    "{X:mult,C:white} X#1# {} Mult if played hand",
+                    "contains a {C:attention}Straight{} and you have",
+                    "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
+                    "Also gives {C:dark_edition}+#2#{} Joker slot"
+                }
+            },
+            ability_name = "MMC Straight Nate",
+            slug = "mmc_straight_nate",
+            ability = {
+                extra = {
+                    Xmult = 4,
+                    j_slots = 1
+                }
+            },
+            rarity = 3,
+            cost = 7,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            nate.ability_name,
+            nate.slug,
+            nate.ability,
+            { x = 0, y = 0 },
+            nate.loc,
+            nate.rarity,
+            nate.cost,
+            nate.unlocked,
+            nate.discovered,
+            nate.blueprint_compat,
+            nate.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. nate.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. nate.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_straight_nate.loc_def(card)
+            return { card.ability.extra.Xmult, card.ability.extra.j_slots }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_straight_nate.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- If hand played is a straight
@@ -2019,6 +859,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.fishermanJoker then
+        -- Create Joker
+        local fish = {
+            loc = {
+                name = "The Fisherman",
+                text = {
+                    "{C:attention}+#2#{} hand size per discard",
+                    "{C:attention}-#2#{} hand size per hand played",
+                    "Resets every round",
+                    "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
+                }
+            },
+            ability_name = "MMC The Fisherman",
+            slug = "mmc_fisherman",
+            ability = {
+                extra = {
+                    current_h_size = 0,
+                    h_mod = 1
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            fish.ability_name,
+            fish.slug,
+            fish.ability,
+            { x = 0, y = 0 },
+            fish.loc,
+            fish.rarity,
+            fish.cost,
+            fish.unlocked,
+            fish.discovered,
+            fish.blueprint_compat,
+            fish.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. fish.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. fish.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_fisherman.loc_def(card)
+            return { card.ability.extra.current_h_size, card.ability.extra.h_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_fisherman.calculate = function(self, context)
             -- Decrease hand size
             if SMODS.end_calculate_context(context) then
@@ -2058,6 +958,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.impatientJoker then
+        -- Create Joker
+        local impatient = {
+            loc = {
+                name = "Impatient Joker",
+                text = {
+                    "{C:mult}+#2#{} Mult per card discarded",
+                    "Resets every round",
+                    "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Impatient Joker",
+            slug = "mmc_impatient",
+            ability = {
+                extra = {
+                    mult_mod = 3,
+                    current_mult = 0
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            impatient.ability_name,
+            impatient.slug,
+            impatient.ability,
+            { x = 0, y = 0 },
+            impatient.loc,
+            impatient.rarity,
+            impatient.cost,
+            impatient.unlocked,
+            impatient.discovered,
+            impatient.blueprint_compat,
+            impatient.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. impatient.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. impatient.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_impatient.loc_def(card)
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_impatient.calculate = function(self, context)
             -- Apply mult
             if SMODS.end_calculate_context(context) then
@@ -2102,6 +1061,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.cultistJoker then
+        -- Create Joker
+        local cultist = {
+            loc = {
+                name = "Cultist",
+                text = {
+                    "{X:mult,C:white}X#2#{} Mult per hand played",
+                    "Resets every round",
+                    "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Cultist",
+            slug = "mmc_cultist",
+            ability = {
+                extra = {
+                    current_Xmult = 1,
+                    Xmult_mod = 1,
+                    old = 0
+                }
+            },
+            rarity = 3,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            cultist.ability_name,
+            cultist.slug,
+            cultist.ability,
+            { x = 0, y = 0 },
+            cultist.loc,
+            cultist.rarity,
+            cultist.cost,
+            cultist.unlocked,
+            cultist.discovered,
+            cultist.blueprint_compat,
+            cultist.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. cultist.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. cultist.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_cultist.loc_def(card)
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_cultist.calculate = function(self, context)
             -- Increment Xmult
             if context.before and not context.blueprint then
@@ -2138,6 +1157,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.sealCollectorJoker then
+        -- Create Joker
+        local seal = {
+            loc = {
+                name = "Seal Collector",
+                text = {
+                    "Gains {C:chips}+#2#{} Chips for",
+                    "every card with a {C:attention}seal",
+                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+                }
+            },
+            ability_name = "MMC Seal Collector",
+            slug = "mmc_seal_collector",
+            ability = {
+                extra = {
+                    current_chips = 25,
+                    chip_mod = 25,
+                    base = 25
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            seal.ability_name,
+            seal.slug,
+            seal.ability,
+            { x = 0, y = 0 },
+            seal.loc,
+            seal.rarity,
+            seal.cost,
+            seal.unlocked,
+            seal.discovered,
+            seal.blueprint_compat,
+            seal.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. seal.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. seal.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_seal_collector.loc_def(card)
+            return { card.ability.extra.current_chips, card.ability.extra.chip_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_seal_collector.calculate = function(self, context)
             -- Apply chips
             if SMODS.end_calculate_context(context) then
@@ -2155,6 +1234,64 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.camperJoker then
+        -- Create Joker
+        local camper = {
+            loc = {
+                name = "Camper",
+                text = {
+                    "Every discarded {C:attention}card{}",
+                    "permanently gains",
+                    "{C:chips}+#1#{} Chips"
+                }
+            },
+            ability_name = "MMC Camper",
+            slug = "mmc_camper",
+            ability = {
+                extra = {
+                    chip_mod = 4
+                }
+            },
+            rarity = 2,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            camper.ability_name,
+            camper.slug,
+            camper.ability,
+            { x = 0, y = 0 },
+            camper.loc,
+            camper.rarity,
+            camper.cost,
+            camper.unlocked,
+            camper.discovered,
+            camper.blueprint_compat,
+            camper.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. camper.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. camper.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_camper.loc_def(card)
+            return { card.ability.extra.chip_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_camper.calculate = function(self, context)
             -- If discarded
             if context.discard then
@@ -2172,6 +1309,74 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.luckyNumberSevenJoker then
+        -- Create Joker
+        local seven = {
+            loc = {
+                name = "Lucky Number Seven",
+                text = {
+                    "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
+                    "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
+                    "{C:attention}7 cards{} are scored,",
+                    "respectively"
+                }
+            },
+            ability_name = "MMC Lucky Number Seven",
+            slug = "mmc_lucky_number_seven",
+            ability = {
+                extra = {
+                    dollar_gain_one = 1,
+                    dollar_gain_two = 3,
+                    dollar_gain_three = 10,
+                    dollar_gain_four = 25,
+                    dollar_gain_five = 50,
+                    dollars = 0,
+                    seven_tally = 0,
+                    old = 0
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            seven.ability_name,
+            seven.slug,
+            seven.ability,
+            { x = 0, y = 0 },
+            seven.loc,
+            seven.rarity,
+            seven.cost,
+            seven.unlocked,
+            seven.discovered,
+            seven.blueprint_compat,
+            seven.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. seven.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. seven.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_lucky_number_seven.loc_def(card)
+            return { card.ability.extra.dollar_gain_one, card.ability.extra.dollar_gain_two,
+                card.ability.extra.dollar_gain_three, card.ability.extra.dollar_gain_four,
+                card.ability.extra.dollar_gain_five }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_lucky_number_seven.calculate = function(self, context)
             -- Count sevens
             if context.individual and context.cardarea == G.play and context.other_card:get_id() == 7 and
@@ -2214,6 +1419,70 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.delayedJoker then
+        -- Create Joker
+        local delayed = {
+            loc = {
+                name = "Delayed Joker",
+                text = {
+                    "Gives {C:mult}+#1#{} Mult, {C:chips}+#2#{}",
+                    "Chips and {X:mult,C:white}X#3#{} Mult on",
+                    "the {C:attention}#5#th{} action",
+                    "{C:inactive}(Current action: {C:attention}#4#{C:inactive} )"
+                }
+            },
+            ability_name = "MMC Delayed Joker",
+            slug = "mmc_delayed",
+            ability = {
+                extra = {
+                    mult = 20,
+                    chips = 100,
+                    Xmult = 1.5,
+                    every = 4,
+                    action_tally = 1
+                }
+            },
+            rarity = 2,
+            cost = 7,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            delayed.ability_name,
+            delayed.slug,
+            delayed.ability,
+            { x = 0, y = 0 },
+            delayed.loc,
+            delayed.rarity,
+            delayed.cost,
+            delayed.unlocked,
+            delayed.discovered,
+            delayed.blueprint_compat,
+            delayed.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. delayed.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. delayed.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_delayed.loc_def(card)
+            return { card.ability.extra.mult, card.ability.extra.chips, card.ability.extra.Xmult,
+                card.ability.extra.action_tally, card.ability.extra.every }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_delayed.calculate = function(self, context)
             -- Increment action tally
             if context.before and not context.blueprint then
@@ -2268,6 +1537,68 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.showoffJoker then
+        -- Create Joker
+        local showoff = {
+            loc = {
+                name = "The Show-Off",
+                text = {
+                    "Gains {X:mult,C:white}X#2#{} Mult when",
+                    "a blind is finished with",
+                    "{C:attention}X#3#{} the chip requirement",
+                    "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC The Show-Off",
+            slug = "mmc_showoff",
+            ability = {
+                extra = {
+                    current_Xmult = 1,
+                    Xmult_mod = 0.25,
+                    req = 2,
+                    total_chips = 0
+                }
+            },
+            rarity = 3,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            showoff.ability_name,
+            showoff.slug,
+            showoff.ability,
+            { x = 0, y = 0 },
+            showoff.loc,
+            showoff.rarity,
+            showoff.cost,
+            showoff.unlocked,
+            showoff.discovered,
+            showoff.blueprint_compat,
+            showoff.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. showoff.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. showoff.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_showoff.loc_def(card)
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_showoff.calculate = function(self, context)
             -- Apply xmult
             if SMODS.end_calculate_context(context) then
@@ -2306,6 +1637,69 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.sniperJoker then
+        -- Create Joker
+        local sniper = {
+            loc = {
+                name = "The Sniper",
+                text = {
+                    "Gains {X:mult,C:white}X#2#{} Mult when a",
+                    "blind is finished within {C:attention}#3#%{} of",
+                    "the {C:attention}exact{} chip requirement",
+                    "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC The Sniper",
+            slug = "mmc_sniper",
+            ability = {
+                extra = {
+                    current_Xmult = 1,
+                    Xmult_mod = 4,
+                    percentage = 5,
+                    total_chips = 0
+                }
+            },
+            rarity = 3,
+            cost = 10,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            sniper.ability_name,
+            sniper.slug,
+            sniper.ability,
+            { x = 0, y = 0 },
+            sniper.loc,
+            sniper.rarity,
+            sniper.cost,
+            sniper.unlocked,
+            sniper.discovered,
+            sniper.blueprint_compat,
+            sniper.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. sniper.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. sniper.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_sniper.loc_def(card)
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.percentage }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_sniper.calculate = function(self, context)
             -- Apply xmult
             if SMODS.end_calculate_context(context) then
@@ -2344,6 +1738,70 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.blackjackJoker then
+        -- Create Joker
+        local blackjack = {
+            loc = {
+                name = "Blackjack Joker",
+                text = {
+                    "Gives {X:mult,C:white}X#1#{} Mult when",
+                    "the ranks of all played",
+                    "cards is {C:attention}exactly #2#",
+                    "Gives {X:mult,C:white}X#3#{} Mult less for",
+                    "every point below #2#"
+                }
+            },
+            ability_name = "MMC Blackjack Joker",
+            slug = "mmc_blackjack",
+            ability = {
+                extra = {
+                    Xmult = 3,
+                    rank_tally = { 0 },
+                    updated_rank_tally = {},
+                    req = 21,
+                    Xmult_mod = 0.5
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            blackjack.ability_name,
+            blackjack.slug,
+            blackjack.ability,
+            { x = 0, y = 0 },
+            blackjack.loc,
+            blackjack.rarity,
+            blackjack.cost,
+            blackjack.unlocked,
+            blackjack.discovered,
+            blackjack.blueprint_compat,
+            blackjack.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. blackjack.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. blackjack.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_blackjack.loc_def(card)
+            return { card.ability.extra.Xmult, card.ability.extra.req, card.ability.extra.Xmult_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_blackjack.calculate = function(self, context)
             -- For full hand
             if context.before and not context.blueprint then
@@ -2411,6 +1869,69 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.batmanJoker then
+        -- Create Joker
+        local batman = {
+            loc = {
+                name = "Batman",
+                text = {
+                    "Gains {C:mult}+#2#{} Mult for",
+                    "every {C:attention}non-lethal{} hand played.",
+                    "Mult gain increases for every",
+                    "Joker with {C:attention}\"Joker\"{} in the name",
+                    "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Batman",
+            slug = "mmc_batman",
+            ability = {
+                extra = {
+                    current_mult = 1,
+                    mult_mod = 1,
+                    total_chips = 0,
+                    base = 1
+                }
+            },
+            rarity = 3,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            batman.ability_name,
+            batman.slug,
+            batman.ability,
+            { x = 0, y = 0 },
+            batman.loc,
+            batman.rarity,
+            batman.cost,
+            batman.unlocked,
+            batman.discovered,
+            batman.blueprint_compat,
+            batman.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. batman.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. batman.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_batman.loc_def(card)
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_batman.calculate = function(self, context)
             -- When hand is played
             if SMODS.end_calculate_context(context) then
@@ -2443,8 +1964,68 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.bombJoker then
-        -- Apply mult
+        -- Create Joker
+        local bomb = {
+            loc = {
+                name = "Bomb",
+                text = { "Gains {C:mult}+#2#{} Mult per round",
+                    "self destructs after {C:attention}#3#{} rounds",
+                    "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC Bomb",
+            slug = "mmc_bomb",
+            ability = {
+                extra = {
+                    current_mult = 15,
+                    mult_mod = 15,
+                    _every = 3
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = false
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            bomb.ability_name,
+            bomb.slug,
+            bomb.ability,
+            { x = 0, y = 0 },
+            bomb.loc,
+            bomb.rarity,
+            bomb.cost,
+            bomb.unlocked,
+            bomb.discovered,
+            bomb.blueprint_compat,
+            bomb.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. bomb.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. bomb.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_bomb.loc_def(card)
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod, card.ability.extra._every }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_bomb.calculate = function(self, context)
+            -- Apply mult
             if SMODS.end_calculate_context(context) then
                 return {
                     message = localize {
@@ -2482,6 +2063,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.eyeChartJoker then
+        -- Create Joker
+        local eye = {
+            loc = {
+                name = "Eye Chart",
+                text = {
+                    "Gives {C:chips}+#1#{} Chips for every",
+                    "letter {C:attention}\"#2#\"{} in your Jokers.",
+                    "Letter changes when this",
+                    "Joker appears in the shop",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy" }
+            },
+            ability_name = "MMC Eye Chart",
+            slug = "mmc_eye_chart",
+            ability = {
+                extra = {
+                    chips = 20,
+                    letter = 'A'
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            eye.ability_name,
+            eye.slug,
+            eye.ability,
+            { x = 0, y = 0 },
+            eye.loc,
+            eye.rarity,
+            eye.cost,
+            eye.unlocked,
+            eye.discovered,
+            eye.blueprint_compat,
+            eye.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. eye.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. eye.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_eye_chart.loc_def(card)
+            return { card.ability.extra.chips, card.ability.extra.letter }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_eye_chart.calculate = function(self, context)
             -- Check if Joker name contains letter and apply chips
             if context.other_joker and context.other_joker ~= self and context.other_joker.ability.set == 'Joker' then
@@ -2520,6 +2161,69 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.grudgefulJoker then
+        -- Create Joker
+        local grudgeful = {
+            loc = {
+                name = "Grudgeful Joker",
+                text = {
+                    "Adds {C:attention}excess Chips{} from last",
+                    "blind to the first hand",
+                    "of the current round. Caps",
+                    "at {C:attention}#2#%{} of current blind's Chips",
+                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+                }
+            },
+            ability_name = "MMC Grudgeful Joker",
+            slug = "mmc_grudgeful",
+            ability = {
+                extra = {
+                    current_chips = 0,
+                    total_chips = 0,
+                    old_chips = 0,
+                    percentage = 10
+                }
+            },
+            rarity = 3,
+            cost = 9,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            grudgeful.ability_name,
+            grudgeful.slug,
+            grudgeful.ability,
+            { x = 0, y = 0 },
+            grudgeful.loc,
+            grudgeful.rarity,
+            grudgeful.cost,
+            grudgeful.unlocked,
+            grudgeful.discovered,
+            grudgeful.blueprint_compat,
+            grudgeful.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. grudgeful.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. grudgeful.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_grudgeful.loc_def(card)
+            return { card.ability.extra.current_chips, card.ability.extra.percentage }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_grudgeful.calculate = function(self, context)
             -- Add scored chips to total
             if context.mmc_scored_chips and not context.blueprint then
@@ -2567,6 +2271,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.finishingBlowJoker then
+        -- Create Joker
+        local fb = {
+            loc = {
+                name = "Finishing Blow",
+                text = {
+                    "If a blind is finished",
+                    "with a {C:attention}High Card{}, randomly",
+                    "{C:attention}Enhance{} scored cards"
+                }
+            },
+            ability_name = "MMC Finishing Blow",
+            slug = "mmc_finishing_blow",
+            ability = {
+                extra = {
+                    high_card = false,
+                    card_refs = {}
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            fb.ability_name,
+            fb.slug,
+            fb.ability,
+            { x = 0, y = 0 },
+            fb.loc,
+            fb.rarity,
+            fb.cost,
+            fb.unlocked,
+            fb.discovered,
+            fb.blueprint_compat,
+            fb.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. fb.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. fb.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_finishing_blow.loc_def(card)
+            return { card.ability.extra.enhancement }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_finishing_blow.calculate = function(self, context)
             -- Check for high card and set card reference
             if context.cardarea == G.play and not context.repetition then
@@ -2598,6 +2361,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.planetaryAlignmentJoker then
+        -- Create Joker
+        local planetary = {
+            loc = {
+                name = "Planetary Alignment",
+                text = {
+                    "Once every #1# rounds",
+                    "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
+                    "one of them will be for your",
+                    "most played {C:attention}poker hand{}"
+                }
+            },
+            ability_name = "MMC Planetary Alignment",
+            slug = "mmc_planetary_alignment",
+            ability = {
+                extra = {
+                    round = 0,
+                    every = 2
+                }
+            },
+            rarity = 1,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            planetary.ability_name,
+            planetary.slug,
+            planetary.ability,
+            { x = 0, y = 0 },
+            planetary.loc,
+            planetary.rarity,
+            planetary.cost,
+            planetary.unlocked,
+            planetary.discovered,
+            planetary.blueprint_compat,
+            planetary.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. planetary.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. planetary.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_planetary_alignment.loc_def(card)
+            return { card.ability.extra.every }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_planetary_alignment.calculate = function(self, context)
             -- Update round counter
             if context.end_of_round and not context.individual and not context.repetition then
@@ -2607,6 +2430,70 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.historicalJoker then
+        -- Create Joker
+        local historical = {
+            loc = {
+                name = "Historical Joker",
+                text = {
+                    "If scored cards have the same",
+                    "{C:attention}ranks{} and {C:attention}order{} as previous",
+                    "hand, add previous hands {C:chips}Chips{}",
+                    "to the current hand. Caps at",
+                    "{C:attention}#1#%{} of current blind's Chips",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC Historical Joker",
+            slug = "mmc_historical",
+            ability = {
+                extra = {
+                    prev_cards = {},
+                    current_cards = {},
+                    current_chips = 0,
+                    percentage = 10
+                }
+            },
+            rarity = 3,
+            cost = 9,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            historical.ability_name,
+            historical.slug,
+            historical.ability,
+            { x = 0, y = 0 },
+            historical.loc,
+            historical.rarity,
+            historical.cost,
+            historical.unlocked,
+            historical.discovered,
+            historical.blueprint_compat,
+            historical.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. historical.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. historical.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_historical.loc_def(card)
+            return { card.ability.extra.percentage }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_historical.calculate = function(self, context)
             -- Save previous cards
             if context.before and not context.blueprint then
@@ -2646,6 +2533,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.suitAlleyJoker then
+        -- Create Joker
+        local suit = {
+            loc = {
+                name = "Suit Alley",
+                text = {
+                    "{C:diamonds}Diamond{} and {C:clubs}Club{} cards",
+                    "gain {C:chips}+#1#{} Chips when scored",
+                    "{C:hearts}Heart{} and {C:spades}Spade{} cards",
+                    "gain {C:mult}+#2#{} Mult when scored"
+                }
+            },
+            ability_name = "MMC Suit Alley",
+            slug = "mmc_suit_alley",
+            ability = {
+                extra = {
+                    mult = 3,
+                    chips = 12
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            suit.ability_name,
+            suit.slug,
+            suit.ability,
+            { x = 0, y = 0 },
+            suit.loc,
+            suit.rarity,
+            suit.cost,
+            suit.unlocked,
+            suit.discovered,
+            suit.blueprint_compat,
+            suit.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. suit.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. suit.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_suit_alley.loc_def(card)
+            return { card.ability.extra.chips, card.ability.extra.mult }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_suit_alley.calculate = function(self, context)
             if context.cardarea == G.play and not context.repetition then
                 local mult = 0
@@ -2681,6 +2628,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.printerJoker then
+        -- Create Joker
+        local printer = {
+            loc = {
+                name = "The Printer",
+                text = {
+                    "If hand scores more than",
+                    "blind's Chips, {C:attention}duplicate{}",
+                    "your hand and add duplicated",
+                    "cards to your hand"
+                }
+            },
+            ability_name = "MMC The Printer",
+            slug = "mmc_printer",
+            ability = {
+                extra = {
+                    hand = {}
+                }
+            },
+            rarity = 3,
+            cost = 9,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            printer.ability_name,
+            printer.slug,
+            printer.ability,
+            { x = 0, y = 0 },
+            printer.loc,
+            printer.rarity,
+            printer.cost,
+            printer.unlocked,
+            printer.discovered,
+            printer.blueprint_compat,
+            printer.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. printer.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. printer.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_printer.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_printer.calculate = function(self, context)
             -- Save cards
             if context.before then
@@ -2724,6 +2730,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.shyJoker then
+        -- Create Joker
+        local shy = {
+            loc = {
+                name = "Shy Joker",
+                text = {
+                    "{X:mult,C:white}X#1#{} Mult,",
+                    "gains {X:mult,C:white}X#2#{} Mult",
+                    "per {C:attention}card{} scored"
+                }
+            },
+            ability_name = "MMC Shy Joker",
+            slug = "mmc_shy",
+            ability = {
+                extra = {
+                    current_Xmult = 1,
+                    Xmult_mod = 0.01
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            shy.ability_name,
+            shy.slug,
+            shy.ability,
+            { x = 0, y = 0 },
+            shy.loc,
+            shy.rarity,
+            shy.cost,
+            shy.unlocked,
+            shy.discovered,
+            shy.blueprint_compat,
+            shy.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. shy.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. shy.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_shy.loc_def(card)
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_shy.calculate = function(self, context)
             -- Add xmult for every played card
             if context.individual and context.cardarea == G.play and not context.blueprint then
@@ -2754,6 +2819,61 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.gamblerJoker then
+        -- Create Joker
+        local gambler = {
+            loc = {
+                name = "The Gambler",
+                text = {
+                    "Retrigger all",
+                    "scored {C:attention}Lucky{} cards"
+                }
+            },
+            ability_name = "MMC The Gambler",
+            slug = "mmc_gambler",
+            ability = {
+                extra = 1
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            gambler.ability_name,
+            gambler.slug,
+            gambler.ability,
+            { x = 0, y = 0 },
+            gambler.loc,
+            gambler.rarity,
+            gambler.cost,
+            gambler.unlocked,
+            gambler.discovered,
+            gambler.blueprint_compat,
+            gambler.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. gambler.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. gambler.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_gambler.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_gambler.calculate = function(self, context)
             -- Retrigger lucky cards
             if context.repetition and context.cardarea == G.play then
@@ -2769,6 +2889,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.incompleteJoker then
+        -- Create Joker
+        local incomplete = {
+            loc = {
+                name = "Incomplete Joker",
+                text = {
+                    "{C:chips}+#1#{} Chips if played",
+                    "hand contains",
+                    "{C:attention}#2#{} or fewer cards"
+                }
+            },
+            ability_name = "MMC Incomplete Joker",
+            slug = "mmc_incomplete",
+            ability = {
+                extra = {
+                    chips = 100,
+                    req = 3
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            incomplete.ability_name,
+            incomplete.slug,
+            incomplete.ability,
+            { x = 0, y = 0 },
+            incomplete.loc,
+            incomplete.rarity,
+            incomplete.cost,
+            incomplete.unlocked,
+            incomplete.discovered,
+            incomplete.blueprint_compat,
+            incomplete.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. incomplete.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. incomplete.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_incomplete.loc_def(card)
+            return { card.ability.extra.chips, card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_incomplete.calculate = function(self, context)
             -- Check if hand is less than 3 cards, then apply chips
             if SMODS.end_calculate_context(context) then
@@ -2787,6 +2966,68 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.abbeyRoadJoker then
+        -- Create Joker
+        local abbey = {
+            loc = {
+                name = "Abbey Road",
+                text = {
+                    "If at least {C:attention}#2#{} poker hands",
+                    "have been played the same",
+                    "amount of times, give {X:mult,C:white}X#1#{} Mult",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC Abbey Road",
+            slug = "mmc_abbey_road",
+            ability = {
+                extra = {
+                    Xmult = 4,
+                    req = 4,
+                    hand_equal_count = {},
+                    should_trigger = false
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            abbey.ability_name,
+            abbey.slug,
+            abbey.ability,
+            { x = 0, y = 0 },
+            abbey.loc,
+            abbey.rarity,
+            abbey.cost,
+            abbey.unlocked,
+            abbey.discovered,
+            abbey.blueprint_compat,
+            abbey.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. abbey.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. abbey.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_abbey_road.loc_def(card)
+            return { card.ability.extra.Xmult, card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_abbey_road.calculate = function(self, context)
             if context.after and not context.blueprint and context.cardarea == G.jokers then
                 -- Reset hand count
@@ -2836,6 +3077,59 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.boatingLicenseJoker then
+        -- Create Joker
+        local boating = {
+            loc = {
+                name = "Boating License",
+                text = {
+                    "{C:attention}Copies{} effects of all",
+                    "scored {C:attention}Enhanced{} cards"
+                }
+            },
+            ability_name = "MMC Boating License",
+            slug = "mmc_boating_license",
+            ability = {},
+            rarity = 3,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            boating.ability_name,
+            boating.slug,
+            boating.ability,
+            { x = 0, y = 0 },
+            boating.loc,
+            boating.rarity,
+            boating.cost,
+            boating.unlocked,
+            boating.discovered,
+            boating.blueprint_compat,
+            boating.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. boating.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. boating.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_boating_license.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_boating_license.calculate = function(self, context)
             if context.individual and context.cardarea == G.play then
                 if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect ==
@@ -2896,6 +3190,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.goldBarJoker then
+        -- Create Joker
+        local gold = {
+            loc = {
+                name = "Gold Bar",
+                text = {
+                    "Earn {C:money}$#1#{} for every",
+                    "{C:attention}Gold Seal{} and {C:attention}Gold card{}",
+                    "at end of round",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC Gold Bar",
+            slug = "mmc_gold_bar",
+            ability = {
+                extra = {
+                    dollars = 2
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            gold.ability_name,
+            gold.slug,
+            gold.ability,
+            { x = 0, y = 0 },
+            gold.loc,
+            gold.rarity,
+            gold.cost,
+            gold.unlocked,
+            gold.discovered,
+            gold.blueprint_compat,
+            gold.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. gold.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. gold.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_gold_bar.loc_def(card)
+            return { card.ability.extra.dollars }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_gold_bar.calculate = function(self, context)
             if context.end_of_round and not context.individual and not context.repetition then
                 local gold_tally = 0
@@ -2923,6 +3276,67 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.riggedJoker then
+        -- Create Joker
+        local rigged = {
+            loc = {
+                name = "Rigged Joker",
+                text = {
+                    "Once per hand, add {C:attention}+#1#{} to all",
+                    "listed {C:green,E:1,S:1.1}probabilities{} whenever a",
+                    "{C:attention}Lucky{} card does not trigger.",
+                    "Resets every round"
+                }
+            },
+            ability_name = "MMC Rigged Joker",
+            slug = "mmc_rigged",
+            ability = {
+                extra = {
+                    probability = 0,
+                    increase = 1,
+                    has_triggered = false
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            rigged.ability_name,
+            rigged.slug,
+            rigged.ability,
+            { x = 0, y = 0 },
+            rigged.loc,
+            rigged.rarity,
+            rigged.cost,
+            rigged.unlocked,
+            rigged.discovered,
+            rigged.blueprint_compat,
+            rigged.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. rigged.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. rigged.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_rigged.loc_def(card)
+            return { card.ability.extra.increase }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_rigged.calculate = function(self, context)
             -- Check if lucky card does not trigger
             if context.individual and context.cardarea == G.play and context.other_card.ability.effect == "Lucky Card" and
@@ -2964,6 +3378,61 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.commanderJoker then
+        -- Create Joker,
+        local commander = {
+            loc = {
+                name = "The Commander",
+                text = {
+                    "If {C:attention}first hand{} of round",
+                    "has only {C:attention}1{} card, give it a",
+                    "random {C:attention}Enhancement{}, {C:attention}Seal",
+                    "and {C:attention}Edition"
+                }
+            },
+            ability_name = "MMC The Commander",
+            slug = "mmc_commander",
+            ability = {},
+            rarity = 3,
+            cost = 9,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            commander.ability_name,
+            commander.slug,
+            commander.ability,
+            { x = 0, y = 0 },
+            commander.loc,
+            commander.rarity,
+            commander.cost,
+            commander.unlocked,
+            commander.discovered,
+            commander.blueprint_compat,
+            commander.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. commander.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. commander.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_commander.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_commander.calculate = function(self, context)
             -- Animate card
             if context.first_hand_drawn then
@@ -3012,6 +3481,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.whatAreTheOddsJoker then
+        -- Create Joker,
+        local wato = {
+            loc = {
+                name = "What Are The Odds",
+                text = {
+                    "If {C:attention}#1# Lucky cards{} trigger",
+                    "in one hand, create a",
+                    "random {C:dark_edition}negative{} Joker"
+                }
+            },
+            ability_name = "MMC What Are The Odds",
+            slug = "mmc_what_are_the_odds",
+            ability = {
+                extra = {
+                    req = 4,
+                    lucky_tally = 0
+                }
+            },
+            rarity = 2,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            wato.ability_name,
+            wato.slug,
+            wato.ability,
+            { x = 0, y = 0 },
+            wato.loc,
+            wato.rarity,
+            wato.cost,
+            wato.unlocked,
+            wato.discovered,
+            wato.blueprint_compat,
+            wato.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. wato.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. wato.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_what_are_the_odds.loc_def(card)
+            return { card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_what_are_the_odds.calculate = function(self, context)
             -- Count lucky triggers
             if context.individual and context.cardarea == G.play and not context.blueprint then
@@ -3060,6 +3588,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.dagonetJoker then
+        -- Create Joker,
+        local dagonet = {
+            loc = {
+                name = "Dagonet",
+                text = {
+                    "{C:attention}Doubles{} all base values",
+                    "on other Jokers",
+                    "{C:inactive}(If possible)"
+                }
+            },
+            ability_name = "MMC Dagonet",
+            slug = "mmc_dagonet",
+            ability = {
+                extra = {
+                    _mult = 2,
+                    _base = 2,
+                    triggered = false
+                }
+            },
+            rarity = 4,
+            cost = 20,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            dagonet.ability_name,
+            dagonet.slug,
+            dagonet.ability,
+            { x = 0, y = 0 },
+            dagonet.loc,
+            dagonet.rarity,
+            dagonet.cost,
+            dagonet.unlocked,
+            dagonet.discovered,
+            dagonet.blueprint_compat,
+            dagonet.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. dagonet.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. dagonet.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_dagonet.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_dagonet.calculate = function(self, context)
             if not context.repetition or context.individual then
                 -- Reset defaults
@@ -3096,6 +3684,68 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.glueJoker then
+        -- Create Joker,
+        local glue = {
+            loc = {
+                name = "Glue",
+                text = {
+                    "If you have both {C:attention}Half",
+                    "and {C:attention}Incomplete Joker{}, give",
+                    "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult"
+                }
+            },
+            ability_name = "MMC Glue",
+            slug = "mmc_glue",
+            ability = {
+                extra = {
+                    Xmult = 5,
+                    j_slots = 2,
+                    half = false,
+                    incomplete = false,
+                    triggered = false
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            glue.ability_name,
+            glue.slug,
+            glue.ability,
+            { x = 0, y = 0 },
+            glue.loc,
+            glue.rarity,
+            glue.cost,
+            glue.unlocked,
+            glue.discovered,
+            glue.blueprint_compat,
+            glue.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. glue.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. glue.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_glue.loc_def(card)
+            return { card.ability.extra.Xmult, card.ability.extra.j_slots }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_glue.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Add xmult if we have both Half and Incomplete Joker
@@ -3114,6 +3764,60 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.harpSealJoker then
+        -- Create Joker,
+        local harp = {
+            loc = {
+                name = "Harp Seal",
+                text = {
+                    "{C:attention}Doubles{} the effect",
+                    "of all {C:attention}Seals",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
+                }
+            },
+            ability_name = "MMC Harp Seal",
+            slug = "mmc_harp_seal",
+            ability = {},
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            harp.ability_name,
+            harp.slug,
+            harp.ability,
+            { x = 0, y = 0 },
+            harp.loc,
+            harp.rarity,
+            harp.cost,
+            harp.unlocked,
+            harp.discovered,
+            harp.blueprint_compat,
+            harp.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. harp.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. harp.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_harp_seal.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_harp_seal.calculate = function(self, context)
             -- Give $3 for each Gold Seal
             if context.individual and context.cardarea == G.play and not context.repetition then
@@ -3178,6 +3882,63 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.footballCardJoker then
+        -- Create Joker,
+        local football = {
+            loc = {
+                name = "Football Card",
+                text = {
+                    "{C:blue}Common{} Jokers",
+                    "each give {C:chips}+#1#{} Chips"
+                }
+            },
+            ability_name = "MMC Football Card",
+            slug = "mmc_football_card",
+            ability = {
+                extra = {
+                    chips = 50
+                }
+            },
+            rarity = 2,
+            cost = 7,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            football.ability_name,
+            football.slug,
+            football.ability,
+            { x = 0, y = 0 },
+            football.loc,
+            football.rarity,
+            football.cost,
+            football.unlocked,
+            football.discovered,
+            football.blueprint_compat,
+            football.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. football.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. football.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_football_card.loc_def(card)
+            return { card.ability.extra.chips }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_football_card.calculate = function(self, context)
             if context.other_joker and context.other_joker ~= self then
                 if context.other_joker.config.center.rarity == 1 then
@@ -3203,6 +3964,72 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.specialEditionJoker then
+        -- Create Joker
+        local special = {
+            loc = {
+                name = "Special Edition Joker",
+                text = {
+                    "Gains {C:mult}+#2#{} Mult per {C:attention}Seal{}, {C:chips}+#4#{}",
+                    "Chips per {C:attention}Enhancement{} and {X:mult,C:white}X#6#{} Mult",
+                    "per {C:attention}Edition{} for every card in deck",
+                    "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult, {C:chips}+#3#{C:inactive}, Chips and {X:mult,C:white}X#5#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Special Edition Joker",
+            slug = "mmc_special_edition",
+            ability = {
+                extra = {
+                    current_mult = 0,
+                    mult_mod = 2,
+                    current_chips = 0,
+                    chip_mod = 10,
+                    current_Xmult = 1,
+                    Xmult_mod = 0.1,
+                    base = 0
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            special.ability_name,
+            special.slug,
+            special.ability,
+            { x = 0, y = 0 },
+            special.loc,
+            special.rarity,
+            special.cost,
+            special.unlocked,
+            special.discovered,
+            special.blueprint_compat,
+            special.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. special.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. special.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_special_edition.loc_def(card)
+            return { card.ability.extra.current_mult, card.ability.extra.mult_mod, card.ability.extra.current_chips,
+                card.ability.extra.chip_mod, card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_special_edition.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.current_mult > 0 or self.ability.extra.current_chips > 0 or
@@ -3221,6 +4048,69 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.stockpilerJoker then
+        -- Create Joker
+        local stockpiler = {
+            loc = {
+                name = "The Stockpiler",
+                text = {
+                    "{C:attention}+#2#{} hand size for every #4#",
+                    "cards in deck above {C:attention}#3#{}.",
+                    "Caps at the current Ante",
+                    "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
+                }
+            },
+            ability_name = "MMC The Stockpiler",
+            slug = "mmc_stockpiler",
+            ability = {
+                extra = {
+                    current_h_size = 0,
+                    h_mod = 1,
+                    base = 52,
+                    every = 4
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            stockpiler.ability_name,
+            stockpiler.slug,
+            stockpiler.ability,
+            { x = 0, y = 0 },
+            stockpiler.loc,
+            stockpiler.rarity,
+            stockpiler.cost,
+            stockpiler.unlocked,
+            stockpiler.discovered,
+            stockpiler.blueprint_compat,
+            stockpiler.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. stockpiler.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. stockpiler.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_stockpiler.loc_def(card)
+            return { card.ability.extra.current_h_size, card.ability.extra.h_mod, card.ability.extra.base,
+                card.ability.extra.every }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_stockpiler.calculate = function(self, context)
             if not context.repetition or context.individual then
                 -- Increase hand size based on number of cards in deck
@@ -3244,6 +4134,69 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.studentLoansJoker then
+        -- Create Joker
+        local student = {
+            loc = {
+                name = "Student Loans",
+                text = {
+                    "Go up to {C:red}-$#1#{} in debt.",
+                    "Gives -#4# {C:red}discard{}",
+                    "for every {C:red}-$#2#{} in debt",
+                    "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
+                }
+            },
+            ability_name = "MMC Student Loans",
+            slug = "mmc_student_loans",
+            ability = {
+                extra = {
+                    negative_bal = 100,
+                    every = 25,
+                    discards = 0,
+                    discard_sub = 1
+                }
+            },
+            rarity = 2,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            student.ability_name,
+            student.slug,
+            student.ability,
+            { x = 0, y = 0 },
+            student.loc,
+            student.rarity,
+            student.cost,
+            student.unlocked,
+            student.discovered,
+            student.blueprint_compat,
+            student.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. student.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. student.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_student_loans.loc_def(card)
+            return { card.ability.extra.negative_bal, card.ability.extra.every, card.ability.extra.discards,
+                card.ability.extra.discard_sub }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_student_loans.calculate = function(self, context)
             if not context.repetition or context.individual then
                 -- Decrease discards based on negative balance
@@ -3262,6 +4215,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.brokeJoker then
+        -- Create Joker
+        local broke = {
+            loc = {
+                name = "Broke Joker",
+                text = {
+                    "Gains {C:mult}+#1#{} Mult",
+                    "per {C:red}-$#3#",
+                    "{C:inactive}(Currently {C:mult}#2#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Broke Joker",
+            slug = "mmc_broke",
+            ability = {
+                extra = {
+                    current_mult = 0,
+                    mult_mod = 1,
+                    every = 2
+                }
+            },
+            rarity = 1,
+            cost = 2,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            broke.ability_name,
+            broke.slug,
+            broke.ability,
+            { x = 0, y = 0 },
+            broke.loc,
+            broke.rarity,
+            broke.cost,
+            broke.unlocked,
+            broke.discovered,
+            broke.blueprint_compat,
+            broke.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. broke.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. broke.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_broke.loc_def(card)
+            return { card.ability.extra.mult_mod, card.ability.extra.current_mult, card.ability.extra.every }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_broke.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Apply mult
@@ -3281,6 +4294,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.goForBrokeJoker then
+        -- Create Joker
+        local gfb = {
+            loc = {
+                name = "Go For Broke",
+                text = {
+                    "Gains {C:chips}+#1#{} Chips",
+                    "per {C:red}-$#3#",
+                    "{C:inactive}(Currently {C:chips}#2#{C:inactive} Chips)"
+                }
+            },
+            ability_name = "MMC Go For Broke",
+            slug = "mmc_go_for_broke",
+            ability = {
+                extra = {
+                    current_chips = 0,
+                    every = 1,
+                    chip_mod = 4
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            gfb.ability_name,
+            gfb.slug,
+            gfb.ability,
+            { x = 0, y = 0 },
+            gfb.loc,
+            gfb.rarity,
+            gfb.cost,
+            gfb.unlocked,
+            gfb.discovered,
+            gfb.blueprint_compat,
+            gfb.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. gfb.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. gfb.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_go_for_broke.loc_def(card)
+            return { card.ability.extra.chip_mod, card.ability.extra.current_chips, card.ability.extra.every }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_go_for_broke.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Apply chips
@@ -3300,6 +4373,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.streetFighterJoker then
+        -- Create Joker
+        local street = {
+            loc = {
+                name = "Street Fighter",
+                text = {
+                    "Gives {X:mult,C:white}X#1#{} Mult",
+                    "when balance is",
+                    "at or below {C:red}-$#2#"
+                }
+            },
+            ability_name = "MMC Street Fighter",
+            slug = "mmc_street_fighter",
+            ability = {
+                extra = {
+                    Xmult = 4,
+                    req = 20
+                }
+            },
+            rarity = 2,
+            cost = 7,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            street.ability_name,
+            street.slug,
+            street.ability,
+            { x = 0, y = 0 },
+            street.loc,
+            street.rarity,
+            street.cost,
+            street.unlocked,
+            street.discovered,
+            street.blueprint_compat,
+            street.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. street.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. street.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_street_fighter.loc_def(card)
+            return { card.ability.extra.Xmult, card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_street_fighter.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Apply xmult if balance is below negative requirement
@@ -3318,6 +4450,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.checklistJoker then
+        -- Create Joker
+        local checklist = {
+            loc = {
+                name = "Checklist",
+                text = {
+                    "Playing {C:attention}#1#{} upgrades",
+                    "it by #2# level. Poker hand",
+                    "changes when played"
+                }
+            },
+            ability_name = "MMC Checklist",
+            slug = "mmc_checklist",
+            ability = {
+                extra = {
+                    poker_hand = "High Card",
+                    increase = 1
+                }
+            },
+            rarity = 2,
+            cost = 7,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            checklist.ability_name,
+            checklist.slug,
+            checklist.ability,
+            { x = 0, y = 0 },
+            checklist.loc,
+            checklist.rarity,
+            checklist.cost,
+            checklist.unlocked,
+            checklist.discovered,
+            checklist.blueprint_compat,
+            checklist.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. checklist.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. checklist.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_checklist.loc_def(card)
+            return { localize(card.ability.extra.poker_hand, 'poker_hands'), card.ability.extra.increase }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_checklist.calculate = function(self, context)
             -- Level up poker hand
             if context.before and context.scoring_name == self.ability.extra.poker_hand then
@@ -3348,6 +4539,64 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.oneOfUsJoker then
+        -- Create Joker
+        local one = {
+            loc = {
+                name = "One Of Us",
+                text = {
+                    "If played hand",
+                    "contains {C:attention}#1# Enhanced cards,",
+                    "Enhance a random {C:attention}Joker"
+                }
+            },
+            ability_name = "MMC One Of Us",
+            slug = "mmc_one_of_us",
+            ability = {
+                extra = {
+                    req = 5
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            one.ability_name,
+            one.slug,
+            one.ability,
+            { x = 0, y = 0 },
+            one.loc,
+            one.rarity,
+            one.cost,
+            one.unlocked,
+            one.discovered,
+            one.blueprint_compat,
+            one.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. one.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. one.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_one_of_us.loc_def(card)
+            return { card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_one_of_us.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Count enhanced cards
@@ -3392,6 +4641,66 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.investorJoker then
+        -- Create Joker
+        local investor = {
+            loc = {
+                name = "The Investor",
+                text = {
+                    "Gives {C:money}$#1#{} at end of",
+                    "round. {C:green}#3# in #2#{} chance to",
+                    "give {C:red}-$#1#{} instead"
+                }
+            },
+            ability_name = "MMC The Investor",
+            slug = "mmc_investor",
+            ability = {
+                extra = {
+                    dollars = 5,
+                    odds = 4
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            investor.ability_name,
+            investor.slug,
+            investor.ability,
+            { x = 0, y = 0 },
+            investor.loc,
+            investor.rarity,
+            investor.cost,
+            investor.unlocked,
+            investor.discovered,
+            investor.blueprint_compat,
+            investor.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. investor.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. investor.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_investor.loc_def(card)
+            return { card.ability.extra.dollars, card.ability.extra.odds,
+                '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_investor.calculate = function(self, context)
             if context.end_of_round and not context.individual and not context.repetition then
                 -- Give money between min and max
@@ -3410,21 +4719,138 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    -- if config.mountainClimberJoker then
-    --     SMODS.Jokers.j_mmc_mountain_climber.calculate = function(self, context)
-    --         if context.individual and context.cardarea == G.play then
-    --             context.other_card.ability.mult = context.other_card.ability.mult or 0
-    --             context.other_card.ability.mult = context.other_card.ability.mult + self.ability.extra.mult
-    --             return {
-    --                 message = localize('k_mmc_upgrade'),
-    --                 colour = G.C.MULT,
-    --                 card = self
-    --             }
-    --         end
-    --     end
-    -- end
+    if config.mountainClimberJoker then
+        -- Create Joker
+        local mountain = {
+            loc = {
+                name = "Mountain Climber",
+                text = {
+                    "Every played {C:attention}card{}",
+                    "permanently gains",
+                    "{C:mult}+#1#{} Mult when scored"
+                }
+            },
+            ability_name = "MMC Mountain Climber",
+            slug = "mmc_mountain_climber",
+            ability = { extra = { mult = 1 } },
+            rarity = 2,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            mountain.ability_name,
+            mountain.slug,
+            mountain.ability,
+            { x = 0, y = 0 },
+            mountain.loc,
+            mountain.rarity,
+            mountain.cost,
+            mountain.unlocked,
+            mountain.discovered,
+            mountain.blueprint_compat,
+            mountain.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. mountain.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. mountain.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_mountain_climber.loc_def(card)
+            return { card.ability.extra.mult }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_mountain_climber.calculate = function(self, context)
+            if context.individual and context.cardarea == G.play then
+                context.other_card.ability.mult = context.other_card.ability.mult or 0
+                context.other_card.ability.mult = context.other_card.ability.mult + self.ability.extra.mult
+                return {
+                    message = localize('k_mmc_upgrade'),
+                    colour = G.C.MULT,
+                    card = self
+                }
+            end
+        end
+    end
 
     if config.shacklesJoker then
+        -- Create Joker
+        local shackles = {
+            loc = {
+                name = "Shackles",
+                text = {
+                    "{C:blue}+#1#{} hand, {C:red}+#2#{} discard,",
+                    "{C:attention}+#3#{} hand size. Destroyed",
+                    "if you play more than",
+                    "{C:attention}#4#{} cards in one hand"
+                }
+            },
+            ability_name = "MMC Shackles",
+            slug = "mmc_shackles",
+            ability = {
+                extra = {
+                    _hand_add = 1,
+                    _h_size = 1,
+                    _discards = 1,
+                    req = 4
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            shackles.ability_name,
+            shackles.slug,
+            shackles.ability,
+            { x = 0, y = 0 },
+            shackles.loc,
+            shackles.rarity,
+            shackles.cost,
+            shackles.unlocked,
+            shackles.discovered,
+            shackles.blueprint_compat,
+            shackles.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. shackles.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. shackles.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_shackles.loc_def(card)
+            return { card.ability.extra._hand_add, card.ability.extra._discards, card.ability.extra._h_size,
+                card.ability.extra.req }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_shackles.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Destroy if more cards than required are played
@@ -3442,6 +4868,65 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.buyOneGetOneJoker then
+        -- Create Joker
+        local bogo = {
+            loc = {
+                name = "Buy One Get One",
+                text = {
+                    "{C:green}#2# in #1#{} chance to",
+                    "get a random {C:attention}extra card{}",
+                    "of whatever you're buying",
+                    "{C:inactive}(Must have room)"
+                }
+            },
+            ability_name = "MMC Buy One Get One",
+            slug = "mmc_buy_one_get_one",
+            ability = {
+                extra = {
+                    odds = 4
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        local joker = SMODS.Joker:new(
+            bogo.ability_name,
+            bogo.slug,
+            bogo.ability,
+            { x = 0, y = 0 },
+            bogo.loc,
+            bogo.rarity,
+            bogo.cost,
+            bogo.unlocked,
+            bogo.discovered,
+            bogo.blueprint_compat,
+            bogo.eternal_compat
+        )
+        joker:register()
+
+        -- Initialize Sprite
+        local sprite = SMODS.Sprite:new(
+            "j_" .. bogo.slug,
+            SMODS.findModByID("MikasMods").path,
+            "j_" .. bogo.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_buy_one_get_one.loc_def(card)
+            return { card.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
+        end
+
+        -- Calculate
         SMODS.Jokers.j_mmc_buy_one_get_one.calculate = function(self, context)
             if context.buying_card then
                 -- Calculate odds
