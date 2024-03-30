@@ -380,7 +380,7 @@ local decks = {
                 "the {C:attention}Even Steven{} joker"
             }
         },
-        ability_name = "MMC Even Steven's Deck",
+        name = "Even Steven's Deck",
         config = {
             mmc_only_evens = true
         },
@@ -398,7 +398,7 @@ local decks = {
                 "the {C:attention}Odd Todd{} joker"
             }
         },
-        ability_name = "MMC Odd Todd's Deck",
+        name = "Odd Todd's Deck",
         config = {
             mmc_only_odds = true
         },
@@ -416,7 +416,7 @@ local decks = {
                 "the {C:attention}Fibonacci{} joker"
             }
         },
-        ability_name = "MMC Fibonacci Deck",
+        name = "Fibonacci Deck",
         config = {
             mmc_only_fibo = true
         },
@@ -434,7 +434,7 @@ local decks = {
                 "the {C:attention}Prime Time{} joker"
             }
         },
-        ability_name = "MMC Prime Deck",
+        name = "Prime Deck",
         config = {
             mmc_only_prime = true
         },
@@ -452,7 +452,7 @@ local decks = {
                 "the {C:attention}Midas Mask{} joker"
             }
         },
-        ability_name = "MMC Midas's Deck",
+        name = "Midas's Deck",
         config = {
             mmc_gold = true
         },
@@ -471,7 +471,7 @@ local decks = {
                 "{C:red}increases{} per Joker"
             }
         },
-        ability_name = "MMC Jokers for Hire",
+        name = "Jokers for Hire",
         config = {
             mmc_for_hire = true
         },
@@ -491,7 +491,7 @@ local decks = {
                 "as fast"
             }
         },
-        ability_name = "MMC Perfect Precision",
+        name = "Perfect Precision",
         config = {
             mmc_precision = true,
             ante_scaling = 1.5,
@@ -686,7 +686,6 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    -- Joker calculations
     if config.primeTimeJoker then
         -- Create Joker
         local prime = {
@@ -5280,7 +5279,7 @@ function Card.set_cost(self)
     if G.GAME.starting_params.mmc_for_hire and
         (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
         -- Multiply cost linearly with counter
-        self.cost = self.cost * for_hire_counter * 2
+        self.cost = self.cost * for_hire_counter
 
         if self.ability.name == 'Riff-raff' then
             -- No fun allowed

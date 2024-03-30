@@ -32,7 +32,7 @@ Only Gold Face cards. Starts with the **_Midas Mask_** joker.
 
 ### "Jokers for Hire" Deck
 All Jokers give +1 Joker slot, but the price of Jokers and Buffoon Packs **_increases_** per Joker.\
-_The exact formula is: `Base Price * Number of Jokers * 2`. All Jokers also remove the Joker slot again once sold_
+_The exact formula is: `Base Price * Number of Jokers`. All Jokers also remove the Joker slot again once sold_
 
 ### Perfect Precision Deck
 +1 hands, discards and hand size. Start with a negative **_The Sniper_** joker. Ante scales X1.5 as fast.
