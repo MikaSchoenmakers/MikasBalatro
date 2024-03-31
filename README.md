@@ -16,7 +16,7 @@ This mod is also incompatible with Divvy's, with no possible fix.
 
 # Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/) version 0.8.2.
-- Download the whole mod as a .zip file, then unzip it in `Balatro\Mods`.
+- Download the whole mod as a .zip file, then unzip it in `Appdata/Balatro/Mods`.
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
 - The mod has a config right at the top of the file, in case you want to disable something in specific.
 
