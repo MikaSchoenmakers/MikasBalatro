@@ -1,5 +1,10 @@
+<div align="center">
+    <img src="./gitresources/LogoFullFlat.png" alt="Mika's Mod Collection"/>
+</div>
+
+<br/>
+
 # Mika's Balatro Mod Collection
-![Mika's Mod Collection](./gitresources/LogoFullFlat.png)\
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 45 Jokers and 7 Decks.
 
 # Mod Incompatibility
