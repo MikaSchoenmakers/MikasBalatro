@@ -1,5 +1,6 @@
 # Mika's Balatro Mod Collection
-This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/).
+![Mika's Mod Collection](./gitresources/LogoFullFlat.png)\
+This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 45 Jokers and 7 Decks.
 
 # Mod Incompatibility
 ### JellyMod
