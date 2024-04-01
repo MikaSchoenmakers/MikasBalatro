@@ -3,6 +3,8 @@
 --- MOD_ID: MikasMods
 --- MOD_AUTHOR: [Mikadoe]
 --- MOD_DESCRIPTION: A collection of Mika's Mods. Check the mod description on GitHub for more information :)
+--- DISPLAY_NAME: Mika's
+--- BADGE_COLOUR: FD5DA8
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
