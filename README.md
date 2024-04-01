@@ -5,7 +5,7 @@
 <br/>
 
 # Mika's Balatro Mod Collection
-This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 45 Jokers and 7 Decks.
+This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 47 Jokers, 2 Tarots and 7 Decks.
 
 # Mod Incompatibility
 ### JellyMod
@@ -15,7 +15,7 @@ _Thanks to `@Mastahcheech` and `@Cr4zZyBipBiip` for figuring this out_
 This mod is also incompatible with Divvy's, with no possible fix.
 
 # Installation
-- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/) version 0.8.2 or higher.
+- Requires [Steamodded](https://github.com/Steamopollys/Steamodded/) version 0.9.4 or higher.
 - Download the whole mod as a .zip file, then unzip it in `Appdata/Balatro/Mods`.
 - For more information about installing mods, check the [Steamodded readme](https://github.com/Steamopollys/Steamodded?tab=readme-ov-file#how-to-install-a-mod).
 - The mod has a config right at the top of the file, in case you want to disable something in specific.
@@ -42,6 +42,13 @@ _The exact formula is: `Base Price * Number of Jokers`. All Jokers also remove t
 
 ### Perfect Precision Deck
 +1 hands, discards and hand size. Start with a negative **_The Sniper_** joker. Ante scales X1.5 as fast.
+
+# Tarots
+### Fortune
+3 in 4 chance to double your money, otherwise set money to $0.
+
+### The Idiot
+Multiply money by -1.
 
 # Jokers
 ## Common
@@ -107,6 +114,10 @@ _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
 ### Seal Collector
 ![Seal Collector](./assets/2x/j_mmc_seal_collector.png)\
 Gains +25 Chips for every card with a seal, starting at 25 Chips.
+
+### Seal Steal
+![Seal Steal](./assets/2x/j_mmc_seal_steal.png)\
+Played Purple and Blue Seals trigger when scored.
 
 ### Shackles
 ![Shackles](./assets/2x/j_mmc_shackles.png)\
@@ -227,6 +238,11 @@ Gains +X0.25 Mult whenever a blind is finished with **_2x_** the chip requiremen
 ### Grudgeful Joker
 ![Grudgeful Joker](./assets/2x/j_mmc_grudgeful.png)\
 Add excess Chips from last blind to the first hand of the current round. Caps at 10% of the current blind's Chips.
+
+### Pack A Punch
+![Pack A Punch](./assets/2x/j_mmc_pack_a_punch.png)\
+When Blind is selected, lose $20 and give the left-most Joker a random Edition.\
+_Will replace the current Edition. Self destructs if there are more Jokers than Joker Slots_
 
 ### The Printer
 ![The Printer](./assets/2x/j_mmc_printer.png)\

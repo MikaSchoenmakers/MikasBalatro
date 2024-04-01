@@ -840,7 +840,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(fortune, true)
+        init_tarot(fortune)
 
         -- Set local variables
         function SMODS.Tarots.c_mmc_fortune.loc_def(card)
@@ -855,21 +855,83 @@ function SMODS.INIT.MikasModCollection()
         -- Use effect
         function SMODS.Tarots.c_mmc_fortune.use(card, area, copier)
             if pseudorandom('fortune') < G.GAME.probabilities.normal * 3 / card.ability.extra.odds then
+                -- Double money
                 delay(0.6)
                 ease_dollars(G.GAME.dollars)
             else
-                card_eval_status_text(card, 'extra', nil, nil, nil, {
-                    message = localize('k_nope_ex'),
-                    colour = G.C.SECONDARY_SET.Tarot
-                })
+                -- Nope!
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.4,
+                    func = function()
+                        attention_text({
+                            text = localize('k_nope_ex'),
+                            scale = 1.3,
+                            hold = 1.4,
+                            major = card,
+                            backdrop_colour = G.C.SECONDARY_SET.Tarot,
+                            align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and 'tm' or
+                                'cm',
+                            offset = { x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and -0.2 or 0 },
+                            silent = true
+                        })
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.06 * G.SETTINGS.GAMESPEED,
+                            blockable = false,
+                            blocking = false,
+                            func = function()
+                                play_sound('tarot2', 0.76, 0.4); return true
+                            end
+                        }))
+                        play_sound('tarot2', 1, 0.4)
+                        card:juice_up(0.3, 0.5)
+                        ease_dollars(-G.GAME.dollars)
+                        return true
+                    end
+                }))
                 delay(0.6)
-                ease_dollars(-G.GAME.dollars)
             end
         end
     end
 
     if config.idiotTarot then
+        -- Create Tarot
+        local idiot = {
+            loc = {
+                name = "The Idiot",
+                text = {
+                    "Multiply",
+                    "money by {C:red}-1"
+                }
+            },
+            ability_name = "MMC The Idiot",
+            slug = "mmc_idiot",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
 
+        -- Initialize Tarot
+        init_tarot(idiot)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_idiot.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_idiot.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_idiot.use(card, area, copier)
+            -- Turn money into negative
+            delay(0.6)
+            ease_dollars(-G.GAME.dollars * 2)
+        end
     end
 
     -- Jokers
@@ -4138,7 +4200,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(pack_a_punch, true)
+        init_joker(pack_a_punch)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_pack_a_punch.loc_def(card)
@@ -4210,7 +4272,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(seal_steal, true)
+        init_joker(seal_steal)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_seal_steal.loc_def(card)
