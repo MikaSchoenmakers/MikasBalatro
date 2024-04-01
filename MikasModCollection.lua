@@ -62,10 +62,46 @@ local config = {
     investorJoker = true,
     mountainClimberJoker = false, -- Not working correctly, do not enable
     shacklesJoker = true,
-    buyOneGetOneJoker = true
+    buyOneGetOneJoker = true,
+    packAPunchJoker = true,
+    sealStealJoker = true,
+    taxCollectorJoker = true,
+    glassCannonJoker = true,
+    scoringTestJoker = true,
 }
 
 -- Helper functions
+local function init_joker(joker, no_sprite)
+    no_sprite = no_sprite or false
+
+    local joker = SMODS.Joker:new(
+        joker.ability_name,
+        joker.slug,
+        joker.ability,
+        { x = 0, y = 0 },
+        joker.loc,
+        joker.rarity,
+        joker.cost,
+        joker.unlocked,
+        joker.discovered,
+        joker.blueprint_compat,
+        joker.eternal_compat
+    )
+    joker:register()
+
+    if not no_sprite then
+        local sprite = SMODS.Sprite:new(
+            joker.slug,
+            SMODS.findModByID("MikasMods").path,
+            joker.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+    end
+end
+
 local function is_even(card)
     local id = card:get_id()
     return id <= 10 and id % 2 == 0
@@ -714,31 +750,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            prime.ability_name,
-            prime.slug,
-            prime.ability,
-            { x = 0, y = 0 },
-            prime.loc,
-            prime.rarity,
-            prime.cost,
-            prime.unlocked,
-            prime.discovered,
-            prime.blueprint_compat,
-            prime.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. prime.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. prime.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(prime)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_prime_time.loc_def(card)
@@ -793,31 +805,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            nate.ability_name,
-            nate.slug,
-            nate.ability,
-            { x = 0, y = 0 },
-            nate.loc,
-            nate.rarity,
-            nate.cost,
-            nate.unlocked,
-            nate.discovered,
-            nate.blueprint_compat,
-            nate.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. nate.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. nate.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(nate)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_straight_nate.loc_def(card)
@@ -886,31 +874,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            fish.ability_name,
-            fish.slug,
-            fish.ability,
-            { x = 0, y = 0 },
-            fish.loc,
-            fish.rarity,
-            fish.cost,
-            fish.unlocked,
-            fish.discovered,
-            fish.blueprint_compat,
-            fish.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. fish.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. fish.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(fish)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_fisherman.loc_def(card)
@@ -984,31 +948,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            impatient.ability_name,
-            impatient.slug,
-            impatient.ability,
-            { x = 0, y = 0 },
-            impatient.loc,
-            impatient.rarity,
-            impatient.cost,
-            impatient.unlocked,
-            impatient.discovered,
-            impatient.blueprint_compat,
-            impatient.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. impatient.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. impatient.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(impatient)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_impatient.loc_def(card)
@@ -1088,31 +1028,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            cultist.ability_name,
-            cultist.slug,
-            cultist.ability,
-            { x = 0, y = 0 },
-            cultist.loc,
-            cultist.rarity,
-            cultist.cost,
-            cultist.unlocked,
-            cultist.discovered,
-            cultist.blueprint_compat,
-            cultist.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. cultist.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. cultist.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(cultist)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_cultist.loc_def(card)
@@ -1184,31 +1100,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            seal.ability_name,
-            seal.slug,
-            seal.ability,
-            { x = 0, y = 0 },
-            seal.loc,
-            seal.rarity,
-            seal.cost,
-            seal.unlocked,
-            seal.discovered,
-            seal.blueprint_compat,
-            seal.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. seal.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. seal.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(seal)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_seal_collector.loc_def(card)
@@ -1259,31 +1151,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            camper.ability_name,
-            camper.slug,
-            camper.ability,
-            { x = 0, y = 0 },
-            camper.loc,
-            camper.rarity,
-            camper.cost,
-            camper.unlocked,
-            camper.discovered,
-            camper.blueprint_compat,
-            camper.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. camper.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. camper.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(camper)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_camper.loc_def(card)
@@ -1342,31 +1210,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            seven.ability_name,
-            seven.slug,
-            seven.ability,
-            { x = 0, y = 0 },
-            seven.loc,
-            seven.rarity,
-            seven.cost,
-            seven.unlocked,
-            seven.discovered,
-            seven.blueprint_compat,
-            seven.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. seven.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. seven.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(seven)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_lucky_number_seven.loc_def(card)
@@ -1449,31 +1293,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            delayed.ability_name,
-            delayed.slug,
-            delayed.ability,
-            { x = 0, y = 0 },
-            delayed.loc,
-            delayed.rarity,
-            delayed.cost,
-            delayed.unlocked,
-            delayed.discovered,
-            delayed.blueprint_compat,
-            delayed.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. delayed.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. delayed.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(delayed)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_delayed.loc_def(card)
@@ -1566,31 +1386,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            showoff.ability_name,
-            showoff.slug,
-            showoff.ability,
-            { x = 0, y = 0 },
-            showoff.loc,
-            showoff.rarity,
-            showoff.cost,
-            showoff.unlocked,
-            showoff.discovered,
-            showoff.blueprint_compat,
-            showoff.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. showoff.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. showoff.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(showoff)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_showoff.loc_def(card)
@@ -1667,31 +1463,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            sniper.ability_name,
-            sniper.slug,
-            sniper.ability,
-            { x = 0, y = 0 },
-            sniper.loc,
-            sniper.rarity,
-            sniper.cost,
-            sniper.unlocked,
-            sniper.discovered,
-            sniper.blueprint_compat,
-            sniper.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. sniper.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. sniper.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(sniper)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_sniper.loc_def(card)
@@ -1769,31 +1541,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            blackjack.ability_name,
-            blackjack.slug,
-            blackjack.ability,
-            { x = 0, y = 0 },
-            blackjack.loc,
-            blackjack.rarity,
-            blackjack.cost,
-            blackjack.unlocked,
-            blackjack.discovered,
-            blackjack.blueprint_compat,
-            blackjack.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. blackjack.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. blackjack.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(blackjack)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_blackjack.loc_def(card)
@@ -1899,31 +1647,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            batman.ability_name,
-            batman.slug,
-            batman.ability,
-            { x = 0, y = 0 },
-            batman.loc,
-            batman.rarity,
-            batman.cost,
-            batman.unlocked,
-            batman.discovered,
-            batman.blueprint_compat,
-            batman.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. batman.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. batman.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(batman)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_batman.loc_def(card)
@@ -1991,31 +1715,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            bomb.ability_name,
-            bomb.slug,
-            bomb.ability,
-            { x = 0, y = 0 },
-            bomb.loc,
-            bomb.rarity,
-            bomb.cost,
-            bomb.unlocked,
-            bomb.discovered,
-            bomb.blueprint_compat,
-            bomb.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. bomb.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. bomb.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(bomb)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_bomb.loc_def(card)
@@ -2090,31 +1790,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            eye.ability_name,
-            eye.slug,
-            eye.ability,
-            { x = 0, y = 0 },
-            eye.loc,
-            eye.rarity,
-            eye.cost,
-            eye.unlocked,
-            eye.discovered,
-            eye.blueprint_compat,
-            eye.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. eye.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. eye.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(eye)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_eye_chart.loc_def(card)
@@ -2191,31 +1867,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            grudgeful.ability_name,
-            grudgeful.slug,
-            grudgeful.ability,
-            { x = 0, y = 0 },
-            grudgeful.loc,
-            grudgeful.rarity,
-            grudgeful.cost,
-            grudgeful.unlocked,
-            grudgeful.discovered,
-            grudgeful.blueprint_compat,
-            grudgeful.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. grudgeful.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. grudgeful.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(grudgeful)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_grudgeful.loc_def(card)
@@ -2297,31 +1949,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            fb.ability_name,
-            fb.slug,
-            fb.ability,
-            { x = 0, y = 0 },
-            fb.loc,
-            fb.rarity,
-            fb.cost,
-            fb.unlocked,
-            fb.discovered,
-            fb.blueprint_compat,
-            fb.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. fb.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. fb.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(fb)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_finishing_blow.loc_def(card)
@@ -2388,31 +2016,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            planetary.ability_name,
-            planetary.slug,
-            planetary.ability,
-            { x = 0, y = 0 },
-            planetary.loc,
-            planetary.rarity,
-            planetary.cost,
-            planetary.unlocked,
-            planetary.discovered,
-            planetary.blueprint_compat,
-            planetary.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. planetary.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. planetary.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(planetary)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_planetary_alignment.loc_def(card)
@@ -2461,31 +2065,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            historical.ability_name,
-            historical.slug,
-            historical.ability,
-            { x = 0, y = 0 },
-            historical.loc,
-            historical.rarity,
-            historical.cost,
-            historical.unlocked,
-            historical.discovered,
-            historical.blueprint_compat,
-            historical.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. historical.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. historical.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(historical)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_historical.loc_def(card)
@@ -2560,31 +2140,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            suit.ability_name,
-            suit.slug,
-            suit.ability,
-            { x = 0, y = 0 },
-            suit.loc,
-            suit.rarity,
-            suit.cost,
-            suit.unlocked,
-            suit.discovered,
-            suit.blueprint_compat,
-            suit.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. suit.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. suit.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(suit)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_suit_alley.loc_def(card)
@@ -2654,31 +2210,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            printer.ability_name,
-            printer.slug,
-            printer.ability,
-            { x = 0, y = 0 },
-            printer.loc,
-            printer.rarity,
-            printer.cost,
-            printer.unlocked,
-            printer.discovered,
-            printer.blueprint_compat,
-            printer.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. printer.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. printer.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(printer)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_printer.loc_def(card)
@@ -2756,31 +2288,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            shy.ability_name,
-            shy.slug,
-            shy.ability,
-            { x = 0, y = 0 },
-            shy.loc,
-            shy.rarity,
-            shy.cost,
-            shy.unlocked,
-            shy.discovered,
-            shy.blueprint_compat,
-            shy.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. shy.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. shy.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(shy)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_shy.loc_def(card)
@@ -2841,31 +2349,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            gambler.ability_name,
-            gambler.slug,
-            gambler.ability,
-            { x = 0, y = 0 },
-            gambler.loc,
-            gambler.rarity,
-            gambler.cost,
-            gambler.unlocked,
-            gambler.discovered,
-            gambler.blueprint_compat,
-            gambler.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. gambler.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. gambler.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(gambler)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_gambler.loc_def(card)
@@ -2915,31 +2399,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            incomplete.ability_name,
-            incomplete.slug,
-            incomplete.ability,
-            { x = 0, y = 0 },
-            incomplete.loc,
-            incomplete.rarity,
-            incomplete.cost,
-            incomplete.unlocked,
-            incomplete.discovered,
-            incomplete.blueprint_compat,
-            incomplete.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. incomplete.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. incomplete.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(incomplete)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_incomplete.loc_def(card)
@@ -2995,31 +2455,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            abbey.ability_name,
-            abbey.slug,
-            abbey.ability,
-            { x = 0, y = 0 },
-            abbey.loc,
-            abbey.rarity,
-            abbey.cost,
-            abbey.unlocked,
-            abbey.discovered,
-            abbey.blueprint_compat,
-            abbey.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. abbey.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. abbey.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(abbey)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_abbey_road.loc_def(card)
@@ -3097,31 +2533,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            boating.ability_name,
-            boating.slug,
-            boating.ability,
-            { x = 0, y = 0 },
-            boating.loc,
-            boating.rarity,
-            boating.cost,
-            boating.unlocked,
-            boating.discovered,
-            boating.blueprint_compat,
-            boating.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. boating.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. boating.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(boating)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_boating_license.loc_def(card)
@@ -3216,31 +2628,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            gold.ability_name,
-            gold.slug,
-            gold.ability,
-            { x = 0, y = 0 },
-            gold.loc,
-            gold.rarity,
-            gold.cost,
-            gold.unlocked,
-            gold.discovered,
-            gold.blueprint_compat,
-            gold.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. gold.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. gold.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(gold)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_gold_bar.loc_def(card)
@@ -3304,31 +2692,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            rigged.ability_name,
-            rigged.slug,
-            rigged.ability,
-            { x = 0, y = 0 },
-            rigged.loc,
-            rigged.rarity,
-            rigged.cost,
-            rigged.unlocked,
-            rigged.discovered,
-            rigged.blueprint_compat,
-            rigged.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. rigged.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. rigged.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(rigged)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_rigged.loc_def(card)
@@ -3400,31 +2764,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            commander.ability_name,
-            commander.slug,
-            commander.ability,
-            { x = 0, y = 0 },
-            commander.loc,
-            commander.rarity,
-            commander.cost,
-            commander.unlocked,
-            commander.discovered,
-            commander.blueprint_compat,
-            commander.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. commander.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. commander.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(commander)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_commander.loc_def(card)
@@ -3507,31 +2847,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            wato.ability_name,
-            wato.slug,
-            wato.ability,
-            { x = 0, y = 0 },
-            wato.loc,
-            wato.rarity,
-            wato.cost,
-            wato.unlocked,
-            wato.discovered,
-            wato.blueprint_compat,
-            wato.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. wato.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. wato.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(wato)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_what_are_the_odds.loc_def(card)
@@ -3615,31 +2931,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            dagonet.ability_name,
-            dagonet.slug,
-            dagonet.ability,
-            { x = 0, y = 0 },
-            dagonet.loc,
-            dagonet.rarity,
-            dagonet.cost,
-            dagonet.unlocked,
-            dagonet.discovered,
-            dagonet.blueprint_compat,
-            dagonet.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. dagonet.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. dagonet.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(dagonet)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_dagonet.loc_def(card)
@@ -3713,31 +3005,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            glue.ability_name,
-            glue.slug,
-            glue.ability,
-            { x = 0, y = 0 },
-            glue.loc,
-            glue.rarity,
-            glue.cost,
-            glue.unlocked,
-            glue.discovered,
-            glue.blueprint_compat,
-            glue.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. glue.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. glue.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(glue)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_glue.loc_def(card)
@@ -3785,31 +3053,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            harp.ability_name,
-            harp.slug,
-            harp.ability,
-            { x = 0, y = 0 },
-            harp.loc,
-            harp.rarity,
-            harp.cost,
-            harp.unlocked,
-            harp.discovered,
-            harp.blueprint_compat,
-            harp.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. harp.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. harp.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(harp)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_harp_seal.loc_def(card)
@@ -3906,31 +3150,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            football.ability_name,
-            football.slug,
-            football.ability,
-            { x = 0, y = 0 },
-            football.loc,
-            football.rarity,
-            football.cost,
-            football.unlocked,
-            football.discovered,
-            football.blueprint_compat,
-            football.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. football.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. football.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(football)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_football_card.loc_def(card)
@@ -3996,31 +3216,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            special.ability_name,
-            special.slug,
-            special.ability,
-            { x = 0, y = 0 },
-            special.loc,
-            special.rarity,
-            special.cost,
-            special.unlocked,
-            special.discovered,
-            special.blueprint_compat,
-            special.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. special.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. special.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(special)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_special_edition.loc_def(card)
@@ -4077,31 +3273,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            stockpiler.ability_name,
-            stockpiler.slug,
-            stockpiler.ability,
-            { x = 0, y = 0 },
-            stockpiler.loc,
-            stockpiler.rarity,
-            stockpiler.cost,
-            stockpiler.unlocked,
-            stockpiler.discovered,
-            stockpiler.blueprint_compat,
-            stockpiler.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. stockpiler.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. stockpiler.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(stockpiler)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_stockpiler.loc_def(card)
@@ -4163,31 +3335,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            student.ability_name,
-            student.slug,
-            student.ability,
-            { x = 0, y = 0 },
-            student.loc,
-            student.rarity,
-            student.cost,
-            student.unlocked,
-            student.discovered,
-            student.blueprint_compat,
-            student.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. student.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. student.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(student)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_student_loans.loc_def(card)
@@ -4242,31 +3390,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            broke.ability_name,
-            broke.slug,
-            broke.ability,
-            { x = 0, y = 0 },
-            broke.loc,
-            broke.rarity,
-            broke.cost,
-            broke.unlocked,
-            broke.discovered,
-            broke.blueprint_compat,
-            broke.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. broke.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. broke.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(broke)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_broke.loc_def(card)
@@ -4321,31 +3445,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            gfb.ability_name,
-            gfb.slug,
-            gfb.ability,
-            { x = 0, y = 0 },
-            gfb.loc,
-            gfb.rarity,
-            gfb.cost,
-            gfb.unlocked,
-            gfb.discovered,
-            gfb.blueprint_compat,
-            gfb.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. gfb.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. gfb.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(gfb)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_go_for_broke.loc_def(card)
@@ -4399,31 +3499,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            street.ability_name,
-            street.slug,
-            street.ability,
-            { x = 0, y = 0 },
-            street.loc,
-            street.rarity,
-            street.cost,
-            street.unlocked,
-            street.discovered,
-            street.blueprint_compat,
-            street.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. street.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. street.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(street)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_street_fighter.loc_def(card)
@@ -4476,31 +3552,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            checklist.ability_name,
-            checklist.slug,
-            checklist.ability,
-            { x = 0, y = 0 },
-            checklist.loc,
-            checklist.rarity,
-            checklist.cost,
-            checklist.unlocked,
-            checklist.discovered,
-            checklist.blueprint_compat,
-            checklist.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. checklist.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. checklist.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(checklist)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_checklist.loc_def(card)
@@ -4564,31 +3616,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            one.ability_name,
-            one.slug,
-            one.ability,
-            { x = 0, y = 0 },
-            one.loc,
-            one.rarity,
-            one.cost,
-            one.unlocked,
-            one.discovered,
-            one.blueprint_compat,
-            one.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. one.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. one.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(one)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_one_of_us.loc_def(card)
@@ -4667,31 +3695,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            investor.ability_name,
-            investor.slug,
-            investor.ability,
-            { x = 0, y = 0 },
-            investor.loc,
-            investor.rarity,
-            investor.cost,
-            investor.unlocked,
-            investor.discovered,
-            investor.blueprint_compat,
-            investor.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. investor.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. investor.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(investor)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_investor.loc_def(card)
@@ -4741,31 +3745,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            mountain.ability_name,
-            mountain.slug,
-            mountain.ability,
-            { x = 0, y = 0 },
-            mountain.loc,
-            mountain.rarity,
-            mountain.cost,
-            mountain.unlocked,
-            mountain.discovered,
-            mountain.blueprint_compat,
-            mountain.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. mountain.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. mountain.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(mountain, true)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_mountain_climber.loc_def(card)
@@ -4817,31 +3797,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            shackles.ability_name,
-            shackles.slug,
-            shackles.ability,
-            { x = 0, y = 0 },
-            shackles.loc,
-            shackles.rarity,
-            shackles.cost,
-            shackles.unlocked,
-            shackles.discovered,
-            shackles.blueprint_compat,
-            shackles.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. shackles.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. shackles.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(shackles)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_shackles.loc_def(card)
@@ -4894,31 +3850,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        local joker = SMODS.Joker:new(
-            bogo.ability_name,
-            bogo.slug,
-            bogo.ability,
-            { x = 0, y = 0 },
-            bogo.loc,
-            bogo.rarity,
-            bogo.cost,
-            bogo.unlocked,
-            bogo.discovered,
-            bogo.blueprint_compat,
-            bogo.eternal_compat
-        )
-        joker:register()
-
-        -- Initialize Sprite
-        local sprite = SMODS.Sprite:new(
-            "j_" .. bogo.slug,
-            SMODS.findModByID("MikasMods").path,
-            "j_" .. bogo.slug .. ".png",
-            71,
-            95,
-            "asset_atli"
-        )
-        sprite:register()
+        init_joker(bogo)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_buy_one_get_one.loc_def(card)
@@ -5047,6 +3979,237 @@ function SMODS.INIT.MikasModCollection()
                     })
                 end
             end
+        end
+    end
+
+    if config.packAPunchJoker then
+        -- Create Joker
+        local pack_a_punch = {
+            loc = {
+                name = "Pack A Punch",
+                text = {
+                    "When {C:attention}Blind{} is selected,",
+                    "lose {C:money}$#1#{} and give the",
+                    "{C:attention}left-most{} Joker",
+                    "a random {C:attention}Edition",
+                    "{C:inactive}(Will replace current edition)"
+                }
+            },
+            ability_name = "MMC Pack A Punch",
+            slug = "mmc_pack_a_punch",
+            ability = {
+                extra = {
+                    dollars = 20
+                }
+            },
+            rarity = 3,
+            cost = 10,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(pack_a_punch, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_pack_a_punch.loc_def(card)
+            return { card.ability.extra.dollars }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_pack_a_punch.calculate = function(self, context)
+            if context.setting_blind and not self.getting_sliced then
+                if G.GAME.dollars >= self.ability.extra.dollars + G.GAME.bankrupt_at then
+                    local joker = G.jokers.cards[1]
+                    if joker and joker ~= self then
+                        ease_dollars(-self.ability.extra.dollars)
+                        local edition = poll_edition('pack_a_punch', nil, false, true)
+                        -- Animate card
+                        G.E_MANAGER:add_event(Event({
+                            delay = 0.5,
+                            func = function()
+                                -- Set Joker edition
+                                joker:juice_up(0.3, 0.5)
+                                if joker.edition.negative then
+                                    G.jokers.config.card_limit = G.jokers.config.card_limit - 1
+                                end
+                                joker:set_edition(edition, true)
+                                -- Delete self if over Joker limit
+                                if G.jokers.config.card_limit < #G.jokers.cards then
+                                    G.E_MANAGER:add_event(Event({
+                                        func = function()
+                                            sendDebugMessage("Self Destruct")
+                                            play_sound('tarot1')
+                                            self:start_dissolve()
+                                            return true
+                                        end
+                                    }))
+                                end
+                                return true
+                            end
+                        }))
+                        -- Return message
+                        return {
+                            message = localize('k_mmc_upgrade'),
+                            colour = G.C.SECONDARY_SET.Tarot
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    if config.tempJoker then
+        -- Create Joker
+        local temp = {
+            loc = {
+                name = "",
+                text = {
+                    ""
+                }
+            },
+            ability_name = "MMC",
+            slug = "mmc_",
+            ability = {
+                extra = {
+
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(temp, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
+            -- TODO
+        end
+    end
+
+    if config.tempJoker then
+        -- Create Joker
+        local temp = {
+            loc = {
+                name = "",
+                text = {
+                    ""
+                }
+            },
+            ability_name = "MMC",
+            slug = "mmc_",
+            ability = {
+                extra = {
+
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(temp)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
+            -- TODO
+        end
+    end
+
+    if config.tempJoker then
+        -- Create Joker
+        local temp = {
+            loc = {
+                name = "",
+                text = {
+                    ""
+                }
+            },
+            ability_name = "MMC",
+            slug = "mmc_",
+            ability = {
+                extra = {
+
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(temp)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
+            -- TODO
+        end
+    end
+
+    if config.tempJoker then
+        -- Create Joker
+        local temp = {
+            loc = {
+                name = "",
+                text = {
+                    ""
+                }
+            },
+            ability_name = "MMC",
+            slug = "mmc_",
+            ability = {
+                extra = {
+
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(temp)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
+            -- TODO
         end
     end
 end
