@@ -102,6 +102,66 @@ local function init_joker(joker, no_sprite)
     end
 end
 
+local function create_tarot(joker, planet)
+    -- Check consumeable space
+    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+        -- Add card
+        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+        G.E_MANAGER:add_event(Event({
+            trigger = 'before',
+            delay = 0.0,
+            func = (function()
+                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, '8ba')
+                card:add_to_deck()
+                G.consumeables:emplace(card)
+                G.GAME.consumeable_buffer = 0
+                return true
+            end)
+        }))
+        -- Show message
+        card_eval_status_text(joker, 'extra', nil, nil, nil, {
+            message = localize('k_plus_tarot'),
+            colour = G.C.PURPLE
+        })
+    else
+        card_eval_status_text(joker, 'extra', nil, nil, nil, {
+            message = localize('k_no_space_ex')
+        })
+    end
+end
+
+local function create_planet(joker, planet, other_joker)
+    if #G.consumeables.cards + G.GAME.consumeable_buffer <
+        G.consumeables.config.card_limit then
+        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+        -- Add card
+        G.E_MANAGER:add_event(Event({
+            trigger = 'before',
+            delay = 0.0,
+            func = (function()
+                local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, planet, 'blusl')
+                card:add_to_deck()
+                G.consumeables:emplace(card)
+                G.GAME.consumeable_buffer = 0
+                if other_joker then
+                    other_joker:juice_up(0.5, 0.5)
+                end
+                return true
+            end)
+        }))
+
+        -- Show message
+        card_eval_status_text(joker, 'extra', nil, nil, nil, {
+            message = localize('k_plus_planet'),
+            colour = G.C.SECONDARY_SET.Planet
+        })
+    else
+        card_eval_status_text(joker, 'extra', nil, nil, nil, {
+            message = localize('k_no_space_ex')
+        })
+    end
+end
+
 local function is_even(card)
     local id = card:get_id()
     return id <= 10 and id % 2 == 0
@@ -2076,7 +2136,6 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_historical.calculate = function(self, context)
             -- Save previous cards
             if context.before and not context.blueprint then
-                sendDebugMessage("Save hand")
                 for _, v in ipairs(context.full_hand) do
                     table.insert(self.ability.extra.current_cards, v.base.id)
                 end
@@ -3099,26 +3158,7 @@ function SMODS.INIT.MikasModCollection()
             if context.discard then
                 if context.other_card.seal == 'Purple' then
                     -- Check consumeable space
-                    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-                        -- Add card
-                        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-                        G.E_MANAGER:add_event(Event({
-                            trigger = 'before',
-                            delay = 0.0,
-                            func = (function()
-                                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, '8ba')
-                                card:add_to_deck()
-                                G.consumeables:emplace(card)
-                                G.GAME.consumeable_buffer = 0
-                                return true
-                            end)
-                        }))
-                        -- Show message
-                        card_eval_status_text(self, 'extra', nil, nil, nil, {
-                            message = localize('k_plus_tarot'),
-                            colour = G.C.PURPLE
-                        })
-                    end
+                    create_tarot(self)
                 end
             end
         end
@@ -3877,8 +3917,7 @@ function SMODS.INIT.MikasModCollection()
                                     })
                                 else
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex'),
-                                        colour = G.C.RED
+                                        message = localize('k_no_space_ex')
                                     })
                                 end
                                 return true
@@ -3900,8 +3939,7 @@ function SMODS.INIT.MikasModCollection()
                                     })
                                 else
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex'),
-                                        colour = G.C.Red
+                                        message = localize('k_no_space_ex')
                                     })
                                 end
                                 return true
@@ -3923,8 +3961,7 @@ function SMODS.INIT.MikasModCollection()
                                     })
                                 else
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex'),
-                                        colour = G.C.Red
+                                        message = localize('k_no_space_ex')
                                     })
                                 end
                                 return true
@@ -3945,8 +3982,7 @@ function SMODS.INIT.MikasModCollection()
                                     })
                                 else
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex'),
-                                        colour = G.C.Red
+                                        message = localize('k_no_space_ex')
                                     })
                                 end
                                 return true
@@ -4040,7 +4076,6 @@ function SMODS.INIT.MikasModCollection()
                                 if G.jokers.config.card_limit < #G.jokers.cards then
                                     G.E_MANAGER:add_event(Event({
                                         func = function()
-                                            sendDebugMessage("Self Destruct")
                                             play_sound('tarot1')
                                             self:start_dissolve()
                                             return true
@@ -4061,22 +4096,20 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.tempJoker then
+    if config.sealStealJoker then
         -- Create Joker
-        local temp = {
+        local seal_steal = {
             loc = {
-                name = "",
+                name = "Seal Steal",
                 text = {
-                    ""
+                    "Played {C:purple}Purple{} and",
+                    "{C:blue}Blue{} Seals trigger",
+                    "when {C:attention}scored"
                 }
             },
-            ability_name = "MMC",
-            slug = "mmc_",
-            ability = {
-                extra = {
-
-                }
-            },
+            ability_name = "MMC Seal Steal",
+            slug = "mmc_seal_steal",
+            ability = {},
             rarity = 1,
             cost = 5,
             unlocked = true,
@@ -4086,16 +4119,83 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(temp, true)
+        init_joker(seal_steal, true)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_temp.loc_def(card)
+        function SMODS.Jokers.j_mmc_seal_steal.loc_def(card)
             return {}
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
-            -- TODO
+        SMODS.Jokers.j_mmc_seal_steal.calculate = function(self, context)
+            if context.individual and context.cardarea == G.play then
+                if context.other_card.seal == 'Purple' then
+                    -- Check for Harp Seal
+                    local harp_seal
+                    for _, v in ipairs(G.jokers.cards) do
+                        if v.ability.name == "MMC Harp Seal" then
+                            harp_seal = v
+                        end
+                    end
+                    create_tarot(self)
+                    -- Repeat for Harp Seal
+                    if harp_seal then
+                        -- Show Harp Seal message
+                        card_eval_status_text(harp_seal, 'extra', nil, nil, nil, {
+                            message = localize('k_again_ex')
+                        })
+                        create_tarot(self)
+                    end
+                elseif context.other_card.seal == 'Blue' then
+                    -- Check for Harp Seal or Planetary Alignment
+                    local harp_seal
+                    local planetary_alignment
+                    for _, v in ipairs(G.jokers.cards) do
+                        if v.ability.name == "MMC Harp Seal" then
+                            harp_seal = v
+                        elseif v.ability.name == "MMC Planetary Alignment" then
+                            planetary_alignment = v
+                        end
+                    end
+                    -- Get planet based on most played hand
+                    local _planet
+                    if planetary_alignment and planetary_alignment.ability.extra.round % planetary_alignment.ability.extra.every == 0 then
+                        -- Get most played hand
+                        local _hand, _tally = nil, 0
+                        for _, v in ipairs(G.handlist) do
+                            if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
+                                _hand = v
+                                _tally = G.GAME.hands[v].played
+                            end
+                        end
+                        -- Get planet based on most played hand
+                        if _hand then
+                            for _, v in pairs(G.P_CENTER_POOLS.Planet) do
+                                if v.config.hand_type == _hand then
+                                    _planet = v.key
+                                end
+                            end
+                        end
+                    end
+                    -- Create planet
+                    if _planet ~= nil then
+                        create_planet(self, _planet, planetary_alignment)
+                    end
+                    create_planet(self)
+                    -- Repeat for harp seal
+                    if harp_seal then
+                        -- Show Harp Seal message
+                        card_eval_status_text(harp_seal, 'extra', nil, nil, nil, {
+                            message = localize('k_again_ex')
+                        })
+                        -- Add card
+                        if _planet ~= nil then
+                            create_planet(self, _planet, planetary_alignment)
+                        end
+                        create_planet(self)
+                    end
+                end
+            end
         end
     end
 
@@ -4540,9 +4640,8 @@ function Card.get_end_of_round_effect(self, context)
     if self.seal == 'Blue' then
         for _, v in pairs(G.jokers.cards) do
             -- Check for Planetary Alignment Joker and consumeable space
-            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0 and
-                #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0 then
+                sendDebugMessage("Should trigger")
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
                 for _, v in ipairs(G.handlist) do
@@ -4561,47 +4660,22 @@ function Card.get_end_of_round_effect(self, context)
                 end
 
                 -- Add card
-                G.E_MANAGER:add_event(Event({
-                    trigger = 'before',
-                    delay = 0.0,
-                    func = (function()
-                        local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, _planet, 'blusl')
-                        card:add_to_deck()
-                        G.consumeables:emplace(card)
-                        G.GAME.consumeable_buffer = 0
-                        return true
-                    end)
-                }))
+                create_planet(v, _planet)
 
-                -- Show message
-                card_eval_status_text(v, 'extra', nil, nil, nil, {
-                    message = localize('k_plus_planet'),
-                    colour = G.C.SECONDARY_SET.Planet
-                })
+                for _, v2 in pairs(G.jokers.cards) do
+                    if v2.ability.name == "MMC Harp Seal" then
+                        create_planet(self)
+                        card_eval_status_text(v2, 'extra', nil, nil, nil, {
+                            message = localize('k_again_ex')
+                        })
+                        create_planet(v, _planet)
+                    end
+                end
             end
 
             -- Create planet for each Blue Seal
-            if v.ability.name == 'MMC Harp Seal' and #G.consumeables.cards + G.GAME.consumeable_buffer <
-                G.consumeables.config.card_limit then
-                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-                -- Add card
-                G.E_MANAGER:add_event(Event({
-                    trigger = 'before',
-                    delay = 0.0,
-                    func = (function()
-                        local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
-                        card:add_to_deck()
-                        G.consumeables:emplace(card)
-                        G.GAME.consumeable_buffer = 0
-                        return true
-                    end)
-                }))
-
-                -- Show message
-                card_eval_status_text(v, 'extra', nil, nil, nil, {
-                    message = localize('k_plus_planet'),
-                    colour = G.C.SECONDARY_SET.Planet
-                })
+            if v.ability.name == 'MMC Harp Seal' then
+                create_planet(v)
             end
         end
     end
