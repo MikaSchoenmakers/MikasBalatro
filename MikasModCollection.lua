@@ -16,6 +16,9 @@ local config = {
     midasDeck = true,
     jokersForHireDeck = true,
     perfectPrecisionDeck = true, -- Do not enable without sniperJoker
+    -- Tarot Cards
+    fortuneTarot = true,
+    idiotTarot = true,
     -- Jokers
     primeTimeJoker = true,
     straightNateJoker = true,
@@ -74,7 +77,7 @@ local config = {
 local function init_joker(joker, no_sprite)
     no_sprite = no_sprite or false
 
-    local joker = SMODS.Joker:new(
+    local new_joker = SMODS.Joker:new(
         joker.ability_name,
         joker.slug,
         joker.ability,
@@ -87,13 +90,13 @@ local function init_joker(joker, no_sprite)
         joker.blueprint_compat,
         joker.eternal_compat
     )
-    joker:register()
+    new_joker:register()
 
     if not no_sprite then
         local sprite = SMODS.Sprite:new(
-            joker.slug,
+            new_joker.slug,
             SMODS.findModByID("MikasMods").path,
-            joker.slug .. ".png",
+            new_joker.slug .. ".png",
             71,
             95,
             "asset_atli"
@@ -102,7 +105,38 @@ local function init_joker(joker, no_sprite)
     end
 end
 
-local function create_tarot(joker, planet)
+local function init_tarot(tarot, no_sprite)
+    no_sprite = no_sprite or false
+
+    local new_tarot = SMODS.Tarot:new(
+        tarot.name,
+        tarot.slug,
+        tarot.config,
+        { x = 0, y = 0 },
+        tarot.loc,
+        tarot.cost,
+        tarot.cost_mult,
+        nil,
+        nil,
+        tarot.discovered,
+        nil
+    )
+    new_tarot:register()
+
+    if not no_sprite then
+        local sprite = SMODS.Sprite:new(
+            new_tarot.slug,
+            SMODS.findModByID("MikasMods").path,
+            new_tarot.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+    end
+end
+
+local function create_tarot(joker)
     -- Check consumeable space
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
         -- Add card
@@ -782,6 +816,61 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
+    -- Tarot Cards
+    if config.fortuneTarot then
+        -- Create Tarot
+        local fortune = {
+            loc = {
+                name = "Fortune",
+                text = {
+                    "{C:green}#2# in #1#{} chance",
+                    "to double your",
+                    "money, otherwise",
+                    "set money to $0"
+                }
+            },
+            ability_name = "MMC Fortune",
+            slug = "mmc_fortune",
+            config = { extra = { odds = 4 } },
+            cost = 4,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(fortune, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_fortune.loc_def(card)
+            return { card.config.extra.odds, '' .. ((G.GAME and G.GAME.probabilities.normal or 1) * 3) }
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_fortune.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_fortune.use(card, area, copier)
+            if pseudorandom('fortune') < G.GAME.probabilities.normal * 3 / card.ability.extra.odds then
+                delay(0.6)
+                ease_dollars(G.GAME.dollars)
+            else
+                card_eval_status_text(card, 'extra', nil, nil, nil, {
+                    message = localize('k_nope_ex'),
+                    colour = G.C.SECONDARY_SET.Tarot
+                })
+                delay(0.6)
+                ease_dollars(-G.GAME.dollars)
+            end
+        end
+    end
+
+    if config.idiotTarot then
+
+    end
+
+    -- Jokers
     if config.primeTimeJoker then
         -- Create Joker
         local prime = {
@@ -4641,7 +4730,6 @@ function Card.get_end_of_round_effect(self, context)
         for _, v in pairs(G.jokers.cards) do
             -- Check for Planetary Alignment Joker and consumeable space
             if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0 then
-                sendDebugMessage("Should trigger")
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
                 for _, v in ipairs(G.handlist) do
