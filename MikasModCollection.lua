@@ -3,7 +3,7 @@
 --- MOD_ID: MikasMods
 --- MOD_AUTHOR: [Mikadoe]
 --- MOD_DESCRIPTION: A collection of Mika's Mods. Check the mod description on GitHub for more information :)
---- DISPLAY_NAME: Mika's
+--- DISPLAY_NAME: Mika's Mod
 --- BADGE_COLOUR: FD5DA8
 ----------------------------------------------
 ------------MOD CODE -------------------------
@@ -44,14 +44,14 @@ local config = {
     suitAlleyJoker = true,
     printerJoker = true,
     shyJoker = true,
-    gamblerJoker = true,
+    horseshoeJoker = true,
     incompleteJoker = true,
     abbeyRoadJoker = true,
     boatingLicenseJoker = true,
     goldBarJoker = true,
     riggedJoker = true,
     commanderJoker = true,
-    whatAreTheOddsJoker = true,
+    blueMoonJoker = true,
     dagonetJoker = true,
     glueJoker = true,
     harpSealJoker = true,
@@ -408,31 +408,6 @@ local attributes = {
     repetitions = {
         key = 'repetitions_dagonet',
         prev_key = 'prev_repetitions_dagonet',
-        min = 0
-    },
-    dollar_gain_one = {
-        key = 'dollar_gain_one_dagonet',
-        prev_key = 'prev_dollar_gain_one_dagonet',
-        min = 0
-    },
-    dollar_gain_two = {
-        key = 'dollar_gain_two_dagonet',
-        prev_key = 'prev_dollar_gain_two_dagonet',
-        min = 0
-    },
-    dollar_gain_three = {
-        key = 'dollar_gain_three_dagonet',
-        prev_key = 'prev_dollar_gain_three_dagonet',
-        min = 0
-    },
-    dollar_gain_four = {
-        key = 'dollar_gain_four_dagonet',
-        prev_key = 'prev_dollar_gain_four_dagonet',
-        min = 0
-    },
-    dollar_gain_five = {
-        key = 'dollar_gain_five_dagonet',
-        prev_key = 'prev_dollar_gain_five_dagonet',
         min = 0
     },
     extra = {
@@ -1220,7 +1195,8 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "{X:mult,C:white}X#2#{} Mult per hand played",
                     "Resets every round",
-                    "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)"
+                    "{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
             ability_name = "MMC Cultist",
@@ -1390,7 +1366,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.luckyNumberSevenJoker then
         -- Create Joker
-        local seven = {
+        local lucky_number_seven = {
             loc = {
                 name = "Lucky Number Seven",
                 text = {
@@ -1404,14 +1380,9 @@ function SMODS.INIT.MikasModCollection()
             slug = "mmc_lucky_number_seven",
             ability = {
                 extra = {
-                    dollar_gain_one = 1,
-                    dollar_gain_two = 3,
-                    dollar_gain_three = 10,
-                    dollar_gain_four = 25,
-                    dollar_gain_five = 50,
+                    base = 1,
                     dollars = 0,
-                    seven_tally = 0,
-                    old = 0
+                    seven_tally = 0
                 }
             },
             rarity = 1,
@@ -1423,13 +1394,12 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(seven)
+        init_joker(lucky_number_seven)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_lucky_number_seven.loc_def(card)
-            return { card.ability.extra.dollar_gain_one, card.ability.extra.dollar_gain_two,
-                card.ability.extra.dollar_gain_three, card.ability.extra.dollar_gain_four,
-                card.ability.extra.dollar_gain_five }
+            return { card.ability.extra.base, card.ability.extra.base * 3, card.ability.extra.base * 10,
+                card.ability.extra.base * 25, card.ability.extra.base * 50 }
         end
 
         -- Calculate
@@ -1443,24 +1413,23 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 -- Set dollars depending on amount of 7s
                 if self.ability.extra.seven_tally == 1 then
-                    self.ability.extra.dollars = self.ability.extra.dollar_gain_one
+                    self.ability.extra.dollars = self.ability.extra.base
                 elseif self.ability.extra.seven_tally == 2 then
-                    self.ability.extra.dollars = self.ability.extra.dollar_gain_two
+                    self.ability.extra.dollars = self.ability.extra.base * 3
                 elseif self.ability.extra.seven_tally == 3 then
-                    self.ability.extra.dollars = self.ability.extra.dollar_gain_three
+                    self.ability.extra.dollars = self.ability.extra.base * 10
                 elseif self.ability.extra.seven_tally == 4 then
-                    self.ability.extra.dollars = self.ability.extra.dollar_gain_four
+                    self.ability.extra.dollars = self.ability.extra.base * 25
                 elseif self.ability.extra.seven_tally >= 5 then
-                    self.ability.extra.dollars = self.ability.extra.dollar_gain_five
+                    self.ability.extra.dollars = self.ability.extra.base * 50
                 end
 
                 -- Give money
                 if self.ability.extra.seven_tally >= 1 then
                     ease_dollars(self.ability.extra.dollars)
-                    self.ability.extra.old = self.ability.extra.dollars
                     return {
-                        message = localize('$') .. self.ability.extra.old,
-                        dollars = self.ability.extra.old,
+                        message = localize('$') .. self.ability.extra.dollars,
+                        dollars = self.ability.extra.dollars,
                         colour = G.C.MONEY
                     }
                 end
@@ -1976,7 +1945,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.eyeChartJoker then
         -- Create Joker
-        local eye = {
+        local eye_chart = {
             loc = {
                 name = "Eye Chart",
                 text = {
@@ -2003,7 +1972,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(eye)
+        init_joker(eye_chart)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_eye_chart.loc_def(card)
@@ -2537,18 +2506,19 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.gamblerJoker then
+    if config.horseshoeJoker then
         -- Create Joker
-        local gambler = {
+        local horseshoe = {
             loc = {
-                name = "The Gambler",
+                name = "Horseshoe",
                 text = {
                     "Retrigger all",
-                    "scored {C:attention}Lucky{} cards"
+                    "scored {C:attention}Lucky{} cards",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC The Gambler",
-            slug = "mmc_gambler",
+            ability_name = "MMC Horseshoe",
+            slug = "mmc_horseshoe",
             ability = {
                 extra = 1
             },
@@ -2561,15 +2531,15 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(gambler)
+        init_joker(horseshoe)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_gambler.loc_def(card)
+        function SMODS.Jokers.j_mmc_horseshoe.loc_def(card)
             return {}
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_gambler.calculate = function(self, context)
+        SMODS.Jokers.j_mmc_horseshoe.calculate = function(self, context)
             -- Retrigger lucky cards
             if context.repetition and context.cardarea == G.play then
                 if context.other_card.ability.effect == "Lucky Card" then
@@ -3031,19 +3001,20 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.whatAreTheOddsJoker then
+    if config.blueMoonJoker then
         -- Create Joker,
-        local wato = {
+        local blue_moon = {
             loc = {
-                name = "What Are The Odds",
+                name = "Blue Moon",
                 text = {
                     "If {C:attention}#1# Lucky cards{} trigger",
                     "in one hand, create a",
-                    "random {C:dark_edition}negative{} Joker"
+                    "random {C:dark_edition}negative{} Joker",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC What Are The Odds",
-            slug = "mmc_what_are_the_odds",
+            ability_name = "MMC Blue Moon",
+            slug = "mmc_blue_moon",
             ability = {
                 extra = {
                     req = 4,
@@ -3059,15 +3030,15 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(wato)
+        init_joker(blue_moon)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_what_are_the_odds.loc_def(card)
+        function SMODS.Jokers.j_mmc_blue_moon.loc_def(card)
             return { card.ability.extra.req }
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_what_are_the_odds.calculate = function(self, context)
+        SMODS.Jokers.j_mmc_blue_moon.calculate = function(self, context)
             -- Count lucky triggers
             if context.individual and context.cardarea == G.play and not context.blueprint then
                 for _, v in ipairs(context.full_hand) do
@@ -4207,12 +4178,12 @@ function SMODS.INIT.MikasModCollection()
             return { card.ability.extra.dollars }
         end
 
-        -- Calculate
+        -- -- Calculate
         SMODS.Jokers.j_mmc_pack_a_punch.calculate = function(self, context)
             if context.setting_blind and not self.getting_sliced then
                 if G.GAME.dollars >= self.ability.extra.dollars + G.GAME.bankrupt_at then
                     local joker = G.jokers.cards[1]
-                    if joker and joker ~= self then
+                    if joker then
                         ease_dollars(-self.ability.extra.dollars)
                         local edition = poll_edition('pack_a_punch', nil, false, true)
                         -- Animate card
@@ -4221,7 +4192,7 @@ function SMODS.INIT.MikasModCollection()
                             func = function()
                                 -- Set Joker edition
                                 joker:juice_up(0.3, 0.5)
-                                if joker.edition.negative then
+                                if joker.edition and joker.edition.negative then
                                     G.jokers.config.card_limit = G.jokers.config.card_limit - 1
                                 end
                                 joker:set_edition(edition, true)
@@ -4352,6 +4323,70 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
+    if config.taxCollectorJoker then
+        -- Create Joker
+        local tax_collector = {
+            loc = {
+                name = "Tax Collector",
+                text = {
+                    "Gives {C:blue}$#1#{}, {C:green}$#2#{}, {C:red}$#3#{} or {C:legendary}$#4#",
+                    "per Joker with the",
+                    "respective {C:attention}rarity",
+                    "at end of round"
+                }
+            },
+            ability_name = "MMC Tax Collector",
+            slug = "mmc_tax_collector",
+            ability = {
+                extra = {
+                    dollars = 1
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(tax_collector, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_tax_collector.loc_def(card)
+            return { card.ability.extra.dollars, card.ability.extra.dollars * 2, card.ability.extra.dollars * 3, card
+            .ability.extra.dollars * 4 }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_tax_collector.calculate = function(self, context)
+            if context.end_of_round and not context.individual and not context.repetition then
+                for _, v in ipairs(G.jokers.cards) do
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.7,
+                        func = (function()
+                            local dollars = self.ability.extra.dollars * v.config.center.rarity
+                            ease_dollars(dollars, true)
+                            card_eval_status_text(v, 'extra', nil, nil, nil, {
+                                message = localize('$') .. dollars,
+                                dollars = dollars,
+                                colour = G.C.MONEY,
+                                instant = true
+                            })
+                            if v ~= self then
+                                v:juice_up(0.5, 0.5)
+                            end
+                            self:juice_up(0.5, 0.5)
+                            return true
+                        end)
+                    }))
+                end
+            end
+        end
+    end
+
     if config.tempJoker then
         -- Create Joker
         local temp = {
@@ -4377,7 +4412,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(temp)
+        init_joker(temp, true)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_temp.loc_def(card)
@@ -4415,45 +4450,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(temp)
-
-        -- Set local variables
-        function SMODS.Jokers.j_mmc_temp.loc_def(card)
-            return {}
-        end
-
-        -- Calculate
-        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
-            -- TODO
-        end
-    end
-
-    if config.tempJoker then
-        -- Create Joker
-        local temp = {
-            loc = {
-                name = "",
-                text = {
-                    ""
-                }
-            },
-            ability_name = "MMC",
-            slug = "mmc_",
-            ability = {
-                extra = {
-
-                }
-            },
-            rarity = 1,
-            cost = 5,
-            unlocked = true,
-            discovered = true,
-            blueprint_compat = false,
-            eternal_compat = true
-        }
-
-        -- Initialize Joker
-        init_joker(temp)
+        init_joker(temp, true)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_temp.loc_def(card)
