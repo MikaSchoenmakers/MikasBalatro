@@ -73,6 +73,7 @@ local config = {
     taxCollectorJoker = true,
     glassCannonJoker = true,
     scoringTestJoker = true,
+    ciceroJoker = true,
 }
 
 -- Helper functions
@@ -90,7 +91,10 @@ local function init_joker(joker, no_sprite)
         joker.unlocked,
         joker.discovered,
         joker.blueprint_compat,
-        joker.eternal_compat
+        joker.eternal_compat,
+        joker.effect,
+        joker.atlas,
+        joker.soul_pos
     )
     new_joker:register()
 
@@ -782,6 +786,7 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_tick = "Tick..."
     G.localization.misc.dictionary.k_mmc_plus_card = "Card!"
     G.localization.misc.dictionary.k_mmc_luck = "+ Luck!"
+    G.localization.misc.dictionary.k_mmc_destroy = "Destroy!"
 
     init_localization()
 
@@ -4363,18 +4368,22 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_tax_collector.calculate = function(self, context)
             if context.end_of_round and not context.individual and not context.repetition then
                 for _, v in ipairs(G.jokers.cards) do
+                    -- Give dollars for every Joker, based on their rarity
                     G.E_MANAGER:add_event(Event({
                         trigger = 'after',
                         delay = 0.7,
                         func = (function()
+                            -- Give dollars
                             local dollars = self.ability.extra.dollars * v.config.center.rarity
                             ease_dollars(dollars, true)
+                            -- Show message
                             card_eval_status_text(v, 'extra', nil, nil, nil, {
                                 message = localize('$') .. dollars,
                                 dollars = dollars,
                                 colour = G.C.MONEY,
                                 instant = true
                             })
+                            -- Animate cards
                             if v ~= self then
                                 v:juice_up(0.5, 0.5)
                             end
@@ -4387,24 +4396,27 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.tempJoker then
+    if config.glassCannonJoker then
         -- Create Joker
-        local temp = {
+        local glass_cannon = {
             loc = {
-                name = "",
+                name = "Glass Cannon",
                 text = {
-                    ""
+                    "{C:attention}Retrigger{} all {C:attention}Glass",
+                    "{C:attention}Cards{}, but they are",
+                    "{C:red}guaranteed{} to break"
                 }
             },
-            ability_name = "MMC",
-            slug = "mmc_",
+            ability_name = "MMC Glass Cannon",
+            slug = "mmc_glass_cannon",
             ability = {
                 extra = {
-
+                    repetitions = 1,
+                    trash_list = {}
                 }
             },
-            rarity = 1,
-            cost = 5,
+            rarity = 2,
+            cost = 7,
             unlocked = true,
             discovered = true,
             blueprint_compat = false,
@@ -4412,37 +4424,88 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(temp, true)
+        init_joker(glass_cannon, true)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_temp.loc_def(card)
+        function SMODS.Jokers.j_mmc_glass_cannon.loc_def(card)
             return {}
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
-            -- TODO
+        SMODS.Jokers.j_mmc_glass_cannon.calculate = function(self, context)
+            -- Retrigger glass cards
+            if context.repetition and context.cardarea == G.play then
+                if context.other_card.ability.effect == "Glass Card" then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = self.ability.extra.repetitions,
+                        card = self
+                    }
+                end
+            end
+
+            -- Mark played glass cards
+            if context.individual and context.cardarea == G.play and not context.repetition then
+                if context.other_card.ability.effect == "Glass Card" then
+                    context.other_card.played = true
+                end
+            end
+
+            -- Destroy played glass cards
+            if SMODS.end_calculate_context(context) then
+                for _, v in ipairs(context.full_hand) do
+                    if v.played then
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'before',
+                            delay = 0.9,
+                            func = (function()
+                                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                    message = localize('k_mmc_destroy'),
+                                    colour = G.C.RED,
+                                    instant = true
+                                })
+                                table.insert(self.ability.extra.trash_list, v)
+                                v:shatter()
+                                return true
+                            end)
+                        }))
+                    end
+                end
+            end
+
+            -- Clean up trash
+            if context.end_of_round and not context.individual and not context.repetition then
+                for _, v in ipairs(self.ability.extra.trash_list) do
+                    v:start_dissolve(nil, true, 0, true)
+                end
+                self.ability.extra.trash_list = {}
+            end
         end
     end
 
-    if config.tempJoker then
+    if config.scoringTestJoker then
         -- Create Joker
-        local temp = {
+        local scoring_test = {
             loc = {
-                name = "",
+                name = "Scoring Test",
                 text = {
-                    ""
+                    "If played hand",
+                    "scores less than {C:attention}#1#%",
+                    "of blind requirement",
+                    "{C:red}destroy{} it"
                 }
             },
-            ability_name = "MMC",
-            slug = "mmc_",
+            ability_name = "MMC Scoring Test",
+            slug = "mmc_scoring_test",
             ability = {
                 extra = {
-
+                    percentage = 1,
+                    played_hand = {},
+                    trash_list = {}
                 }
             },
-            rarity = 1,
-            cost = 5,
+            rarity = 2,
+            cost = 6,
             unlocked = true,
             discovered = true,
             blueprint_compat = false,
@@ -4450,16 +4513,85 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(temp, true)
+        init_joker(scoring_test, true)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_temp.loc_def(card)
-            return {}
+        function SMODS.Jokers.j_mmc_scoring_test.loc_def(card)
+            return { card.ability.extra.percentage }
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_temp.calculate = function(self, context)
-            -- TODO
+        SMODS.Jokers.j_mmc_scoring_test.calculate = function(self, context)
+            if SMODS.end_calculate_context(context) then
+                -- Get played hand
+                self.ability.extra.played_hand = {}
+                for _, v in ipairs(context.full_hand) do
+                    table.insert(self.ability.extra.played_hand, v)
+                end
+            end
+
+            if context.mmc_scored_chips then
+                if context.mmc_scored_chips < G.GAME.blind.chips * self.ability.extra.percentage / 100 then
+                    -- Destroy played hand if it's less than 1% of blind requirement
+                    for _, v in ipairs(self.ability.extra.played_hand) do
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'before',
+                            delay = 0.9,
+                            func = (function()
+                                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                    message = localize('k_mmc_destroy'),
+                                    colour = G.C.RED,
+                                    instant = true
+                                })
+                                table.insert(self.ability.extra.trash_list, v)
+                                v:start_dissolve()
+                                return true
+                            end)
+                        }))
+                    end
+                end
+            end
+
+            -- Clean up trash
+            if context.end_of_round and not context.individual and not context.repetition then
+                for _, v in ipairs(self.ability.extra.trash_list) do
+                    v:start_dissolve(nil, true, 0, true)
+                end
+                self.ability.extra.trash_list = {}
+            end
+        end
+    end
+
+    if config.ciceroJoker then
+        -- Create Joker
+        local cicero = {
+            loc = {
+                name = "Cicero",
+                text = {
+                    "Jokers that do not",
+                    "give {C:mult}Mult{}, {C:chips}Chips{} or",
+                    "{C:attention}retriggers{} will be",
+                    "{C:dark_edition}negative{} in the shop"
+                }
+            },
+            ability_name = "MMC Cicero",
+            slug = "mmc_cicero",
+            ability = {},
+            rarity = 4,
+            cost = 20,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true,
+            soul_pos = { x = 1, y = 0 }
+        }
+
+        -- Initialize Joker
+        init_joker(cicero)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_cicero.loc_def(card)
+            return {}
         end
     end
 end
@@ -4697,6 +4829,27 @@ function Card.set_cost(self)
         if self.ability.name == 'Riff-raff' then
             -- No fun allowed
             self.cost = 1000000000
+        end
+    end
+end
+
+-- Set card edition
+local set_edition_ref = Card.set_edition
+function Card.set_edition(self, edition, immediate, silent)
+    set_edition_ref(self, edition, immediate, silent)
+    if self.ability.set == 'Joker' and (self.edition == nil or not edition.negative) then
+        for _, v in ipairs(G.jokers.cards) do
+            if v.ability.name == "MMC Cicero" then
+                local support = true
+                for _, v2 in ipairs(G.localization.descriptions.Joker[self.config.center.key].text) do
+                    sendDebugMessage(v2:lower())
+                    support = support and not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
+                end
+                if support then
+                    self:set_edition({ negative = true })
+                end
+                break
+            end
         end
     end
 end
