@@ -5,7 +5,7 @@
 <br/>
 
 # Mika's Balatro Mod Collection
-This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 47 Jokers, 2 Tarots and 7 Decks.
+This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 51 Jokers, 2 Tarots, 1 Spectral and 7 Decks.
 
 # Mod Incompatibility
 ### JellyMod
