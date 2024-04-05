@@ -45,10 +45,17 @@ _The exact formula is: `Base Price * Number of Jokers`. All Jokers also remove t
 
 # Tarots
 ### Fortune
+![Fortune](./assets/2x/c_mmc_fortune.png)\
 3 in 4 chance to double your money, otherwise set money to $0.
 
 ### The Idiot
+![The Idiot](./assets/2x/c_mmc_idiot.png)\
 Multiply money by -1.
+
+# Tarots
+### Bribe
+![Bribe](./assets/2x/c_mmc_bribe.png)\
+Turn a random Joker Negative but lose $50, ignoring the spending limit.
 
 # Jokers
 ## Common
