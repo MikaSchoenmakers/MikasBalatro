@@ -3873,7 +3873,8 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "If played hand",
                     "contains {C:attention}#1# Enhanced cards,",
-                    "Enhance a random {C:attention}Joker"
+                    "give a random Joker",
+                    "a random {C:attention}Edition"
                 }
             },
             ability_name = "MMC One Of Us",

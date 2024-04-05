@@ -203,7 +203,7 @@ Gives +3 mult per discarded card. Resets every round.
 
 ### One Of Us
 ![One Of Us](./assets/2x/j_mmc_one_of_us.png)\
-If played hand contains 5 Enhanced cards, Enhance a random Joker.
+If played hand contains 5 Enhanced cards, give a random Joker a random Edition.
 
 ### Scoring Test
 ![Scoring Test](./assets/2x/j_mmc_scoring_test.png)\
