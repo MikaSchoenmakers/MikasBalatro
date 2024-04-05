@@ -7,10 +7,10 @@
 * Scoring Test: If played hand scores less than 1% of blind chip requirement, destroy it.
 * Cicero: All Jokers that do not give Mult, Chips or retriggers will be negative in the shop.
 ### New Tarots
-* Added The Idiot, that multiplies your money by -1, might be a bit too niche, but it could synergize with all the Jokers that gain a bonus based on negative balance, as well as going back into positive balance if you're in the negative.
-* Added Fortune, that has a 3/4 chance to double your money with no cap, but otherwise it sets your money to $0.
+* The Idiot: Multiply your money by -1.
+* Fortune: Has a 3/4 chance to double your money with no cap, otherwise set your money to $0.
 ### New Spectrals
-* Added Bribe, that turns a random joker Negative but takes -$50, ignoring the spending limit (so you can use it at $0 and after using you will have -$50).
+* Bribe: Turn a random Joker Negative but lose $50, ignoring the spending limit.
 ### Resprites
 * New sprite for Planetary Alignment (now Aurora Borealis),The Cultist, What Are The Odds (now Blue Moon), and The Gambler (now Horseshoe). All done by `@Grassy`
 ### Other
