@@ -21,6 +21,8 @@ local config = {
     -- Tarot Cards
     fortuneTarot = true,
     idiotTarot = true,
+    -- Spectral Cards
+    bribeSpectral = true,
     -- Jokers
     primeTimeJoker = true,
     straightNateJoker = true,
@@ -39,7 +41,7 @@ local config = {
     eyeChartJoker = true,
     grudgefulJoker = true,
     finishingBlowJoker = true,
-    planetaryAlignmentJoker = true,
+    auroraBorealisJoker = true,
     historicalJoker = true,
     suitAlleyJoker = true,
     printerJoker = true,
@@ -122,10 +124,10 @@ local function init_tarot(tarot, no_sprite)
         tarot.loc,
         tarot.cost,
         tarot.cost_mult,
-        nil,
-        nil,
+        tarot.effect,
+        tarot.consumeable,
         tarot.discovered,
-        nil
+        tarot.atlas
     )
     new_tarot:register()
 
@@ -134,6 +136,35 @@ local function init_tarot(tarot, no_sprite)
             new_tarot.slug,
             SMODS.findModByID("MikasMods").path,
             new_tarot.slug .. ".png",
+            71,
+            95,
+            "asset_atli"
+        )
+        sprite:register()
+    end
+end
+
+local function init_spectral(spectral, no_sprite)
+    no_sprite = no_sprite or false
+
+    local new_spectral = SMODS.Spectral:new(
+        spectral.name,
+        spectral.slug,
+        spectral.config,
+        { x = 0, y = 0 },
+        spectral.loc,
+        spectral.cost,
+        spectral.consumeable,
+        spectral.discovered,
+        spectral.atlas
+    )
+    new_spectral:register()
+
+    if not no_sprite then
+        local sprite = SMODS.Sprite:new(
+            new_spectral.slug,
+            SMODS.findModByID("MikasMods").path,
+            new_spectral.slug .. ".png",
             71,
             95,
             "asset_atli"
@@ -479,6 +510,14 @@ local function not_in_table(table, value)
     end
     return true
 end
+
+local cicero_blacklist = {
+    "Misprint",
+}
+
+local cicero_whitelist = {
+    "Mr. Bones",
+}
 
 -- Create Decks
 local decks = {
@@ -914,10 +953,76 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
+    -- Spectral Cards
+    if config.bribeSpectral then
+        -- Create Spectral
+        local bribe = {
+            loc = {
+                name = "Bribe",
+                text = {
+                    "Add {C:dark_edition}Negative{} to",
+                    "a random {C:attention}Joker{},",
+                    "{C:red}-$#1#{}, ignores",
+                    "spending limit"
+                }
+            },
+            ability_name = "MMC Bribe",
+            slug = "mmc_bribe",
+            config = { extra = { dollars = 50, j_slots = 1 } },
+            cost = 4,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Spectral
+        init_spectral(bribe)
+
+        -- Set local variables
+        function SMODS.Spectrals.c_mmc_bribe.loc_def(card)
+            return { card.config.extra.dollars, card.config.extra.j_slots }
+        end
+
+        -- Set can_use
+        function SMODS.Spectrals.c_mmc_bribe.can_use(card)
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not v.edition) then
+                    return true
+                end
+            end
+            return false
+        end
+
+        -- Use effect
+        function SMODS.Spectrals.c_mmc_bribe.use(card, area, copier)
+            -- Get editionless Jokers
+            local editionless_jokers = {}
+            for _, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not v.edition) then
+                    table.insert(editionless_jokers, v)
+                end
+            end
+            -- Add negative to random Joker
+            if #editionless_jokers > 0 then
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.4,
+                    func = function()
+                        local joker = pseudorandom_element(editionless_jokers, pseudoseed('bribe'))
+                        ease_dollars(-card.ability.extra.dollars)
+                        card:juice_up(0.3, 0.5)
+                        joker:set_edition({ negative = true }, true)
+                        return true
+                    end
+                }))
+            end
+            delay(0.6)
+        end
+    end
+
     -- Jokers
     if config.primeTimeJoker then
         -- Create Joker
-        local prime = {
+        local prime_time = {
             loc = {
                 name = "Prime Time",
                 text = {
@@ -943,7 +1048,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(prime)
+        init_joker(prime_time)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_prime_time.loc_def(card)
@@ -971,7 +1076,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.straightNateJoker then
         -- Create Joker
-        local nate = {
+        local straight_nate = {
             loc = {
                 name = "Straight Nate",
                 text = {
@@ -998,7 +1103,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(nate)
+        init_joker(straight_nate)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_straight_nate.loc_def(card)
@@ -1040,7 +1145,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.fishermanJoker then
         -- Create Joker
-        local fish = {
+        local fisherman = {
             loc = {
                 name = "The Fisherman",
                 text = {
@@ -1067,7 +1172,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(fish)
+        init_joker(fisherman)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_fisherman.loc_def(card)
@@ -1267,7 +1372,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.sealCollectorJoker then
         -- Create Joker
-        local seal = {
+        local seal_collector = {
             loc = {
                 name = "Seal Collector",
                 text = {
@@ -1294,7 +1399,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(seal)
+        init_joker(seal_collector)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_seal_collector.loc_def(card)
@@ -2110,7 +2215,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.finishingBlowJoker then
         -- Create Joker
-        local fb = {
+        local finishing_blow = {
             loc = {
                 name = "Finishing Blow",
                 text = {
@@ -2136,7 +2241,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(fb)
+        init_joker(finishing_blow)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_finishing_blow.loc_def(card)
@@ -2174,20 +2279,21 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.planetaryAlignmentJoker then
+    if config.auroraBorealisJoker then
         -- Create Joker
-        local planetary = {
+        local aurora_borealis = {
             loc = {
-                name = "Planetary Alignment",
+                name = "Aurora Borealis",
                 text = {
                     "Once every #1# rounds",
                     "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
                     "one of them will be for your",
-                    "most played {C:attention}poker hand{}"
+                    "most played {C:attention}poker hand{}",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC Planetary Alignment",
-            slug = "mmc_planetary_alignment",
+            ability_name = "MMC Aurora Borealis",
+            slug = "mmc_aurora_borealis",
             ability = {
                 extra = {
                     round = 0,
@@ -2203,15 +2309,15 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(planetary)
+        init_joker(aurora_borealis)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_planetary_alignment.loc_def(card)
+        function SMODS.Jokers.j_mmc_aurora_borealis.loc_def(card)
             return { card.ability.extra.every }
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_planetary_alignment.calculate = function(self, context)
+        SMODS.Jokers.j_mmc_aurora_borealis.calculate = function(self, context)
             -- Update round counter
             if context.end_of_round and not context.individual and not context.repetition then
                 self.ability.extra.round = self.ability.extra.round + 1
@@ -2299,7 +2405,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.suitAlleyJoker then
         -- Create Joker
-        local suit = {
+        local suit_alley = {
             loc = {
                 name = "Suit Alley",
                 text = {
@@ -2326,7 +2432,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(suit)
+        init_joker(suit_alley)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_suit_alley.loc_def(card)
@@ -2613,7 +2719,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.abbeyRoadJoker then
         -- Create Joker
-        local abbey = {
+        local abbey_road = {
             loc = {
                 name = "Abbey Road",
                 text = {
@@ -2642,7 +2748,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(abbey)
+        init_joker(abbey_road)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_abbey_road.loc_def(card)
@@ -2700,7 +2806,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.boatingLicenseJoker then
         -- Create Joker
-        local boating = {
+        local boating_license = {
             loc = {
                 name = "Boating License",
                 text = {
@@ -2720,7 +2826,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(boating)
+        init_joker(boating_license)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_boating_license.loc_def(card)
@@ -2789,7 +2895,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.goldBarJoker then
         -- Create Joker
-        local gold = {
+        local gold_bar = {
             loc = {
                 name = "Gold Bar",
                 text = {
@@ -2815,7 +2921,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(gold)
+        init_joker(gold_bar)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_gold_bar.loc_def(card)
@@ -3115,7 +3221,8 @@ function SMODS.INIT.MikasModCollection()
             unlocked = true,
             discovered = true,
             blueprint_compat = false,
-            eternal_compat = true
+            eternal_compat = true,
+            soul_pos = { x = 1, y = 0 }
         }
 
         -- Initialize Joker
@@ -3220,7 +3327,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.harpSealJoker then
         -- Create Joker,
-        local harp = {
+        local harp_seal = {
             loc = {
                 name = "Harp Seal",
                 text = {
@@ -3241,7 +3348,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(harp)
+        init_joker(harp_seal)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_harp_seal.loc_def(card)
@@ -3252,7 +3359,7 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_harp_seal.calculate = function(self, context)
             -- Give $3 for each Gold Seal
             if context.individual and context.cardarea == G.play and not context.repetition then
-                if context.other_card.seal == 'Gold' then
+                if context.other_card.seal == 'Gold' and not context.other_card.debuff then
                     ease_dollars(3)
                     return {
                         message = localize('$') .. 3,
@@ -3265,7 +3372,7 @@ function SMODS.INIT.MikasModCollection()
 
             -- Repeat Red Seals
             if context.repetition and context.cardarea == G.play then
-                if context.other_card.seal == 'Red' then
+                if context.other_card.seal == 'Red' and not context.other_card.debuff then
                     return {
                         message = localize('k_again_ex'),
                         repetitions = 1,
@@ -3274,7 +3381,7 @@ function SMODS.INIT.MikasModCollection()
                 end
             end
             if context.repetition and context.cardarea == G.hand then
-                if context.other_card.seal == 'Red' and (next(context.card_effects[1]) or #context.card_effects > 1) then
+                if context.other_card.seal == 'Red' and (next(context.card_effects[1]) or #context.card_effects > 1) and not context.other_card.debuff then
                     return {
                         message = localize('k_again_ex'),
                         repetitions = 1,
@@ -3285,7 +3392,7 @@ function SMODS.INIT.MikasModCollection()
 
             -- Create tarot card for each Purple Seal
             if context.discard then
-                if context.other_card.seal == 'Purple' then
+                if context.other_card.seal == 'Purple' and not context.other_card.debuff then
                     -- Check consumeable space
                     create_tarot(self)
                 end
@@ -3295,7 +3402,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.footballCardJoker then
         -- Create Joker,
-        local football = {
+        local football_card = {
             loc = {
                 name = "Football Card",
                 text = {
@@ -3319,7 +3426,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(football)
+        init_joker(football_card)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_football_card.loc_def(card)
@@ -3353,7 +3460,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.specialEditionJoker then
         -- Create Joker
-        local special = {
+        local special_edition = {
             loc = {
                 name = "Special Edition Joker",
                 text = {
@@ -3385,7 +3492,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(special)
+        init_joker(special_edition)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_special_edition.loc_def(card)
@@ -3475,7 +3582,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.studentLoansJoker then
         -- Create Joker
-        local student = {
+        local student_loans = {
             loc = {
                 name = "Student Loans",
                 text = {
@@ -3504,7 +3611,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(student)
+        init_joker(student_loans)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_student_loans.loc_def(card)
@@ -3587,7 +3694,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.goForBrokeJoker then
         -- Create Joker
-        local gfb = {
+        local go_for_broke = {
             loc = {
                 name = "Go For Broke",
                 text = {
@@ -3614,7 +3721,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(gfb)
+        init_joker(go_for_broke)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_go_for_broke.loc_def(card)
@@ -3642,7 +3749,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.streetFighterJoker then
         -- Create Joker
-        local street = {
+        local street_fighter = {
             loc = {
                 name = "Street Fighter",
                 text = {
@@ -3668,7 +3775,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(street)
+        init_joker(street_fighter)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_street_fighter.loc_def(card)
@@ -3760,7 +3867,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.oneOfUsJoker then
         -- Create Joker
-        local one = {
+        local one_of_us = {
             loc = {
                 name = "One Of Us",
                 text = {
@@ -3785,7 +3892,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(one)
+        init_joker(one_of_us)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_one_of_us.loc_def(card)
@@ -3893,7 +4000,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.mountainClimberJoker then
         -- Create Joker
-        local mountain = {
+        local mountain_climber = {
             loc = {
                 name = "Mountain Climber",
                 text = {
@@ -3914,7 +4021,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(mountain, true)
+        init_joker(mountain_climber, true)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_mountain_climber.loc_def(card)
@@ -3993,7 +4100,7 @@ function SMODS.INIT.MikasModCollection()
 
     if config.buyOneGetOneJoker then
         -- Create Joker
-        local bogo = {
+        local buy_one_get_one = {
             loc = {
                 name = "Buy One Get One",
                 text = {
@@ -4019,7 +4126,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(bogo)
+        init_joker(buy_one_get_one)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_buy_one_get_one.loc_def(card)
@@ -4258,7 +4365,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_seal_steal.calculate = function(self, context)
             if context.individual and context.cardarea == G.play then
-                if context.other_card.seal == 'Purple' then
+                if context.other_card.seal == 'Purple' and not context.other_card.debuff then
                     -- Check for Harp Seal
                     local harp_seal
                     for _, v in ipairs(G.jokers.cards) do
@@ -4275,20 +4382,20 @@ function SMODS.INIT.MikasModCollection()
                         })
                         create_tarot(self)
                     end
-                elseif context.other_card.seal == 'Blue' then
-                    -- Check for Harp Seal or Planetary Alignment
+                elseif context.other_card.seal == 'Blue' and not context.other_card.debuff then
+                    -- Check for Harp Seal or Aurora Borealis
                     local harp_seal
-                    local planetary_alignment
+                    local aurora_borealis
                     for _, v in ipairs(G.jokers.cards) do
                         if v.ability.name == "MMC Harp Seal" then
                             harp_seal = v
-                        elseif v.ability.name == "MMC Planetary Alignment" then
-                            planetary_alignment = v
+                        elseif v.ability.name == "MMC Aurora Borealis" then
+                            aurora_borealis = v
                         end
                     end
                     -- Get planet based on most played hand
                     local _planet
-                    if planetary_alignment and planetary_alignment.ability.extra.round % planetary_alignment.ability.extra.every == 0 then
+                    if aurora_borealis and aurora_borealis.ability.extra.round % aurora_borealis.ability.extra.every == 0 then
                         -- Get most played hand
                         local _hand, _tally = nil, 0
                         for _, v in ipairs(G.handlist) do
@@ -4308,7 +4415,7 @@ function SMODS.INIT.MikasModCollection()
                     end
                     -- Create planet
                     if _planet ~= nil then
-                        create_planet(self, _planet, planetary_alignment)
+                        create_planet(self, _planet, aurora_borealis)
                     end
                     create_planet(self)
                     -- Repeat for harp seal
@@ -4319,7 +4426,7 @@ function SMODS.INIT.MikasModCollection()
                         })
                         -- Add card
                         if _planet ~= nil then
-                            create_planet(self, _planet, planetary_alignment)
+                            create_planet(self, _planet, aurora_borealis)
                         end
                         create_planet(self)
                     end
@@ -4356,7 +4463,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(tax_collector, true)
+        init_joker(tax_collector)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_tax_collector.loc_def(card)
@@ -4424,7 +4531,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(glass_cannon, true)
+        init_joker(glass_cannon)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_glass_cannon.loc_def(card)
@@ -4513,7 +4620,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(scoring_test, true)
+        init_joker(scoring_test)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_scoring_test.loc_def(card)
@@ -4837,15 +4944,15 @@ end
 local set_edition_ref = Card.set_edition
 function Card.set_edition(self, edition, immediate, silent)
     set_edition_ref(self, edition, immediate, silent)
-    if self.ability.set == 'Joker' and (self.edition == nil or not edition.negative) then
+    if not self.added_to_deck and self.ability.set == 'Joker' and (self.edition == nil or not edition.negative) then
         for _, v in ipairs(G.jokers.cards) do
             if v.ability.name == "MMC Cicero" then
                 local support = true
                 for _, v2 in ipairs(G.localization.descriptions.Joker[self.config.center.key].text) do
-                    sendDebugMessage(v2:lower())
-                    support = support and not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
+                    support = support and
+                        not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
                 end
-                if support then
+                if support or not not_in_table(cicero_whitelist, self.ability.name) and not_in_table(cicero_blacklist, self.ability.name) then
                     self:set_edition({ negative = true })
                 end
                 break
@@ -4940,10 +5047,10 @@ end
 -- Handle end of round card effects
 local get_end_of_round_effectref = Card.get_end_of_round_effect
 function Card.get_end_of_round_effect(self, context)
-    if self.seal == 'Blue' then
+    if self.seal == 'Blue' and not self.debuff then
         for _, v in pairs(G.jokers.cards) do
-            -- Check for Planetary Alignment Joker and consumeable space
-            if v.ability.name == 'MMC Planetary Alignment' and v.ability.extra.round % v.ability.extra.every == 0 then
+            -- Check for Aurora Borealis Joker and consumeable space
+            if v.ability.name == 'MMC Aurora Borealis' and v.ability.extra.round % v.ability.extra.every == 0 then
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
                 for _, v in ipairs(G.handlist) do

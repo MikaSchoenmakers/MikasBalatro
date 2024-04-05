@@ -132,6 +132,10 @@ _So at Ante 1 you can have at most +1 Hand size, at Ante 2 at most +2, etc..._
 ![Suit Alley](./assets/2x/j_mmc_suit_alley.png)\
 Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3 Mult when scored.
 
+### Tax Collector
+![Tax Collector](./assets/2x/j_mmc_tax_collector.png)\
+Gives $1, $2, $3 or $4 per Joker at the end of the round, based on their rarity.
+
 ## Uncommon
 ### Abbey Road
 ![Abbey Road](./assets/2x/j_mmc_abbey_road.png)\
@@ -151,6 +155,10 @@ Every discarded card permanently gains +4 Chips.
 ### Checklist
 ![Checklist](./assets/2x/j_mmc_checklist.png)\
 Playing High Card upgrades it by 1 level. Poker hand changes when played.
+
+### Glass Cannon
+![Glass Cannon](./assets/2x/j_mmc_glass_cannon.png)\
+Retrigger all glass cards, but they are guaranteed to break.
 
 ### Finishing Blow
 ![Finishing Blow](./assets/2x/j_mmc_finishing_blow.png)\
@@ -181,6 +189,10 @@ Gives +3 mult per discarded card. Resets every round.
 ### One Of Us
 ![One Of Us](./assets/2x/j_mmc_one_of_us.png)\
 If played hand contains 5 Enhanced cards, Enhance a random Joker.
+
+### Scoring Test
+![Scoring Test](./assets/2x/j_mmc_scoring_test.png)\
+If played hand scores less than 1% of blind chip requirement, destroy it.
 
 ### Shy Joker
 ![Shy Joker](./assets/2x/j_mmc_shy.png)\
@@ -259,6 +271,9 @@ Gives X4 mult if the hand contains a straight and you have both the **_Odd Todd_
 
 ## Legendary
 ### Dagonet
-![Dagonet](./assets/2x/j_mmc_dagonet.png)\
+![Dagonet](./gitresources/DagonetFlat.png)\
 Doubles all base values on Jokers.\
 _Does not work with Cards like Juggler and Credit Card_
+
+![Cicero](./gitresources/CiceroFlat.png)\
+All Jokers that do not give Mult, Chips or retriggers will be negative in the shop.
