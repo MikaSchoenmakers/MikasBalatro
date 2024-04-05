@@ -156,6 +156,12 @@ _Art made by `Grassy`_
 Gives X3 Mult when the ranks of all played cards adds up to **_exactly 21_**. Gives -X0.5 Mult less for every point below 21.\
 _An Ace can be valued at either 1 or 11_
 
+### Blue Moon
+![Blue Moon](./assets/2x/j_mmc_blue_moon.png)\
+If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.\
+_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_\
+_Art made by `Grassy`_
+
 ### Camper
 ![Camper](./assets/2x/j_mmc_camper.png)\
 Every discarded card permanently gains +4 Chips.
@@ -218,12 +224,6 @@ Gives X4 Mult when balance is at or below -$20.
 ### Student Loans
 ![Student Loans](./assets/2x/j_mmc_student_loans.png)\
 Go up to -$100 in debt. Gives -1 discard for every -$25 in debt.
-
-### What Are The Odds
-![Blue Moon](./assets/2x/j_mmc_blue_moon.png)\
-If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.\
-_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_\
-_Art made by `Grassy`_
 
 ## Rare
 ### Batman
