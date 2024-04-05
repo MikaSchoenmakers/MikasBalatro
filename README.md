@@ -59,6 +59,11 @@ Turn a random Joker Negative but lose $50, ignoring the spending limit.
 
 # Jokers
 ## Common
+### Aurora Borealis
+![Aurora Borealis](./assets/2x/j_mmc_aurora_borealis.png)\
+Once every 2 rounds, Blue Seals give 2 Planet cards. One of these will be for your most played poker hand.\
+_Art made by `Grassy`_
+
 ### Bomb
 ![Bomb](./assets/2x/j_mmc_bomb.png)\
 Gains +15 Mult per round, starting at 15. Self destructs after 3 rounds.\
@@ -103,10 +108,6 @@ Gives $5 at the end of every round. 1 in 4 chance to give -$5 instead.
 ### Lucky Number Seven
 ![Lucky Number Seven](./assets/2x/j_mmc_lucky_number_seven.png)\
 Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
-
-### Planetary Alignment
-![Planetary Alignment](./assets/2x/j_mmc_planetary_alignment.png)\
-Once every 2 rounds, Blue Seals give 2 Planet cards. One of these will be for your most played poker hand.
 
 ### Prime Time
 ![Prime Time](./assets/2x/j_mmc_prime_time.png)\
@@ -180,13 +181,14 @@ Gives +1 hand size per discard, -1 hand size per hand played _(but hand size eff
 ![Football Card](./assets/2x/j_mmc_football_card.png)\
 Gives +50 Chips for every Common Joker.
 
-### The Gambler
-![The Gambler](./assets/2x/j_mmc_gambler.png)\
-Retrigger all played **_Lucky_** cards.
-
 ### Harp Seal
 ![Harp Seal](./assets/2x/j_mmc_harp_seal.png)\
 Doubles the effect of all Seals.\
+_Art made by `Grassy`_
+
+### Horseshoe
+![Horseshoe](./assets/2x/j_mmc_horseshoe.png)\
+Retrigger all played **_Lucky_** cards.\
 _Art made by `Grassy`_
 
 ### Impatient Joker
@@ -218,9 +220,10 @@ Gives X4 Mult when balance is at or below -$20.
 Go up to -$100 in debt. Gives -1 discard for every -$25 in debt.
 
 ### What Are The Odds
-![What Are The Odds](./assets/2x/j_mmc_what_are_the_odds.png)\
+![Blue Moon](./assets/2x/j_mmc_blue_moon.png)\
 If 4 Lucky cards trigger in one hand, create a random **_negative_** Joker.\
-_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_
+_If a Lucky card triggers on both Mult and money, it counts as 2 triggers. Retriggers also count as seperate triggers_\
+_Art made by `Grassy`_
 
 ## Rare
 ### Batman
