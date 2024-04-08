@@ -819,7 +819,6 @@ function SMODS.INIT.MikasModCollection()
     G.localization.misc.dictionary.k_mmc_upgrade = "Upgrade!"
     G.localization.misc.dictionary.k_mmc_charging = "Charging..."
     G.localization.misc.dictionary.k_mmc_bonus = "Bonus!"
-    G.localization.misc.dictionary.k_mmc_reset = "Reset!"
     G.localization.misc.dictionary.k_mmc_hand_up = "+ Hand Size!"
     G.localization.misc.dictionary.k_mmc_hand_down = "- Hand Size!"
     G.localization.misc.dictionary.k_mmc_tick = "Tick..."
@@ -846,7 +845,7 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "{C:green}#2# in #1#{} chance",
                     "to set money to",
-                    "$0, otherwise",
+                    "{C:money}$0{}, otherwise",
                     "double your money"
                 }
             },
@@ -1216,7 +1215,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.current_h_size = 0
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_reset')
+                        message = localize('k_reset')
                     })
                 end
             end
@@ -1295,7 +1294,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.current_mult = 0
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_reset')
+                        message = localize('k_reset')
                     })
                 end
             end
@@ -1368,7 +1367,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.current_Xmult = 1
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_reset')
+                        message = localize('k_reset')
                     })
                 end
             end
@@ -1640,7 +1639,7 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.action_tally == 1 then
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_reset')
+                        message = localize('k_reset')
                     })
                 else
                     -- Charging message
@@ -3032,7 +3031,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.probability = 0
                     -- Reset message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_reset')
+                        message = localize('k_reset')
                     })
                 end
             end
