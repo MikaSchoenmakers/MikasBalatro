@@ -117,7 +117,8 @@ _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
 
 ### Scratch Card
 ![Scratch Card](./assets/2x/j_mmc_scratch_card.png)\
-Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
+Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.\
+_Art made by `Grassy`_
 
 ### Seal Collector
 ![Seal Collector](./assets/2x/j_mmc_seal_collector.png)\
