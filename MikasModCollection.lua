@@ -31,7 +31,7 @@ local config = {
     cultistJoker = true,
     sealCollectorJoker = true,
     camperJoker = true,
-    luckyNumberSevenJoker = true,
+    scratchCardJoker = true,
     delayedJoker = true,
     showoffJoker = true,
     sniperJoker = true,
@@ -1474,20 +1474,21 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.luckyNumberSevenJoker then
+    if config.scratchCardJoker then
         -- Create Joker
-        local lucky_number_seven = {
+        local scratch_card = {
             loc = {
-                name = "Lucky Number Seven",
+                name = "Scratch Card",
                 text = {
                     "Gain {C:money}$#1#{}, {C:money}$#2#{}, {C:money}$#3#{}, {C:money}$#4#{},",
                     "{C:money}$#5#{} when 1, 2, 3, 4 or 5",
                     "{C:attention}7 cards{} are scored,",
-                    "respectively"
+                    "respectively",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC Lucky Number Seven",
-            slug = "mmc_lucky_number_seven",
+            ability_name = "MMC Scratch Card",
+            slug = "mmc_scratch_card",
             ability = {
                 extra = {
                     base = 1,
@@ -1504,16 +1505,16 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(lucky_number_seven)
+        init_joker(scratch_card)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_lucky_number_seven.loc_def(card)
+        function SMODS.Jokers.j_mmc_scratch_card.loc_def(card)
             return { card.ability.extra.base, card.ability.extra.base * 3, card.ability.extra.base * 10,
                 card.ability.extra.base * 25, card.ability.extra.base * 50 }
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_lucky_number_seven.calculate = function(self, context)
+        SMODS.Jokers.j_mmc_scratch_card.calculate = function(self, context)
             -- Count sevens
             if context.individual and context.cardarea == G.play and context.other_card:get_id() == 7 and
                 not context.blueprint then
@@ -4442,7 +4443,7 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Tax Collector",
                 text = {
-                    "Gives {C:blue}$#1#{}, {C:green}$#2#{}, {C:red}$#3#{} or {C:legendary}$#4#",
+                    "Gives {C:green}$#2#{}, {C:red}$#3#{} or {C:legendary}$#4#",
                     "per Joker with the",
                     "respective {C:attention}rarity",
                     "at end of round"
@@ -4468,8 +4469,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_tax_collector.loc_def(card)
-            return { card.ability.extra.dollars, card.ability.extra.dollars * 2, card.ability.extra.dollars * 3, card
-            .ability.extra.dollars * 4 }
+            return { card.ability.extra.dollars, card.ability.extra.dollars * 2, card.ability.extra.dollars * 4 }
         end
 
         -- Calculate
@@ -4477,28 +4477,33 @@ function SMODS.INIT.MikasModCollection()
             if context.end_of_round and not context.individual and not context.repetition then
                 for _, v in ipairs(G.jokers.cards) do
                     -- Give dollars for every Joker, based on their rarity
-                    G.E_MANAGER:add_event(Event({
-                        trigger = 'after',
-                        delay = 0.7,
-                        func = (function()
-                            -- Give dollars
-                            local dollars = self.ability.extra.dollars * v.config.center.rarity
-                            ease_dollars(dollars, true)
-                            -- Show message
-                            card_eval_status_text(v, 'extra', nil, nil, nil, {
-                                message = localize('$') .. dollars,
-                                dollars = dollars,
-                                colour = G.C.MONEY,
-                                instant = true
-                            })
-                            -- Animate cards
-                            if v ~= self then
-                                v:juice_up(0.5, 0.5)
-                            end
-                            self:juice_up(0.5, 0.5)
-                            return true
-                        end)
-                    }))
+                    if v ~= self and v.config.center.rarity > 1 then
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.7,
+                            func = (function()
+                                -- Give dollars
+                                local dollars = self.ability.extra.dollars * (v.config.center.rarity - 1)
+                                if v.config.center.rarity == 4 then
+                                    dollars = dollars + 1
+                                end
+                                ease_dollars(dollars, true)
+                                -- Show message
+                                card_eval_status_text(v, 'extra', nil, nil, nil, {
+                                    message = localize('$') .. dollars,
+                                    dollars = dollars,
+                                    colour = G.C.MONEY,
+                                    instant = true
+                                })
+                                -- Animate cards
+                                if v ~= self then
+                                    v:juice_up(0.5, 0.5)
+                                end
+                                self:juice_up(0.5, 0.5)
+                                return true
+                            end)
+                        })) 
+                    end
                 end
             end
         end
