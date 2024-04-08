@@ -202,15 +202,14 @@ local function create_tarot(joker)
 end
 
 local function create_planet(joker, planet, other_joker)
-    if #G.consumeables.cards + G.GAME.consumeable_buffer <
-        G.consumeables.config.card_limit then
+    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+        local card_type = 'Planet'
         G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-        -- Add card
         G.E_MANAGER:add_event(Event({
             trigger = 'before',
             delay = 0.0,
             func = (function()
-                local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, planet, 'blusl')
+                local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, 'blusl')
                 card:add_to_deck()
                 G.consumeables:emplace(card)
                 G.GAME.consumeable_buffer = 0
@@ -3808,8 +3807,9 @@ function SMODS.INIT.MikasModCollection()
                 name = "Checklist",
                 text = {
                     "Playing {C:attention}#1#{} upgrades",
-                    "it by #2# level. Poker hand",
-                    "changes when played"
+                    "it by #2# level,",
+                    "poker hand changes",
+                    "at end of round"
                 }
             },
             ability_name = "MMC Checklist",
@@ -3836,6 +3836,21 @@ function SMODS.INIT.MikasModCollection()
             return { localize(card.ability.extra.poker_hand, 'poker_hands'), card.ability.extra.increase }
         end
 
+        -- Set ability
+        function SMODS.Jokers.j_mmc_checklist.set_ability(card, initial, delay_sprites)
+            local _poker_hands = {}
+            for k, v in pairs(G.GAME.hands) do
+                if v.visible then _poker_hands[#_poker_hands + 1] = k end
+            end
+            local old_hand = card.ability.extra.poker_hand
+            card.ability.extra.poker_hand = nil
+            while not card.ability.extra.poker_hand do
+                card.ability.extra.poker_hand = pseudorandom_element(_poker_hands,
+                    pseudoseed((card.area and card.area.config.type == 'title') and 'false_checklist' or 'checklist'))
+                if card.ability.extra.poker_hand == old_hand then card.ability.extra.poker_hand = nil end
+            end
+        end
+
         -- Calculate
         SMODS.Jokers.j_mmc_checklist.calculate = function(self, context)
             -- Level up poker hand
@@ -3846,22 +3861,17 @@ function SMODS.INIT.MikasModCollection()
                 level_up_hand(self, context.scoring_name, false, self.ability.extra.increase)
             end
 
-            -- Get new random poker hand if triggered
-            if context.after and not context.blueprint and context.cardarea == G.jokers then
-                if self.ability.extra.triggered then
-                    G.E_MANAGER:add_event(Event({
-                        func = function()
-                            local _poker_hands = {}
-                            for k, v in pairs(G.GAME.hands) do
-                                if v.visible and k ~= self.ability.extra.poker_hand then
-                                    _poker_hands[#_poker_hands + 1] = k
-                                end
-                            end
-                            self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('checklist'))
-                            return true
-                        end
-                    }))
+            -- Get new random poker hand at end of round
+            if context.end_of_round and not context.individual and
+                not context.repetition and not context.blueprint then
+                local _poker_hands = {}
+                for k, v in pairs(G.GAME.hands) do
+                    if v.visible and k ~= self.ability.extra.poker_hand then _poker_hands[#_poker_hands + 1] = k end
                 end
+                self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('checklist'))
+                return {
+                    message = localize('k_reset')
+                }
             end
         end
     end
@@ -4443,7 +4453,7 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Tax Collector",
                 text = {
-                    "Gives {C:green}$#2#{}, {C:red}$#3#{} or {C:legendary}$#4#",
+                    "Gives {C:green}$#1#{}, {C:red}$#2#{} or {C:legendary}$#3#",
                     "per Joker with the",
                     "respective {C:attention}rarity",
                     "at end of round"
@@ -4502,7 +4512,7 @@ function SMODS.INIT.MikasModCollection()
                                 self:juice_up(0.5, 0.5)
                                 return true
                             end)
-                        })) 
+                        }))
                     end
                 end
             end
