@@ -7,6 +7,7 @@
 ### Bugfixes
 * Fixed Checklist not updating the Poker Hand.
 * Cicero no longer gives Negative to Misprint and no longer ignores Printer.
+* Fixed wrong description of One Of Us.
 ### Resprites
 * New sprite for Lucky Number Seven (now Scratch Card). Done by `@Grassy`.
 ## Update V0.11.0
