@@ -516,6 +516,7 @@ local cicero_blacklist = {
 
 local cicero_whitelist = {
     "Mr. Bones",
+    "Printer",
 }
 
 -- Create Decks
@@ -978,7 +979,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Spectrals.c_mmc_bribe.loc_def(card)
-            return { G.GAME.bribe_cost or card.config.extra.dollars, card.config.extra.j_slots }
+            return { G.GAME.mmc_bribe_cost or card.config.extra.dollars, card.config.extra.j_slots }
         end
 
         -- Set can_use
@@ -994,7 +995,7 @@ function SMODS.INIT.MikasModCollection()
         -- Use effect
         function SMODS.Spectrals.c_mmc_bribe.use(card, area, copier)
             -- Get cost
-            G.GAME.bribe_cost = G.GAME.bribe_cost or card.ability.extra.dollars
+            G.GAME.mmc_bribe_cost = G.GAME.mmc_bribe_cost or card.ability.extra.dollars
             -- Get editionless Jokers
             local editionless_jokers = {}
             for _, v in pairs(G.jokers.cards) do
@@ -1010,11 +1011,11 @@ function SMODS.INIT.MikasModCollection()
                     func = function()
                         -- Set joker edition
                         local joker = pseudorandom_element(editionless_jokers, pseudoseed('bribe'))
-                        ease_dollars(-G.GAME.bribe_cost)
+                        ease_dollars(-G.GAME.mmc_bribe_cost)
                         card:juice_up(0.3, 0.5)
                         joker:set_edition({ negative = true }, true)
                         -- Change Cost
-                        G.GAME.bribe_cost = G.GAME.bribe_cost + card.ability.extra.increase
+                        G.GAME.mmc_bribe_cost = G.GAME.mmc_bribe_cost + card.ability.extra.increase
                         return true
                     end
                 }))
@@ -2097,7 +2098,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_eye_chart.calculate = function(self, context)
             -- Check if Joker name contains letter and apply chips
-            if context.other_joker and context.other_joker ~= self and context.other_joker.ability.set == 'Joker' then
+            if context.other_joker and context.other_joker.ability.set == 'Joker' then
                 -- FOR OTHER MODS:
                 -- If your mod uses ability names with a prefix and you want it to be compatible with this Joker,
                 -- Send me a message on Discord and I will add your prefix here so that it will work correctly!
@@ -4973,7 +4974,7 @@ function Card.set_edition(self, edition, immediate, silent)
                     support = support and
                         not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
                 end
-                if support or not not_in_table(cicero_whitelist, self.ability.name) and not_in_table(cicero_blacklist, self.ability.name) then
+                if (support or not not_in_table(cicero_whitelist, self.ability.name)) and not_in_table(cicero_blacklist, self.ability.name) then
                     self:set_edition({ negative = true })
                 end
                 break

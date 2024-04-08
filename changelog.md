@@ -3,10 +3,12 @@
 * Bribe's cost now increases by $25 for each usage.
 * Tax collector now gives $1, $2 or $4 per rarity, starting at uncommon.
 * Fortune's effect is now inverted, meaning that it has a 1/4 chance of setting your money to $0, otherwise it will double your money. This prevents infinite money with Oops All 6s.
+* Eye chart now also counts itself for letters in the name.
 ### Bugfixes
 * Fixed Checklist not updating the Poker Hand.
+* Cicero no longer gives Negative to Misprint and no longer ignores Printer.
 ### Resprites
-* New sprite for Lucky Number Seven (now Scratch Card). Done by `@Grassy`
+* New sprite for Lucky Number Seven (now Scratch Card). Done by `@Grassy`.
 ## Update V0.11.0
 ### New Jokers
 * Pack A Punch: Give the left-most Joker a random Edition when a blind is selected, at the cost of $20. This will replace the current Edition. It also self destructs if it replaces a negative Edition and there are too many Jokers.
@@ -21,7 +23,7 @@
 ### New Spectrals
 * Bribe: Turn a random Joker Negative but lose $50, ignoring the spending limit.
 ### Resprites
-* New sprite for Planetary Alignment (now Aurora Borealis), The Cultist, What Are The Odds (now Blue Moon), and The Gambler (now Horseshoe). All done by `@Grassy`
+* New sprite for Planetary Alignment (now Aurora Borealis), The Cultist, What Are The Odds (now Blue Moon), and The Gambler (now Horseshoe). All done by `@Grassy`.
 ### Other
 * Harp Seal now works with Planetary Alignment (now Aurora Borealis).
 * Added a Mod Badge, so Steamodded V0.9.7 is required.
@@ -42,4 +44,4 @@
 * Added 7 new Jokers, making the total Joker count 45 (3 full pages)
 * Detailed ability information can be found in the [readme](https://github.com/MikaSchoenmakers/MikasBalatro?tab=readme-ov-file#mikas-balatro-mod-collection)
 ### Resprites
-* Added a new sprite to The Banker (now Gold Bar), done by `@Grassy`
+* Added a new sprite to The Banker (now Gold Bar), done by `@Grassy`.
