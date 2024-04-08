@@ -46,7 +46,7 @@ _The exact formula is: `Base Price * Number of Jokers`. All Jokers also remove t
 # Tarots
 ### Fortune
 ![Fortune](./assets/2x/c_mmc_fortune.png)\
-3 in 4 chance to double your money, otherwise set money to $0.
+1 in 4 chance to set money to $0, otherwise double your money.
 
 ### The Idiot
 ![The Idiot](./assets/2x/c_mmc_idiot.png)\
@@ -55,7 +55,7 @@ Multiply money by -1.
 # Tarots
 ### Bribe
 ![Bribe](./assets/2x/c_mmc_bribe.png)\
-Turn a random Joker Negative but lose $50, ignoring the spending limit.
+Turn a random Joker Negative but lose $50, ignoring the spending limit. Cost increases by $25 per usage.
 
 # Jokers
 ## Common
@@ -105,10 +105,6 @@ Give +100 Chips if played hand contains 3 or fewer cards.
 ![The Investor](./assets/2x/j_mmc_investor.png)\
 Gives $5 at the end of every round. 1 in 4 chance to give -$5 instead.
 
-### Lucky Number Seven
-![Lucky Number Seven](./assets/2x/j_mmc_lucky_number_seven.png)\
-Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
-
 ### Prime Time
 ![Prime Time](./assets/2x/j_mmc_prime_time.png)\
 Gives each played prime number _(2, 3, 5, 7, Ace)_ X1.2 mult when scored.\
@@ -118,6 +114,10 @@ _Art made by `Grassy`_
 ![Rigged Joker](./assets/2x/j_mmc_rigged.png)\
 Once per hand, add +1 to all listed probabilities whenever a **_Lucky_** card does not trigger. Resets every round.\
 _Example: 1 in 4 -> 2 in 4 -> 3 in 4_
+
+### Scratch Card
+![Scratch Card](./assets/2x/j_mmc_lucky_number_seven.png)\
+Gain $1, $3, $10, $25, $50 when 1, 2, 3, 4 or 5 sevens are played, respectively.
 
 ### Seal Collector
 ![Seal Collector](./assets/2x/j_mmc_seal_collector.png)\
@@ -142,7 +142,7 @@ Diamond and Club cards gain +12 Chips when scored. Heart and Spade cards gain +3
 
 ### Tax Collector
 ![Tax Collector](./assets/2x/j_mmc_tax_collector.png)\
-Gives $1, $2, $3 or $4 per Joker at the end of the round, based on their rarity.
+Gives $1, $2 or $4 per Joker at the end of the round, based on their rarity starting at uncommon.
 
 ## Uncommon
 ### Abbey Road

@@ -844,9 +844,9 @@ function SMODS.INIT.MikasModCollection()
                 name = "Fortune",
                 text = {
                     "{C:green}#2# in #1#{} chance",
-                    "to double your",
-                    "money, otherwise",
-                    "set money to $0"
+                    "to set money to",
+                    "$0, otherwise",
+                    "double your money"
                 }
             },
             ability_name = "MMC Fortune",
@@ -862,7 +862,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Tarots.c_mmc_fortune.loc_def(card)
-            return { card.config.extra.odds, '' .. ((G.GAME and G.GAME.probabilities.normal or 1) * 3) }
+            return { card.config.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
         end
 
         -- Set can_use
@@ -873,10 +873,6 @@ function SMODS.INIT.MikasModCollection()
         -- Use effect
         function SMODS.Tarots.c_mmc_fortune.use(card, area, copier)
             if pseudorandom('fortune') < G.GAME.probabilities.normal * 3 / card.ability.extra.odds then
-                -- Double money
-                delay(0.6)
-                ease_dollars(G.GAME.dollars)
-            else
                 -- Nope!
                 G.E_MANAGER:add_event(Event({
                     trigger = 'after',
@@ -909,6 +905,10 @@ function SMODS.INIT.MikasModCollection()
                     end
                 }))
                 delay(0.6)
+            else
+                -- Double money
+                delay(0.6)
+                ease_dollars(G.GAME.dollars)
             end
         end
     end
@@ -967,7 +967,7 @@ function SMODS.INIT.MikasModCollection()
             },
             ability_name = "MMC Bribe",
             slug = "mmc_bribe",
-            config = { extra = { dollars = 50, j_slots = 1 } },
+            config = { extra = { dollars = 50, j_slots = 1, increase = 25 } },
             cost = 4,
             cost_mult = 1,
             discovered = true
@@ -978,7 +978,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Spectrals.c_mmc_bribe.loc_def(card)
-            return { card.config.extra.dollars, card.config.extra.j_slots }
+            return { G.GAME.bribe_cost or card.config.extra.dollars, card.config.extra.j_slots }
         end
 
         -- Set can_use
@@ -993,6 +993,8 @@ function SMODS.INIT.MikasModCollection()
 
         -- Use effect
         function SMODS.Spectrals.c_mmc_bribe.use(card, area, copier)
+            -- Get cost
+            G.GAME.bribe_cost = G.GAME.bribe_cost or card.ability.extra.dollars
             -- Get editionless Jokers
             local editionless_jokers = {}
             for _, v in pairs(G.jokers.cards) do
@@ -1006,10 +1008,13 @@ function SMODS.INIT.MikasModCollection()
                     trigger = 'after',
                     delay = 0.4,
                     func = function()
+                        -- Set joker edition
                         local joker = pseudorandom_element(editionless_jokers, pseudoseed('bribe'))
-                        ease_dollars(-card.ability.extra.dollars)
+                        ease_dollars(-G.GAME.bribe_cost)
                         card:juice_up(0.3, 0.5)
                         joker:set_edition({ negative = true }, true)
+                        -- Change Cost
+                        G.GAME.bribe_cost = G.GAME.bribe_cost + card.ability.extra.increase
                         return true
                     end
                 }))
