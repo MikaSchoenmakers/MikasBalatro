@@ -1,3 +1,9 @@
+## Update V0.11.2
+### Resprites
+* New sprites for both Tarot cards, done by `@Grassy`.
+### Bugfixes
+* Fixed Abbey Road not working.
+* Fixed wrong odds on Ace of Pentacles.
 ## Update V0.11.1
 ### Balance changes
 * Bribe's cost now increases by $25 for each usage.
@@ -9,7 +15,7 @@
 * Cicero no longer gives Negative to Misprint and no longer ignores Printer.
 * Fixed wrong description of One Of Us.
 ### Resprites
-* New sprite for Lucky Number Seven (now Scratch Card). Done by `@Grassy`.
+* New sprite for Lucky Number Seven (now Scratch Card), done by `@Grassy`.
 ## Update V0.11.0
 ### New Jokers
 * Pack A Punch: Give the left-most Joker a random Edition when a blind is selected, at the cost of $20. This will replace the current Edition. It also self destructs if it replaces a negative Edition and there are too many Jokers.
@@ -24,7 +30,7 @@
 ### New Spectrals
 * Bribe: Turn a random Joker Negative but lose $50, ignoring the spending limit.
 ### Resprites
-* New sprite for Planetary Alignment (now Aurora Borealis), The Cultist, What Are The Odds (now Blue Moon), and The Gambler (now Horseshoe). All done by `@Grassy`.
+* New sprite for Planetary Alignment (now Aurora Borealis), The Cultist, What Are The Odds (now Blue Moon), and The Gambler (now Horseshoe), all done by `@Grassy`.
 ### Other
 * Harp Seal now works with Planetary Alignment (now Aurora Borealis).
 * Added a Mod Badge, so Steamodded V0.9.7 is required.

@@ -44,13 +44,15 @@ _The exact formula is: `Base Price * Number of Jokers`. All Jokers also remove t
 +1 hands, discards and hand size. Start with a negative **_The Sniper_** joker. Ante scales X1.5 as fast.
 
 # Tarots
-### Fortune
-![Fortune](./assets/2x/c_mmc_fortune.png)\
-1 in 4 chance to set money to $0, otherwise double your money.
+### Ace Of Pentacles
+![Ace Of Pentacles](./assets/2x/c_mmc_ace_of_pentacles.png)\
+1 in 4 chance to set money to $0, otherwise double your money.\
+_Art made by `Grassy`_
 
-### The Idiot
-![The Idiot](./assets/2x/c_mmc_idiot.png)\
-Multiply money by -1.
+### Page Of Pentacles
+![Page Of Pentacles](./assets/2x/c_mmc_page_of_pentacles.png)\
+Multiply money by -1.\
+_Art made by `Grassy`_
 
 # Tarots
 ### Bribe

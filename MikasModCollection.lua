@@ -19,8 +19,8 @@ local config = {
     jokersForHireDeck = true,
     perfectPrecisionDeck = true, -- Do not enable without sniperJoker
     -- Tarot Cards
-    fortuneTarot = true,
-    idiotTarot = true,
+    aceOfPentaclesTarot = true,
+    pageOfPentaclesTarot = true,
     -- Spectral Cards
     bribeSpectral = true,
     -- Jokers
@@ -837,20 +837,21 @@ function SMODS.INIT.MikasModCollection()
     end
 
     -- Tarot Cards
-    if config.fortuneTarot then
+    if config.aceOfPentaclesTarot then
         -- Create Tarot
-        local fortune = {
+        local ace_of_pentacles = {
             loc = {
-                name = "Fortune",
+                name = "Ace Of Pentacles",
                 text = {
                     "{C:green}#2# in #1#{} chance",
                     "to set money to",
                     "{C:money}$0{}, otherwise",
-                    "double your money"
+                    "double your money",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC Fortune",
-            slug = "mmc_fortune",
+            ability_name = "MMC Ace Of Pentacles",
+            slug = "mmc_ace_of_pentacles",
             config = { extra = { odds = 4 } },
             cost = 4,
             cost_mult = 1,
@@ -858,21 +859,21 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(fortune)
+        init_tarot(ace_of_pentacles)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_fortune.loc_def(card)
+        function SMODS.Tarots.c_mmc_ace_of_pentacles.loc_def(card)
             return { card.config.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_fortune.can_use(card)
+        function SMODS.Tarots.c_mmc_ace_of_pentacles.can_use(card)
             return true
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_fortune.use(card, area, copier)
-            if pseudorandom('fortune') < G.GAME.probabilities.normal * 3 / card.ability.extra.odds then
+        function SMODS.Tarots.c_mmc_ace_of_pentacles.use(card, area, copier)
+            if pseudorandom('ace_of_pentacles') < G.GAME.probabilities.normal / card.ability.extra.odds then
                 -- Nope!
                 G.E_MANAGER:add_event(Event({
                     trigger = 'after',
@@ -913,18 +914,19 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.idiotTarot then
+    if config.pageOfPentaclesTarot then
         -- Create Tarot
-        local idiot = {
+        local page_of_pentacles = {
             loc = {
-                name = "The Idiot",
+                name = "Page Of Pentacles",
                 text = {
                     "Multiply",
-                    "money by {C:red}-1"
+                    "money by {C:red}-1",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC The Idiot",
-            slug = "mmc_idiot",
+            ability_name = "MMC Page Of Pentacles",
+            slug = "mmc_page_of_pentacles",
             config = {},
             cost = 1,
             cost_mult = 1,
@@ -932,20 +934,20 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(idiot)
+        init_tarot(page_of_pentacles)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_idiot.loc_def(card)
+        function SMODS.Tarots.c_mmc_page_of_pentacles.loc_def(card)
             return {}
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_idiot.can_use(card)
+        function SMODS.Tarots.c_mmc_page_of_pentacles.can_use(card)
             return true
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_idiot.use(card, area, copier)
+        function SMODS.Tarots.c_mmc_page_of_pentacles.use(card, area, copier)
             -- Turn money into negative
             delay(0.6)
             ease_dollars(-G.GAME.dollars * 2)
@@ -2763,7 +2765,8 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_abbey_road.calculate = function(self, context)
             if context.after and not context.blueprint and context.cardarea == G.jokers then
-                -- Reset hand count
+                -- Reset
+                self.ability.extra.should_trigger = false
                 self.ability.extra.hand_equal_count = {}
 
                 -- Count occurance of all hands
@@ -2800,11 +2803,6 @@ function SMODS.INIT.MikasModCollection()
                         card = self
                     }
                 end
-            end
-
-            -- Reset
-            if context.after and not context.blueprint and context.cardarea == G.jokers then
-                self.ability.extra.should_trigger = false
             end
         end
     end
