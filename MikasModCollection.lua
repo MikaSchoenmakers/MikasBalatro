@@ -76,7 +76,7 @@ local config = {
     glassCannonJoker = true,
     scoringTestJoker = true,
     ciceroJoker = true,
-    sunriseJoker = true,
+    dawnJoker = true,
     savingsJoker = true,
     monopolistJoker = true,
     nebulaJoker = true,
@@ -847,10 +847,10 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Ace Of Pentacles",
                 text = {
-                    "{C:green}#2# in #1#{} chance",
+                    "{C:red}#2# in #1#{} chance",
                     "to set money to",
                     "{C:money}$0{}, otherwise",
-                    "double your money",
+                    "{C:attention}double{} your money",
                     "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
@@ -1093,8 +1093,8 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "{X:mult,C:white} X#1# {} Mult if played hand",
                     "contains a {C:attention}Straight{} and you have",
-                    "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}.",
-                    "Also gives {C:dark_edition}+#2#{} Joker slot"
+                    "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}",
+                    "Gives {C:dark_edition}+#2#{} Joker slot"
                 }
             },
             ability_name = "MMC Straight Nate",
@@ -1926,7 +1926,7 @@ function SMODS.INIT.MikasModCollection()
                 name = "Batman",
                 text = {
                     "Gains {C:mult}+#2#{} Mult for",
-                    "every {C:attention}non-lethal{} hand played.",
+                    "every {C:attention}non-lethal{} hand played",
                     "Mult gain increases for every",
                     "Joker with {C:attention}\"Joker\"{} in the name",
                     "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
@@ -2072,7 +2072,7 @@ function SMODS.INIT.MikasModCollection()
                 name = "Eye Chart",
                 text = {
                     "Gives {C:chips}+#1#{} Chips for every",
-                    "letter {C:attention}\"#2#\"{} in your Jokers.",
+                    "letter {C:attention}\"#2#\"{} in your Jokers",
                     "Letter changes when this",
                     "Joker appears in the shop",
                     "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy" }
@@ -2716,7 +2716,7 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_incomplete.calculate = function(self, context)
             -- Check if hand is less than 3 cards, then apply chips
             if SMODS.end_calculate_context(context) then
-                if  context.full_hand and #context.full_hand <= self.ability.extra.req then
+                if context.full_hand and #context.full_hand <= self.ability.extra.req then
                     return {
                         message = localize {
                             type = 'variable',
@@ -2972,7 +2972,7 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "Once per hand, add {C:attention}+#1#{} to all",
                     "listed {C:green,E:1,S:1.1}probabilities{} whenever a",
-                    "{C:attention}Lucky{} card does not trigger.",
+                    "{C:attention}Lucky{} card does not trigger",
                     "Resets every round"
                 }
             },
@@ -3535,7 +3535,7 @@ function SMODS.INIT.MikasModCollection()
                 name = "The Stockpiler",
                 text = {
                     "{C:attention}+#2#{} hand size for every #4#",
-                    "cards in deck above {C:attention}#3#{}.",
+                    "cards in deck above {C:attention}#3#{}",
                     "Caps at the current Ante",
                     "{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
                 }
@@ -3596,7 +3596,7 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Student Loans",
                 text = {
-                    "Go up to {C:red}-$#1#{} in debt.",
+                    "Go up to {C:red}-$#1#{} in debt",
                     "Gives -#4# {C:red}discard{}",
                     "for every {C:red}-$#2#{} in debt",
                     "{C:inactive}(Currently {C:attention}#3#{C:inactive} discards)"
@@ -4727,6 +4727,227 @@ function SMODS.INIT.MikasModCollection()
             return {}
         end
     end
+
+    if config.dawnJoker then
+        -- Create Joker
+        local dawn = {
+            loc = {
+                name = "Dawn",
+                text = {
+                    "Retrigger all played",
+                    "cards in {C:attention}first",
+                    "{C:attention}hand{} of round"
+                }
+            },
+            ability_name = "MMC Dawn",
+            slug = "mmc_dawn",
+            ability = { extra = 1 },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(dawn, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_dawn.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_dawn.calculate = function(self, context)
+            -- Retrigger first hand
+            if context.repetition and context.cardarea == G.play then
+                if context.other_card and G.GAME.current_round.hands_played == 0 then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = self.ability.extra,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
+
+    if config.savingsJoker then
+        -- Create Joker
+        local savings = {
+            loc = {
+                name = "Savings",
+                text = {
+                    "{C:mult}+#1#{} Mult per round",
+                    "Resets when",
+                    "buying a {C:attention}card",
+                    "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Savings",
+            slug = "mmc_savings",
+            ability = {
+                extra = {
+                    mult_mod = 5,
+                    current_mult = 0
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(savings, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_savings.loc_def(card)
+            return { card.ability.extra.mult_mod, card.ability.extra.current_mult }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_savings.calculate = function(self, context)
+            -- Reset mult on purchase
+            if context.buying_card and not context.blueprint then
+                if self.ability.extra.current_mult ~= 0 then
+                    self.ability.extra.current_mult = 0
+                    -- Reset message
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize('k_reset')
+                    })
+                end
+            end
+
+            -- Apply mult
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.current_mult > 0 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_mult',
+                            vars = { self.ability.extra.current_mult }
+                        },
+                        mult_mod = self.ability.extra.current_mult,
+                        card = self
+                    }
+                end
+            end
+
+            -- Increase mult
+            if context.end_of_round and not context.individual and
+                not context.repetition and not context.blueprint then
+                self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
+                return {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_mult',
+                        vars = { self.ability.extra.mult_mod }
+                    },
+                    colour = G.C.RED,
+                    card = self
+                }
+            end
+        end
+    end
+
+    if config.monopolistJoker then
+        -- Create Joker
+        local monopolist = {
+            loc = {
+                name = "Monopolist",
+                text = {
+                    "{X:mult,C:white}X#1#{} Mult, gains",
+                    "{X:mult,C:white}X#2#{} Mult at {C:money}$#3#{},",
+                    "requirement doubles",
+                    "when met"
+                }
+            },
+            ability_name = "MMC Monopolist",
+            slug = "mmc_monopolist",
+            ability = {
+                extra = {
+                    current_Xmult = 1,
+                    Xmult_mod = 0.5,
+                    req = 25,
+                    base = 25,
+                }
+            },
+            rarity = 3,
+            cost = 10,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(monopolist, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_monopolist.loc_def(card)
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.req }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_monopolist.calculate = function(self, context)
+            -- Apply xmult
+            if SMODS.end_calculate_context(context) then
+                if self.ability.extra.current_Xmult > 1 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        Xmult_mod = self.ability.extra.current_Xmult,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
+
+    if config.nebulaJoker then
+        -- Create Joker
+        local nebula = {
+            loc = {
+                name = "Nebula",
+                text = {
+                    ""
+                }
+            },
+            ability_name = "MMC Nebula",
+            slug = "mmc_nebula",
+            ability = {
+                extra = {
+
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(nebula, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_nebula.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_nebula.calculate = function(self, context)
+            -- TODO
+        end
+    end
 end
 
 -- Stretch card back of odd shaped Jokers
@@ -5047,6 +5268,38 @@ function Card.update(self, dt)
             if negative_bal < 0 then
                 self.ability.extra.current_chips = -1 * math.ceil(negative_bal / self.ability.extra.every) *
                     self.ability.extra.chip_mod
+            end
+        end
+
+        if self.ability.name == 'MMC Monopolist' then
+            local bal = G.GAME.dollars
+            if bal >= self.ability.extra.req then
+                -- Increase Xmult and req
+                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
+                self.ability.extra.req = self.ability.extra.req * 2
+                -- Show message
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.current_Xmult }
+                    },
+                    colour = G.C.MULT
+                })
+            elseif self.ability.extra.req ~= self.ability.extra.base and
+                bal < (self.ability.extra.req / 2) then
+                -- Decrease Xmult and req
+                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra.Xmult_mod
+                self.ability.extra.req = self.ability.extra.req / 2
+                -- Show message
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize {
+                        type = 'variable',
+                        key = 'a_xmult',
+                        vars = { self.ability.extra.current_Xmult }
+                    },
+                    colour = G.C.MULT
+                })
             end
         end
     end
