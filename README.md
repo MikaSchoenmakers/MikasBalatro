@@ -55,9 +55,10 @@ Multiply money by -1.\
 _Art made by `Grassy`_
 
 # Tarots
-### Bribe
-![Bribe](./assets/2x/c_mmc_bribe.png)\
-Turn a random Joker Negative but lose $50, ignoring the spending limit. Cost increases by $25 per usage.
+### Incense
+![Incense](./assets/2x/c_mmc_incense.png)\
+Turn a random Joker Negative but lose $50, ignoring the spending limit. Cost increases by $25 per usage.\
+_Art made by `Grassy`_
 
 # Jokers
 ## Common
@@ -88,7 +89,8 @@ _Art made by `Grassy`_
 
 ### Glue
 ![Glue](./assets/2x/j_mmc_glue.png)\
-If you have both the Half Joker and the Incomplete Joker, give +2 Joker slots and X5 Mult.
+If you have both the Half Joker and the Incomplete Joker, give +2 Joker slots and X5 Mult.\
+_Art made by `Grassy`_
 
 ### Go For Broke
 ![Go For Broke](./assets/2x/j_mmc_go_for_broke.png)\
@@ -212,10 +214,6 @@ If played hand contains 5 Enhanced cards, give a random Joker a random Edition.
 ![Scoring Test](./assets/2x/j_mmc_scoring_test.png)\
 If played hand scores less than 1% of blind chip requirement, destroy it.
 
-### Shy Joker
-![Shy Joker](./assets/2x/j_mmc_shy.png)\
-Gain X0.01 Mult for every card played, starting at X1 Mult.
-
 ### Special Edition Joker
 ![Special Edition Joker](./assets/2x/j_mmc_special_edition.png)\
 Gains +2 Mult per Seal, +10 Chips per Enhancement and X0.1 Mult per Edition for every card in your deck.
@@ -227,6 +225,11 @@ Gives X4 Mult when balance is at or below -$20.
 ### Student Loans
 ![Student Loans](./assets/2x/j_mmc_student_loans.png)\
 Go up to -$100 in debt. Gives -1 discard for every -$25 in debt.
+
+### Training Wheels
+![Training Wheels](./assets/2x/j_mmc_training_wheels.png)\
+Gain X0.01 Mult for every card played, starting at X1 Mult.\
+_Art made by `Grassy`_
 
 ## Rare
 ### Batman

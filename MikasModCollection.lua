@@ -22,7 +22,7 @@ local config = {
     aceOfPentaclesTarot = true,
     pageOfPentaclesTarot = true,
     -- Spectral Cards
-    bribeSpectral = true,
+    incenseSpectral = true,
     -- Jokers
     primeTimeJoker = true,
     straightNateJoker = true,
@@ -45,7 +45,7 @@ local config = {
     historicalJoker = true,
     suitAlleyJoker = true,
     printerJoker = true,
-    shyJoker = true,
+    trainingWheelsJoker = true,
     horseshoeJoker = true,
     incompleteJoker = true,
     abbeyRoadJoker = true,
@@ -76,6 +76,10 @@ local config = {
     glassCannonJoker = true,
     scoringTestJoker = true,
     ciceroJoker = true,
+    sunriseJoker = true,
+    savingsJoker = true,
+    monopolistJoker = true,
+    nebulaJoker = true,
 }
 
 -- Helper functions
@@ -955,20 +959,21 @@ function SMODS.INIT.MikasModCollection()
     end
 
     -- Spectral Cards
-    if config.bribeSpectral then
+    if config.incenseSpectral then
         -- Create Spectral
-        local bribe = {
+        local incense = {
             loc = {
-                name = "Bribe",
+                name = "Incense",
                 text = {
                     "Add {C:dark_edition}Negative{} to",
                     "a random {C:attention}Joker{},",
                     "{C:red}-$#1#{}, ignores",
-                    "spending limit"
+                    "spending limit",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC Bribe",
-            slug = "mmc_bribe",
+            ability_name = "MMC Incense",
+            slug = "mmc_incense",
             config = { extra = { dollars = 50, j_slots = 1, increase = 25 } },
             cost = 4,
             cost_mult = 1,
@@ -976,15 +981,15 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Spectral
-        init_spectral(bribe)
+        init_spectral(incense)
 
         -- Set local variables
-        function SMODS.Spectrals.c_mmc_bribe.loc_def(card)
-            return { G.GAME.mmc_bribe_cost or card.config.extra.dollars, card.config.extra.j_slots }
+        function SMODS.Spectrals.c_mmc_incense.loc_def(card)
+            return { G.GAME.mmc_incense_cost or card.config.extra.dollars, card.config.extra.j_slots }
         end
 
         -- Set can_use
-        function SMODS.Spectrals.c_mmc_bribe.can_use(card)
+        function SMODS.Spectrals.c_mmc_incense.can_use(card)
             for _, v in pairs(G.jokers.cards) do
                 if v.ability.set == 'Joker' and (not v.edition) then
                     return true
@@ -994,9 +999,9 @@ function SMODS.INIT.MikasModCollection()
         end
 
         -- Use effect
-        function SMODS.Spectrals.c_mmc_bribe.use(card, area, copier)
+        function SMODS.Spectrals.c_mmc_incense.use(card, area, copier)
             -- Get cost
-            G.GAME.mmc_bribe_cost = G.GAME.mmc_bribe_cost or card.ability.extra.dollars
+            G.GAME.mmc_incense_cost = G.GAME.mmc_incense_cost or card.ability.extra.dollars
             -- Get editionless Jokers
             local editionless_jokers = {}
             for _, v in pairs(G.jokers.cards) do
@@ -1011,12 +1016,12 @@ function SMODS.INIT.MikasModCollection()
                     delay = 0.4,
                     func = function()
                         -- Set joker edition
-                        local joker = pseudorandom_element(editionless_jokers, pseudoseed('bribe'))
-                        ease_dollars(-G.GAME.mmc_bribe_cost)
+                        local joker = pseudorandom_element(editionless_jokers, pseudoseed('incense'))
+                        ease_dollars(-G.GAME.mmc_incense_cost)
                         card:juice_up(0.3, 0.5)
                         joker:set_edition({ negative = true }, true)
                         -- Change Cost
-                        G.GAME.mmc_bribe_cost = G.GAME.mmc_bribe_cost + card.ability.extra.increase
+                        G.GAME.mmc_incense_cost = G.GAME.mmc_incense_cost + card.ability.extra.increase
                         return true
                     end
                 }))
@@ -2559,19 +2564,20 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.shyJoker then
+    if config.trainingWheelsJoker then
         -- Create Joker
-        local shy = {
+        local training_wheels = {
             loc = {
-                name = "Shy Joker",
+                name = "Training Wheels",
                 text = {
                     "{X:mult,C:white}X#1#{} Mult,",
                     "gains {X:mult,C:white}X#2#{} Mult",
-                    "per {C:attention}card{} scored"
+                    "per {C:attention}card{} scored",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC Shy Joker",
-            slug = "mmc_shy",
+            ability_name = "MMC Training Wheels",
+            slug = "mmc_training_wheels",
             ability = {
                 extra = {
                     current_Xmult = 1,
@@ -2587,15 +2593,15 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(shy)
+        init_joker(training_wheels)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_shy.loc_def(card)
+        function SMODS.Jokers.j_mmc_training_wheels.loc_def(card)
             return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_shy.calculate = function(self, context)
+        SMODS.Jokers.j_mmc_training_wheels.calculate = function(self, context)
             -- Add xmult for every played card
             if context.individual and context.cardarea == G.play and not context.blueprint then
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
@@ -2710,7 +2716,7 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_incomplete.calculate = function(self, context)
             -- Check if hand is less than 3 cards, then apply chips
             if SMODS.end_calculate_context(context) then
-                if #context.full_hand <= self.ability.extra.req then
+                if  context.full_hand and #context.full_hand <= self.ability.extra.req then
                     return {
                         message = localize {
                             type = 'variable',
@@ -3080,7 +3086,7 @@ function SMODS.INIT.MikasModCollection()
             -- If first hand is single card, upgrade
             if G.GAME.current_round.hands_played == 0 then
                 if context.before then
-                    if #context.full_hand == 1 then
+                    if context.full_hand and #context.full_hand == 1 then
                         local _card = context.full_hand[1]
 
                         -- Animate card
@@ -3280,7 +3286,8 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "If you have both {C:attention}Half",
                     "and {C:attention}Incomplete Joker{}, give",
-                    "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult"
+                    "{C:dark_edition}+#2#{} Joker slots and {X:mult,C:white}X#1#{} Mult",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
             ability_name = "MMC Glue",
@@ -4100,7 +4107,7 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_shackles.calculate = function(self, context)
             if SMODS.end_calculate_context(context) then
                 -- Destroy if more cards than required are played
-                if #context.full_hand > self.ability.extra.req then
+                if context.full_hand and #context.full_hand > self.ability.extra.req then
                     G.E_MANAGER:add_event(Event({
                         func = function()
                             play_sound('tarot1')
@@ -4473,7 +4480,7 @@ function SMODS.INIT.MikasModCollection()
             cost = 4,
             unlocked = true,
             discovered = true,
-            blueprint_compat = false,
+            blueprint_compat = true,
             eternal_compat = true
         }
 
@@ -4545,7 +4552,7 @@ function SMODS.INIT.MikasModCollection()
             cost = 7,
             unlocked = true,
             discovered = true,
-            blueprint_compat = false,
+            blueprint_compat = true,
             eternal_compat = true
         }
 
