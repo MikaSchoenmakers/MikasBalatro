@@ -22,12 +22,12 @@
 * Tax collector now gives $1, $2 or $4 per rarity, starting at uncommon.
 * Fortune's effect is now inverted, meaning that it has a 1/4 chance of setting your money to $0, otherwise it will double your money. This prevents infinite money with Oops All 6s.
 * Eye chart now also counts itself for letters in the name.
+### Resprites
+* New sprite for Lucky Number Seven (now Scratch Card), done by `@Grassy`.
 ### Bugfixes
 * Fixed Checklist not updating the Poker Hand.
 * Cicero no longer gives Negative to Misprint and no longer ignores Printer.
 * Fixed wrong description of One Of Us.
-### Resprites
-* New sprite for Lucky Number Seven (now Scratch Card), done by `@Grassy`.
 ## Update V0.11.0
 ### New Jokers
 * Pack A Punch: Give the left-most Joker a random Edition when a blind is selected, at the cost of $20. This will replace the current Edition. It also self destructs if it replaces a negative Edition and there are too many Jokers.
@@ -47,19 +47,19 @@
 * Harp Seal now works with Planetary Alignment (now Aurora Borealis).
 * Added a Mod Badge, so Steamodded V0.9.7 is required.
 ## Update V0.10.1
-### Bugfixes
-* Changed blueprint compatibility for a lot of Jokers, meaning they should now work correctly with blueprint.
-    - The full list of Jokers that got changed with regards to blueprint is: Cultist, Lucky Number Seven, Delayed Jokers, Showoff, Sniper, Blackjack, Batman, Grudgeful, Historical, Shy joker, Abbey Road, Rigged, What Are The Odds, Stockpiler, Checklist and One Of Us.
-* Fixed Incomplete Joker stretching on reload.
 ### Balance changes
 * Showoff Joker now gains X0.25 Mult instead of X1 Mult.
 * Jokers For Hire deck now has a linear cost increase, instead of an exponential one. Example: 2nd joker will cost the base price X2, 3rd joker will cost the base price X3, etc.
     - Riff-raff now costs $1.000.000.000.
+### Bugfixes
+* Changed blueprint compatibility for a lot of Jokers, meaning they should now work correctly with blueprint.
+    - The full list of Jokers that got changed with regards to blueprint is: Cultist, Lucky Number Seven, Delayed Jokers, Showoff, Sniper, Blackjack, Batman, Grudgeful, Historical, Shy joker, Abbey Road, Rigged, What Are The Odds, Stockpiler, Checklist and One Of Us.
+* Fixed Incomplete Joker stretching on reload.
 ### Other
 * Changed Jokers (where applicable) to use in game functions to pick random editions, to be more in line with the base game, this means the odds will be the same as the base game as well instead of being evenly spread.
 * Now uses the updated joker API for setting the local variables used in localization. This means Steamodded V0.8.2 is **required**.
 ## Update V0.10.0
-### New
+### New Jokers
 * Added 7 new Jokers, making the total Joker count 45 (3 full pages)
 * Detailed ability information can be found in the [readme](https://github.com/MikaSchoenmakers/MikasBalatro?tab=readme-ov-file#mikas-balatro-mod-collection)
 ### Resprites
