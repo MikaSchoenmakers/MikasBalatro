@@ -1,3 +1,15 @@
+## Update V0.12.0
+### New Jokers
+* Dawn: Retrigger all played cards in first hand of round.
+* Savings: +5 Mult per round, resets when buying a card.
+* Monopolist: X1 Mult, gains X0.5 Mult per $25, requirement doubles when met.\
+   _Ex: once you reach $25 you'll get X1.5 Mult, at $50 X2, at $100 X2.5, etc._
+### Resprites
+* New sprites for Bribe (now Incense), Shy Joker (now Training wheels) and Glue, done by `@Grassy`.
+### Bugfixes
+* Fixed a full_hand crash that happened with other mods.
+### Other
+* Added blueprint compatibility for Tax Collector and Glass Cannon.
 ## Update V0.11.2
 ### Resprites
 * New sprites for both Tarot cards, done by `@Grassy`.

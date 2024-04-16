@@ -171,6 +171,10 @@ Every discarded card permanently gains +4 Chips.
 ![Checklist](./assets/2x/j_mmc_checklist.png)\
 Playing High Card upgrades it by 1 level. Poker hand changes when played.
 
+### Dawn
+![Dawn](./assets/2x/j_mmc_dawn.png)\
+Retrigger all played cards in first hand of round.
+
 ### Glass Cannon
 ![Glass Cannon](./assets/2x/j_mmc_glass_cannon.png)\
 Retrigger all glass cards, but they are guaranteed to break.
@@ -205,6 +209,10 @@ Gives +3 mult per discarded card. Resets every round.
 ### One Of Us
 ![One Of Us](./assets/2x/j_mmc_one_of_us.png)\
 If played hand contains 5 Enhanced cards, give a random Joker a random Edition.
+
+### Savings
+![Savings](./assets/2x/j_mmc_savings.png)\
++5 Mult per round, resets when buying a card.
 
 ### Scoring Test
 ![Scoring Test](./assets/2x/j_mmc_scoring_test.png)\
@@ -249,18 +257,19 @@ Gains +X1 mult per hand played, starting at X1. Resets every round.
 Gives 20 Mult, 100 Chips and X1.5 Mult on the 4th action.\
 _An action is either playing a hand or discarding_
 
+### Grudgeful Joker
+![Grudgeful Joker](./assets/2x/j_mmc_grudgeful.png)\
+Add excess Chips from last blind to the first hand of the current round. Caps at 10% of the current blind's Chips.
+
 ### Historical Joker
 ![Historical Joker](./assets/2x/j_mmc_historical.png)\
 If scored cards have the same **_ranks_** and **_order_** as the previous hand, add previous hand's Chips to the current hand. Caps at 10% of the current blind's Chips.\
 _Art made by `Grassy`_
 
-### The Show-Off
-![The Show-Off](./assets/2x/j_mmc_showoff.png)\
-Gains +X0.25 Mult whenever a blind is finished with **_2x_** the chip requirement.
-
-### Grudgeful Joker
-![Grudgeful Joker](./assets/2x/j_mmc_grudgeful.png)\
-Add excess Chips from last blind to the first hand of the current round. Caps at 10% of the current blind's Chips.
+### Monopolist
+![Monopolist](./assets/2x/j_mmc_monopolist.png)\
+X1 Mult, gains X0.5 Mult per $25, requirement doubles when met.\
+_E.g: once you reach $25 you'll get X1.5 Mult, at $50 X2, at $100 X2.5, etc._
 
 ### Pack A Punch
 ![Pack A Punch](./assets/2x/j_mmc_pack_a_punch.png)\
@@ -270,6 +279,10 @@ _Will replace the current Edition. Self destructs if there are more Jokers than 
 ### The Printer
 ![The Printer](./assets/2x/j_mmc_printer.png)\
 If a hand scores more than the blind's required Chips, duplicate the played hand and add cards to your hand.
+
+### The Show-Off
+![The Show-Off](./assets/2x/j_mmc_showoff.png)\
+Gains +X0.25 Mult whenever a blind is finished with **_2x_** the chip requirement.
 
 ### The Sniper
 ![The Sniper](./assets/2x/j_mmc_sniper.png)\
