@@ -5191,18 +5191,20 @@ end
 local set_edition_ref = Card.set_edition
 function Card.set_edition(self, edition, immediate, silent)
     set_edition_ref(self, edition, immediate, silent)
-    if not self.added_to_deck and self.ability.set == 'Joker' and (self.edition == nil or not edition.negative) then
-        for _, v in ipairs(G.jokers.cards) do
-            if v.ability.name == "MMC Cicero" then
-                local support = true
-                for _, v2 in ipairs(G.localization.descriptions.Joker[self.config.center.key].text) do
-                    support = support and
-                        not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
+    if G.jokers then
+        if not self.added_to_deck and self.ability.set == 'Joker' and (self.edition == nil or not edition.negative) then
+            for _, v in ipairs(G.jokers.cards) do
+                if v.ability.name == "MMC Cicero" then
+                    local support = true
+                    for _, v2 in ipairs(G.localization.descriptions.Joker[self.config.center.key].text) do
+                        support = support and
+                            not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
+                    end
+                    if (support or not not_in_table(cicero_whitelist, self.ability.name)) and not_in_table(cicero_blacklist, self.ability.name) then
+                        self:set_edition({ negative = true })
+                    end
+                    break
                 end
-                if (support or not not_in_table(cicero_whitelist, self.ability.name)) and not_in_table(cicero_blacklist, self.ability.name) then
-                    self:set_edition({ negative = true })
-                end
-                break
             end
         end
     end
