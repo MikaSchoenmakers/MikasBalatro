@@ -443,11 +443,6 @@ local attributes = {
         prev_key = 'prev_base_dagonet',
         min = 0
     },
-    repetitions = {
-        key = 'repetitions_dagonet',
-        prev_key = 'prev_repetitions_dagonet',
-        min = 0
-    },
     extra = {
         key = 'extra_dagonet',
         prev_key = 'prev_extra_dagonet',
@@ -2715,8 +2710,8 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_incomplete.calculate = function(self, context)
             -- Check if hand is less than 3 cards, then apply chips
-            if SMODS.end_calculate_context(context) then
-                if context.full_hand and #context.full_hand <= self.ability.extra.req then
+            if SMODS.end_calculate_context(context) and context.full_hand then
+                if #context.full_hand <= self.ability.extra.req then
                     return {
                         message = localize {
                             type = 'variable',
@@ -3086,7 +3081,7 @@ function SMODS.INIT.MikasModCollection()
             -- If first hand is single card, upgrade
             if G.GAME.current_round.hands_played == 0 then
                 if context.before then
-                    if context.full_hand and #context.full_hand == 1 then
+                    if #context.full_hand == 1 then
                         local _card = context.full_hand[1]
 
                         -- Animate card
@@ -3923,7 +3918,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_one_of_us.calculate = function(self, context)
-            if SMODS.end_calculate_context(context) then
+            if SMODS.end_calculate_context(context) and context.full_hand then
                 -- Count enhanced cards
                 local enhanced_tally = 0
                 for _, v in ipairs(context.full_hand) do
@@ -4105,9 +4100,9 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_shackles.calculate = function(self, context)
-            if SMODS.end_calculate_context(context) then
+            if SMODS.end_calculate_context(context) and context.full_hand then
                 -- Destroy if more cards than required are played
-                if context.full_hand and #context.full_hand > self.ability.extra.req then
+                if #context.full_hand > self.ability.extra.req then
                     G.E_MANAGER:add_event(Event({
                         func = function()
                             play_sound('tarot1')
@@ -4315,40 +4310,38 @@ function SMODS.INIT.MikasModCollection()
         -- -- Calculate
         SMODS.Jokers.j_mmc_pack_a_punch.calculate = function(self, context)
             if context.setting_blind and not self.getting_sliced then
-                if G.GAME.dollars >= self.ability.extra.dollars + G.GAME.bankrupt_at then
-                    local joker = G.jokers.cards[1]
-                    if joker then
-                        ease_dollars(-self.ability.extra.dollars)
-                        local edition = poll_edition('pack_a_punch', nil, false, true)
-                        -- Animate card
-                        G.E_MANAGER:add_event(Event({
-                            delay = 0.5,
-                            func = function()
-                                -- Set Joker edition
-                                joker:juice_up(0.3, 0.5)
-                                if joker.edition and joker.edition.negative then
-                                    G.jokers.config.card_limit = G.jokers.config.card_limit - 1
-                                end
-                                joker:set_edition(edition, true)
-                                -- Delete self if over Joker limit
-                                if G.jokers.config.card_limit < #G.jokers.cards then
-                                    G.E_MANAGER:add_event(Event({
-                                        func = function()
-                                            play_sound('tarot1')
-                                            self:start_dissolve()
-                                            return true
-                                        end
-                                    }))
-                                end
-                                return true
+                local joker = G.jokers.cards[1]
+                if joker then
+                    ease_dollars(-self.ability.extra.dollars)
+                    local edition = poll_edition('pack_a_punch', nil, false, true)
+                    -- Animate card
+                    G.E_MANAGER:add_event(Event({
+                        delay = 0.5,
+                        func = function()
+                            -- Set Joker edition
+                            joker:juice_up(0.3, 0.5)
+                            if joker.edition and joker.edition.negative then
+                                G.jokers.config.card_limit = G.jokers.config.card_limit - 1
                             end
-                        }))
-                        -- Return message
-                        return {
-                            message = localize('k_mmc_upgrade'),
-                            colour = G.C.SECONDARY_SET.Tarot
-                        }
-                    end
+                            joker:set_edition(edition, true)
+                            -- Delete self if over Joker limit
+                            if G.jokers.config.card_limit < #G.jokers.cards then
+                                G.E_MANAGER:add_event(Event({
+                                    func = function()
+                                        play_sound('tarot1')
+                                        self:start_dissolve()
+                                        return true
+                                    end
+                                }))
+                            end
+                            return true
+                        end
+                    }))
+                    -- Return message
+                    return {
+                        message = localize('k_mmc_upgrade'),
+                        colour = G.C.SECONDARY_SET.Tarot
+                    }
                 end
             end
         end
@@ -4585,7 +4578,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Destroy played glass cards
-            if SMODS.end_calculate_context(context) then
+            if SMODS.end_calculate_context(context) and context.full_hand then
                 for _, v in ipairs(context.full_hand) do
                     if v.played then
                         G.E_MANAGER:add_event(Event({
@@ -4655,7 +4648,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_scoring_test.calculate = function(self, context)
-            if SMODS.end_calculate_context(context) then
+            if SMODS.end_calculate_context(context) and context.full_hand then
                 -- Get played hand
                 self.ability.extra.played_hand = {}
                 for _, v in ipairs(context.full_hand) do
@@ -4741,7 +4734,7 @@ function SMODS.INIT.MikasModCollection()
             },
             ability_name = "MMC Dawn",
             slug = "mmc_dawn",
-            ability = { extra = 1 },
+            ability = { extra = { repetitions = 1 } },
             rarity = 2,
             cost = 6,
             unlocked = true,
@@ -4751,7 +4744,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(dawn, true)
+        init_joker(dawn)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_dawn.loc_def(card)
@@ -4765,7 +4758,7 @@ function SMODS.INIT.MikasModCollection()
                 if context.other_card and G.GAME.current_round.hands_played == 0 then
                     return {
                         message = localize('k_again_ex'),
-                        repetitions = self.ability.extra,
+                        repetitions = self.ability.extra.repetitions,
                         card = self
                     }
                 end
@@ -4802,7 +4795,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(savings, true)
+        init_joker(savings)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_savings.loc_def(card)
@@ -4885,7 +4878,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(monopolist, true)
+        init_joker(monopolist)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_monopolist.loc_def(card)
@@ -4917,35 +4910,53 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Nebula",
                 text = {
-                    ""
+                    "Adds all {C:attention}poker",
+                    "{C:attention}hand{} levels above",
+                    "#1# to {C:mult}Mult"
                 }
             },
             ability_name = "MMC Nebula",
             slug = "mmc_nebula",
-            ability = {
-                extra = {
-
-                }
-            },
+            ability = { extra = { req = 1 } },
             rarity = 1,
             cost = 5,
             unlocked = true,
             discovered = true,
-            blueprint_compat = false,
+            blueprint_compat = true,
             eternal_compat = true
         }
 
         -- Initialize Joker
-        init_joker(nebula, true)
+        init_joker(nebula)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_nebula.loc_def(card)
-            return {}
+            return { card.ability.extra.req }
         end
 
         -- Calculate
         SMODS.Jokers.j_mmc_nebula.calculate = function(self, context)
-            -- TODO
+            if SMODS.end_calculate_context(context) then
+                -- Get level of all hands
+                local _tally = 0
+                for _, v in ipairs(G.handlist) do
+                    if G.GAME.hands[v].visible and G.GAME.hands[v].level > self.ability.extra.req then
+                        _tally = _tally + G.GAME.hands[v].level - 1
+                    end
+                end
+                -- Apply mult
+                if _tally > 0 then
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_mult',
+                            vars = { _tally }
+                        },
+                        mult_mod = _tally,
+                        card = self
+                    }
+                end
+            end
         end
     end
 end

@@ -5,7 +5,7 @@
 <br/>
 
 # Mika's Balatro Mod Collection
-This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 51 Jokers, 2 Tarots, 1 Spectral and 7 Decks.
+This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 55 Jokers, 2 Tarots, 1 Spectral and 7 Decks.
 
 # Mod Incompatibility
 ### JellyMod
@@ -106,6 +106,11 @@ Give +100 Chips if played hand contains 3 or fewer cards.
 ### The Investor
 ![The Investor](./assets/2x/j_mmc_investor.png)\
 Gives $5 at the end of every round. 1 in 4 chance to give -$5 instead.
+
+### Nebula
+![Nebula](./assets/2x/j_mmc_nebula.png)\
+Nebula: Adds the level of all poker hands to Mult.\
+_Does not count undiscovered hands like Flush House and Five of a Kind until they are discovered_
 
 ### Prime Time
 ![Prime Time](./assets/2x/j_mmc_prime_time.png)\
@@ -277,7 +282,7 @@ _E.g: once you reach $25 you'll get X1.5 Mult, at $50 X2, at $100 X2.5, etc._
 ### Pack A Punch
 ![Pack A Punch](./assets/2x/j_mmc_pack_a_punch.png)\
 When Blind is selected, lose $20 and give the left-most Joker a random Edition.\
-_Will replace the current Edition. Self destructs if there are more Jokers than Joker Slots_
+_Will replace the current Edition. Self destructs if there are more Jokers than Joker Slots. Ignores the spending limit_
 
 ### The Printer
 ![The Printer](./assets/2x/j_mmc_printer.png)\

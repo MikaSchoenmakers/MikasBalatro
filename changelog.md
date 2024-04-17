@@ -4,12 +4,17 @@
 * Savings: +5 Mult per round, resets when buying a card.
 * Monopolist: X1 Mult, gains X0.5 Mult per $25, requirement doubles when met.\
    _Ex: once you reach $25 you'll get X1.5 Mult, at $50 X2, at $100 X2.5, etc._
+* Nebula: Adds the level of all poker hands to Mult.\
+   _Does not count undiscovered hands like Flush House and Five of a Kind until they are discovered_
 ### Resprites
 * New sprites for Bribe (now Incense), Shy Joker (now Training wheels) and Glue, done by `@Grassy`.
 ### Bugfixes
 * Fixed a full_hand crash that happened with other mods.
+* Fixed a crash that happened with Deck Creator
 ### Other
 * Added blueprint compatibility for Tax Collector and Glass Cannon.
+* Dagonet no longer affects repetitions, since this isn't really a value in any of the jokers description but more of an internal value.
+* Pack A Punch now ignores the spending limit, which means that you will go into the negatives if you do not have $20.
 ## Update V0.11.2
 ### Resprites
 * New sprites for both Tarot cards, done by `@Grassy`.
