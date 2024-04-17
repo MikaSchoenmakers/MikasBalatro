@@ -177,7 +177,7 @@ local function init_spectral(spectral, no_sprite)
     end
 end
 
-local function create_tarot(joker)
+local function create_tarot(joker, seed)
     -- Check consumeable space
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
         -- Add card
@@ -186,7 +186,7 @@ local function create_tarot(joker)
             trigger = 'before',
             delay = 0.0,
             func = (function()
-                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, '8ba')
+                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, seed)
                 card:add_to_deck()
                 G.consumeables:emplace(card)
                 G.GAME.consumeable_buffer = 0
@@ -205,7 +205,7 @@ local function create_tarot(joker)
     end
 end
 
-local function create_planet(joker, planet, other_joker)
+local function create_planet(joker, seed, planet, other_joker)
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
         local card_type = 'Planet'
         G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
@@ -213,7 +213,7 @@ local function create_planet(joker, planet, other_joker)
             trigger = 'before',
             delay = 0.0,
             func = (function()
-                local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, 'blusl')
+                local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, seed)
                 card:add_to_deck()
                 G.consumeables:emplace(card)
                 G.GAME.consumeable_buffer = 0
@@ -3166,10 +3166,10 @@ function SMODS.INIT.MikasModCollection()
             -- Check for 5 lucky triggers
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.lucky_tally >= self.ability.extra.req then
-                    -- Create new negative Joker based on Judgement Tarot card
+                    -- Create new negative Joker
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
+                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'blue_moon')
                             card:set_edition({
                                 negative = true
                             })
@@ -3399,7 +3399,7 @@ function SMODS.INIT.MikasModCollection()
             if context.discard then
                 if context.other_card.seal == 'Purple' and not context.other_card.debuff then
                     -- Check consumeable space
-                    create_tarot(self)
+                    create_tarot(self, 'harp_seal')
                 end
             end
         end
@@ -4154,13 +4154,13 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_buy_one_get_one.calculate = function(self, context)
             if context.buying_card then
                 -- Calculate odds
-                if pseudorandom('lucky_money') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                if pseudorandom('buy_one_get_one') < G.GAME.probabilities.normal / self.ability.extra.odds then
                     if context.card.ability.set == 'Joker' then
                         -- Give extra Joker
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if #G.jokers.cards < G.jokers.config.card_limit then
-                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
+                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.jokers:emplace(card)
                                     card:start_materialize()
@@ -4176,14 +4176,13 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
-                    end
-                    if context.card.ability.set == 'Tarot' then
+                    elseif context.card.ability.set == 'Tarot' then
                         -- Give extra Tarot card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'emp')
+                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4198,14 +4197,13 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
-                    end
-                    if context.card.ability.set == 'Spectral' then
+                    elseif context.card.ability.set == 'Spectral' then
                         -- Give extra Spectral card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'sea')
+                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4220,13 +4218,12 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
-                    end
-                    if context.card.ability.set == 'Planet' then
+                    elseif context.card.ability.set == 'Planet' then
                         G.E_MANAGER:add_event(Event({
                             -- Give extra Planet card
                             func = (function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
+                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4241,13 +4238,12 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end)
                         }))
-                    end
-                    if context.card.ability.set == 'Default' then
+                    elseif context.card.ability.set == 'Default' then
                         -- Give extra Playing Card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 local _card = create_playing_card({
-                                    front = pseudorandom_element(G.P_CARDS, pseudoseed('bogo')),
+                                    front = pseudorandom_element(G.P_CARDS, pseudoseed('buy_one_get_one')),
                                     center = G.P_CENTERS.c_base
                                 }, G.deck, nil, nil, { G.C.SECONDARY_SET.Enhanced })
                                 _card:add_to_deck()
@@ -4388,14 +4384,14 @@ function SMODS.INIT.MikasModCollection()
                             harp_seal = v
                         end
                     end
-                    create_tarot(self)
+                    create_tarot(self, 'seal_steal')
                     -- Repeat for Harp Seal
                     if harp_seal then
                         -- Show Harp Seal message
                         card_eval_status_text(harp_seal, 'extra', nil, nil, nil, {
                             message = localize('k_again_ex')
                         })
-                        create_tarot(self)
+                        create_tarot(self, 'seal_steal')
                     end
                 elseif context.other_card.seal == 'Blue' and not context.other_card.debuff then
                     -- Check for Harp Seal or Aurora Borealis
@@ -4430,9 +4426,9 @@ function SMODS.INIT.MikasModCollection()
                     end
                     -- Create planet
                     if _planet ~= nil then
-                        create_planet(self, _planet, aurora_borealis)
+                        create_planet(self, 'seal_steal', _planet, aurora_borealis)
                     end
-                    create_planet(self)
+                    create_planet(self, 'seal_steal')
                     -- Repeat for harp seal
                     if harp_seal then
                         -- Show Harp Seal message
@@ -4441,9 +4437,9 @@ function SMODS.INIT.MikasModCollection()
                         })
                         -- Add card
                         if _planet ~= nil then
-                            create_planet(self, _planet, aurora_borealis)
+                            create_planet(self, 'seal_steal', _planet, aurora_borealis)
                         end
-                        create_planet(self)
+                        create_planet(self, 'seal_steal')
                     end
                 end
             end
@@ -5161,8 +5157,10 @@ function Card:remove_from_deck(from_debuff)
         if self.ability.name == 'MMC Student Loans' then
             -- Reset bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
-            ease_discard(-self.ability.extra.discards)
-            G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+            if self.ability.extra.discards > 0 then
+                ease_discard(-self.ability.extra.discards)
+                G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+            end
         end
 
         if self.ability.name == 'MMC Shackles' then
@@ -5290,29 +5288,33 @@ function Card.update(self, dt)
                 -- Increase Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req * 2
-                -- Show message
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.current_Xmult }
-                    },
-                    colour = G.C.MULT
-                })
+                if self.added_to_deck then
+                    -- Show message
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        colour = G.C.MULT
+                    })
+                end
             elseif self.ability.extra.req ~= self.ability.extra.base and
                 bal < (self.ability.extra.req / 2) then
                 -- Decrease Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req / 2
-                -- Show message
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.current_Xmult }
-                    },
-                    colour = G.C.MULT
-                })
+                if self.added_to_deck then
+                    -- Show message
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        colour = G.C.MULT
+                    })
+                end
             end
         end
     end
@@ -5361,22 +5363,22 @@ function Card.get_end_of_round_effect(self, context)
                 end
 
                 -- Add card
-                create_planet(v, _planet)
+                create_planet(v, _planet, 'aurora_borealis')
 
                 for _, v2 in pairs(G.jokers.cards) do
                     if v2.ability.name == "MMC Harp Seal" then
-                        create_planet(self)
+                        create_planet(self, 'aurora_borealis')
                         card_eval_status_text(v2, 'extra', nil, nil, nil, {
                             message = localize('k_again_ex')
                         })
-                        create_planet(v, _planet)
+                        create_planet(v, _planet, 'aurora_borealis')
                     end
                 end
             end
 
             -- Create planet for each Blue Seal
             if v.ability.name == 'MMC Harp Seal' then
-                create_planet(v)
+                create_planet(v, 'harp_seal')
             end
         end
     end
