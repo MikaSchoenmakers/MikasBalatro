@@ -67,7 +67,7 @@ local config = {
     checklistJoker = true,
     oneOfUsJoker = true,
     investorJoker = true,
-    mountainClimberJoker = false, -- Not working correctly, do not enable
+    mountainClimberJoker = true,
     shacklesJoker = true,
     buyOneGetOneJoker = true,
     packAPunchJoker = true,
@@ -177,7 +177,7 @@ local function init_spectral(spectral, no_sprite)
     end
 end
 
-local function create_tarot(joker)
+local function create_tarot(joker, seed)
     -- Check consumeable space
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
         -- Add card
@@ -186,7 +186,7 @@ local function create_tarot(joker)
             trigger = 'before',
             delay = 0.0,
             func = (function()
-                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, '8ba')
+                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, seed)
                 card:add_to_deck()
                 G.consumeables:emplace(card)
                 G.GAME.consumeable_buffer = 0
@@ -205,7 +205,7 @@ local function create_tarot(joker)
     end
 end
 
-local function create_planet(joker, planet, other_joker)
+local function create_planet(joker, seed, planet, other_joker)
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
         local card_type = 'Planet'
         G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
@@ -213,7 +213,7 @@ local function create_planet(joker, planet, other_joker)
             trigger = 'before',
             delay = 0.0,
             func = (function()
-                local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, 'blusl')
+                local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, seed)
                 card:add_to_deck()
                 G.consumeables:emplace(card)
                 G.GAME.consumeable_buffer = 0
@@ -815,7 +815,11 @@ end
 
 function SMODS.INIT.MikasModCollection()
     -- Localization
-    G.localization.misc.dictionary.k_mmc_upgrade = "Upgrade!"
+    G.localization.descriptions.Other.card_extra_mult = { text = { "{C:mult}+#1#{} extra Mult" } }
+    sendDebugMessage('Chips:', 'MikasModCollection')
+    sendDebugMessage(inspect(G.localization.descriptions["Other"]['card_extra_chips']), 'MikasModCollection')
+    sendDebugMessage('Mult:', 'MikasModCollection')
+    sendDebugMessage(inspect(G.localization.descriptions["Other"]['card_extra_mult']), 'MikasModCollection')
     G.localization.misc.dictionary.k_mmc_charging = "Charging..."
     G.localization.misc.dictionary.k_mmc_bonus = "Bonus!"
     G.localization.misc.dictionary.k_mmc_hand_up = "+ Hand Size!"
@@ -1472,7 +1476,7 @@ function SMODS.INIT.MikasModCollection()
                 context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus +
                     self.ability.extra.chip_mod
                 return {
-                    message = localize('k_mmc_upgrade'),
+                    message = localize('k_upgrade_ex'),
                     colour = G.C.CHIPS,
                     card = self
                 }
@@ -1720,7 +1724,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
 
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_upgrade'),
+                        message = localize('k_upgrade_ex'),
                         colour = G.C.RED
                     })
                 end
@@ -1797,7 +1801,7 @@ function SMODS.INIT.MikasModCollection()
                     self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
 
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_upgrade'),
+                        message = localize('k_upgrade_ex'),
                         colour = G.C.RED
                     })
                 end
@@ -2275,7 +2279,7 @@ function SMODS.INIT.MikasModCollection()
                     for _, v in ipairs(self.ability.extra.card_refs) do
                         v:set_ability(pseudorandom_element(enhancements, pseudoseed('finishing_blow')), nil, true)
                         card_eval_status_text(self, 'extra', nil, nil, nil, {
-                            message = localize('k_mmc_upgrade'),
+                            message = localize('k_upgrade_ex'),
                             delay = 0.45
                         })
                     end
@@ -3013,7 +3017,7 @@ function SMODS.INIT.MikasModCollection()
                         message = localize('k_mmc_luck'),
                         colour = G.C.GREEN
                     })
-                    self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.probability
+                    self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.increase
                     for k, v in pairs(G.GAME.probabilities) do
                         G.GAME.probabilities[k] = v + self.ability.extra.probability
                     end
@@ -3108,7 +3112,7 @@ function SMODS.INIT.MikasModCollection()
 
                         -- Return message
                         card_eval_status_text(self, 'extra', nil, nil, nil, {
-                            message = localize('k_mmc_upgrade')
+                            message = localize('k_upgrade_ex')
                         })
                     end
                 end
@@ -3166,10 +3170,10 @@ function SMODS.INIT.MikasModCollection()
             -- Check for 5 lucky triggers
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.lucky_tally >= self.ability.extra.req then
-                    -- Create new negative Joker based on Judgement Tarot card
+                    -- Create new negative Joker
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
+                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'blue_moon')
                             card:set_edition({
                                 negative = true
                             })
@@ -3399,7 +3403,7 @@ function SMODS.INIT.MikasModCollection()
             if context.discard then
                 if context.other_card.seal == 'Purple' and not context.other_card.debuff then
                     -- Check consumeable space
-                    create_tarot(self)
+                    create_tarot(self, 'harp_seal')
                 end
             end
         end
@@ -3951,7 +3955,7 @@ function SMODS.INIT.MikasModCollection()
                         }))
                         -- Return message
                         return {
-                            message = localize('k_mmc_upgrade'),
+                            message = localize('k_upgrade_ex'),
                             colour = G.C.SECONDARY_SET.Tarot
                         }
                     end
@@ -4048,13 +4052,12 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_mountain_climber.calculate = function(self, context)
             if context.individual and context.cardarea == G.play then
-                context.other_card.ability.mult = context.other_card.ability.mult or 0
-                context.other_card.ability.mult = context.other_card.ability.mult + self.ability.extra.mult
-                return {
-                    message = localize('k_mmc_upgrade'),
+                context.other_card.ability.perma_mult = context.other_card.ability.perma_mult or 0
+                context.other_card.ability.perma_mult = context.other_card.ability.perma_mult + self.ability.extra.mult
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize('k_upgrade_ex'),
                     colour = G.C.MULT,
-                    card = self
-                }
+                })
             end
         end
     end
@@ -4154,13 +4157,14 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_buy_one_get_one.calculate = function(self, context)
             if context.buying_card then
                 -- Calculate odds
-                if pseudorandom('lucky_money') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                if pseudorandom('buy_one_get_one') < G.GAME.probabilities.normal / self.ability.extra.odds then
                     if context.card.ability.set == 'Joker' then
                         -- Give extra Joker
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if #G.jokers.cards < G.jokers.config.card_limit then
-                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'jud')
+                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.jokers:emplace(card)
                                     card:start_materialize()
@@ -4176,14 +4180,14 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
-                    end
-                    if context.card.ability.set == 'Tarot' then
+                    elseif context.card.ability.set == 'Tarot' then
                         -- Give extra Tarot card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'emp')
+                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4198,14 +4202,14 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
-                    end
-                    if context.card.ability.set == 'Spectral' then
+                    elseif context.card.ability.set == 'Spectral' then
                         -- Give extra Spectral card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'sea')
+                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4220,13 +4224,13 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end
                         }))
-                    end
-                    if context.card.ability.set == 'Planet' then
+                    elseif context.card.ability.set == 'Planet' then
                         G.E_MANAGER:add_event(Event({
                             -- Give extra Planet card
                             func = (function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'blusl')
+                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4241,13 +4245,12 @@ function SMODS.INIT.MikasModCollection()
                                 return true
                             end)
                         }))
-                    end
-                    if context.card.ability.set == 'Default' then
+                    elseif context.card.ability.set == 'Default' then
                         -- Give extra Playing Card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 local _card = create_playing_card({
-                                    front = pseudorandom_element(G.P_CARDS, pseudoseed('bogo')),
+                                    front = pseudorandom_element(G.P_CARDS, pseudoseed('buy_one_get_one')),
                                     center = G.P_CENTERS.c_base
                                 }, G.deck, nil, nil, { G.C.SECONDARY_SET.Enhanced })
                                 _card:add_to_deck()
@@ -4324,6 +4327,10 @@ function SMODS.INIT.MikasModCollection()
                                 G.jokers.config.card_limit = G.jokers.config.card_limit - 1
                             end
                             joker:set_edition(edition, true)
+                            -- Show message
+                            card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                message = localize('k_upgrade_ex')
+                            })
                             -- Delete self if over Joker limit
                             if G.jokers.config.card_limit < #G.jokers.cards then
                                 G.E_MANAGER:add_event(Event({
@@ -4339,7 +4346,7 @@ function SMODS.INIT.MikasModCollection()
                     }))
                     -- Return message
                     return {
-                        message = localize('k_mmc_upgrade'),
+                        message = localize('k_upgrade_ex'),
                         colour = G.C.SECONDARY_SET.Tarot
                     }
                 end
@@ -4388,14 +4395,14 @@ function SMODS.INIT.MikasModCollection()
                             harp_seal = v
                         end
                     end
-                    create_tarot(self)
+                    create_tarot(self, 'seal_steal')
                     -- Repeat for Harp Seal
                     if harp_seal then
                         -- Show Harp Seal message
                         card_eval_status_text(harp_seal, 'extra', nil, nil, nil, {
                             message = localize('k_again_ex')
                         })
-                        create_tarot(self)
+                        create_tarot(self, 'seal_steal')
                     end
                 elseif context.other_card.seal == 'Blue' and not context.other_card.debuff then
                     -- Check for Harp Seal or Aurora Borealis
@@ -4430,9 +4437,9 @@ function SMODS.INIT.MikasModCollection()
                     end
                     -- Create planet
                     if _planet ~= nil then
-                        create_planet(self, _planet, aurora_borealis)
+                        create_planet(self, 'seal_steal', _planet, aurora_borealis)
                     end
-                    create_planet(self)
+                    create_planet(self, 'seal_steal')
                     -- Repeat for harp seal
                     if harp_seal then
                         -- Show Harp Seal message
@@ -4441,9 +4448,9 @@ function SMODS.INIT.MikasModCollection()
                         })
                         -- Add card
                         if _planet ~= nil then
-                            create_planet(self, _planet, aurora_borealis)
+                            create_planet(self, 'seal_steal', _planet, aurora_borealis)
                         end
-                        create_planet(self)
+                        create_planet(self, 'seal_steal')
                     end
                 end
             end
@@ -4962,7 +4969,7 @@ function SMODS.INIT.MikasModCollection()
 end
 
 -- Stretch card back of odd shaped Jokers
-local flipref = Card.flip
+local flip_ref = Card.flip
 function Card:flip()
     local scale = 1
     local H = G.CARD_H
@@ -4978,13 +4985,14 @@ function Card:flip()
         end
     end
 
-    flipref(self)
+    flip_ref(self)
 end
 
 -- Center odd shaped Jokers
 local set_spritesref = Card.set_sprites
 function Card:set_sprites(_center, _front)
     set_spritesref(self, _center, _front)
+
     local X, Y, W, H = self.T.x, self.T.y, self.T.w, self.T.h
 
     if _center then
@@ -5070,6 +5078,7 @@ function Card:add_to_deck(from_debuff)
             G.hand:change_size(self.ability.extra._h_size)
         end
     end
+
     add_to_deckref(self, from_debuff)
 end
 
@@ -5161,8 +5170,10 @@ function Card:remove_from_deck(from_debuff)
         if self.ability.name == 'MMC Student Loans' then
             -- Reset bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
-            ease_discard(-self.ability.extra.discards)
-            G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+            if self.ability.extra.discards > 0 then
+                ease_discard(-self.ability.extra.discards)
+                G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+            end
         end
 
         if self.ability.name == 'MMC Shackles' then
@@ -5174,6 +5185,7 @@ function Card:remove_from_deck(from_debuff)
             G.hand:change_size(-self.ability.extra._h_size)
         end
     end
+
     remove_from_deckref(self, from_debuff)
 end
 
@@ -5181,6 +5193,7 @@ end
 local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
+
     if self.ability.name == 'MMC Eye Chart' and not self.added_to_deck then
         -- Generate new letter
         self.ability.extra.letter = string.upper(pseudorandom_element(letters, pseudoseed('eye_chart')))
@@ -5290,29 +5303,33 @@ function Card.update(self, dt)
                 -- Increase Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req * 2
-                -- Show message
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.current_Xmult }
-                    },
-                    colour = G.C.MULT
-                })
+                if self.added_to_deck then
+                    -- Show message
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        colour = G.C.MULT
+                    })
+                end
             elseif self.ability.extra.req ~= self.ability.extra.base and
                 bal < (self.ability.extra.req / 2) then
                 -- Decrease Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req / 2
-                -- Show message
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.current_Xmult }
-                    },
-                    colour = G.C.MULT
-                })
+                if self.added_to_deck then
+                    -- Show message
+                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_xmult',
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        colour = G.C.MULT
+                    })
+                end
             end
         end
     end
@@ -5361,29 +5378,138 @@ function Card.get_end_of_round_effect(self, context)
                 end
 
                 -- Add card
-                create_planet(v, _planet)
+                create_planet(v, _planet, 'aurora_borealis')
 
                 for _, v2 in pairs(G.jokers.cards) do
                     if v2.ability.name == "MMC Harp Seal" then
-                        create_planet(self)
+                        create_planet(self, 'aurora_borealis')
                         card_eval_status_text(v2, 'extra', nil, nil, nil, {
                             message = localize('k_again_ex')
                         })
-                        create_planet(v, _planet)
+                        create_planet(v, _planet, 'aurora_borealis')
                     end
                 end
             end
 
             -- Create planet for each Blue Seal
             if v.ability.name == 'MMC Harp Seal' then
-                create_planet(v)
+                create_planet(v, 'harp_seal')
             end
         end
     end
 
     -- Call base function and return result
-    local ret = get_end_of_round_effectref(self, context)
-    return ret
+    return get_end_of_round_effectref(self, context)
+end
+
+-- Add Bonus Mult to card description
+local generate_UIBox_ability_table_ref = Card.generate_UIBox_ability_table
+function Card:generate_UIBox_ability_table()
+    if self.ability.perma_mult and self.ability.perma_mult > 0 then
+        local card_type, hide_desc = self.ability.set or "None", nil
+        local loc_vars = nil
+        local main_start, main_end = nil, nil
+        local no_badge = nil
+
+        if not self.bypass_lock and self.config.center.unlocked ~= false and
+            (self.ability.set == 'Joker' or self.ability.set == 'Edition' or self.ability.consumeable or self.ability.set == 'Voucher' or self.ability.set == 'Booster') and
+            not self.config.center.discovered and
+            ((self.area ~= G.jokers and self.area ~= G.consumeables and self.area) or not self.area) then
+            card_type = 'Undiscovered'
+        end
+        if self.config.center.unlocked == false and not self.bypass_lock then --For everyting that is locked
+            card_type = "Locked"
+            if self.area and self.area == G.shop_demo then
+                loc_vars = {}; no_badge = true
+            end
+        elseif card_type == 'Undiscovered' and not self.bypass_discovery_ui then -- Any Joker or tarot/planet/voucher that is not yet discovered
+            hide_desc = true
+        elseif self.debuff then
+            loc_vars = {
+                debuffed = true,
+                playing_card = not not self.base.colour,
+                value = self.base.value,
+                suit = self.base
+                    .suit,
+                colour = self.base.colour
+            }
+        elseif card_type == 'Default' or card_type == 'Enhanced' then
+            loc_vars = {
+                playing_card = not not self.base.colour,
+                value = self.base.value,
+                suit = self.base.suit,
+                colour = self.base.colour,
+                nominal_chips = self.base.nominal > 0 and self.base.nominal or nil,
+                bonus_chips = (self.ability.bonus + (self.ability.perma_bonus or 0)) > 0 and
+                    (self.ability.bonus + (self.ability.perma_bonus or 0)) or nil,
+                bonus_mult = (self.ability.mult + (self.ability.perma_mult or 0)) > 0 and
+                    (self.ability.mult + (self.ability.perma_mult or 0)) or nil
+            }
+        end
+        local badges = {}
+        if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
+            badges.card_type = card_type
+        end
+        if self.ability.set == 'Joker' and self.bypass_discovery_ui and (not no_badge) then
+            badges.force_rarity = true
+        end
+        if self.edition then
+            if self.edition.type == 'negative' and self.ability.consumeable then
+                badges[#badges + 1] = 'negative_consumable'
+            else
+                badges[#badges + 1] = (self.edition.type == 'holo' and 'holographic' or self.edition.type)
+            end
+        end
+        if self.seal then badges[#badges + 1] = string.lower(self.seal) .. '_seal' end
+        if self.ability.eternal then badges[#badges + 1] = 'eternal' end
+        if self.ability.perishable then
+            loc_vars = loc_vars or {}; loc_vars.perish_tally = self.ability.perish_tally
+            badges[#badges + 1] = 'perishable'
+        end
+        if self.ability.rental then badges[#badges + 1] = 'rental' end
+        if self.pinned then badges[#badges + 1] = 'pinned_left' end
+
+        if self.sticker then
+            loc_vars = loc_vars or {}; loc_vars.sticker = self.sticker
+        end
+
+        return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, hide_desc, main_start, main_end)
+    end
+
+    return generate_UIBox_ability_table_ref(self)
+end
+
+local generate_card_ui_ref = generate_card_ui
+function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
+    if not full_UI_table then 
+        full_UI_table = {
+            main = {},
+            info = {},
+            type = {},
+            name = nil,
+            badges = badges or {}
+        }
+    end
+
+    local desc_nodes = (not full_UI_table.name and full_UI_table.main) or full_UI_table.info
+
+    if main_start then 
+        desc_nodes[#desc_nodes+1] = main_start 
+    end
+
+    if specific_vars and specific_vars.bonus_mult then
+        localize { type = 'other', key = 'card_extra_mult', nodes = desc_nodes, vars = { specific_vars.bonus_mult } }
+    end
+
+    return generate_card_ui_ref(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
+end
+
+local get_chip_mult_ref = Card.get_chip_mult
+function Card:get_chip_mult()
+    if self.ability.perma_mult then
+        return self.ability.mult + self.ability.perma_mult
+    end
+    return get_chip_mult_ref(self)
 end
 
 ----------------------------------------------
