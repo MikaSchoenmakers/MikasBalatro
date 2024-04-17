@@ -3013,7 +3013,7 @@ function SMODS.INIT.MikasModCollection()
                         message = localize('k_mmc_luck'),
                         colour = G.C.GREEN
                     })
-                    self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.probability
+                    self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.increase
                     for k, v in pairs(G.GAME.probabilities) do
                         G.GAME.probabilities[k] = v + self.ability.extra.probability
                     end
