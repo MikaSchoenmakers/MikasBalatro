@@ -80,6 +80,10 @@ local config = {
     savingsJoker = true,
     monopolistJoker = true,
     nebulaJoker = true,
+    cheapskateJoker = true,
+    psychicJoker = true,
+    cheatJoker = true,
+    plusOneJoker = true,
 }
 
 -- Helper functions
@@ -1122,7 +1126,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_straight_nate.calculate = function(self, context)
-            if SMODS.end_calculate_context(context) then
+            if SMODS.end_calculate_context(context) and context.poker_hands then
                 -- If hand played is a straight
                 if next(context.poker_hands["Straight"]) then
                     -- Check for Todd and Steven Jokers
@@ -3627,23 +3631,6 @@ function SMODS.INIT.MikasModCollection()
             return { card.ability.extra.negative_bal, card.ability.extra.every, card.ability.extra.discards,
                 card.ability.extra.discard_sub }
         end
-
-        -- Calculate
-        SMODS.Jokers.j_mmc_student_loans.calculate = function(self, context)
-            if not context.repetition or context.individual then
-                -- Decrease discards based on negative balance
-                local negative_bal = G.GAME.dollars
-                if negative_bal < 0 then
-                    local debuffs = math.ceil(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
-                    if debuffs ~= self.ability.extra.discards then
-                        debuffs = debuffs - self.ability.extra.discards
-                        ease_discard(debuffs)
-                        G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
-                        self.ability.extra.discards = self.ability.extra.discards + debuffs
-                    end
-                end
-            end
-        end
     end
 
     if config.brokeJoker then
@@ -4966,6 +4953,243 @@ function SMODS.INIT.MikasModCollection()
             end
         end
     end
+
+    if config.cheapskateJoker then
+        -- Create Joker
+        local cheapskate = {
+            loc = {
+                name = "Cheapskate",
+                text = {
+                    "If a {C:attention}Booster Pack",
+                    "is skipped, earn",
+                    "half of it's {C:money}cost"
+                }
+            },
+            ability_name = "MMC Cheapskate",
+            slug = "mmc_cheapskate",
+            ability = {
+                extra = {
+                    cost = 0
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(cheapskate, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_cheapskate.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_cheapskate.calculate = function(self, context)
+            if context.open_booster then
+                self.ability.extra.cost = math.floor(context.card.cost / 2)
+            end
+
+            if context.skipping_booster then
+                ease_dollars(self.ability.extra.cost)
+                card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    message = localize('$') .. self.ability.extra.cost,
+                    dollars = self.ability.extra.cost,
+                    colour = G.C.MONEY
+                })
+            end
+        end
+    end
+
+    if config.psychicJoker then
+        -- Create Joker
+        local psychic = {
+            loc = {
+                name = "Psychic Joker",
+                text = {
+                    "{C:chips}+#1#{} Chips, destroyed",
+                    "if you play more",
+                    "than {C:attention}#2#{} cards",
+                    "in one hand"
+                }
+            },
+            ability_name = "MMC Psychic Joker",
+            slug = "mmc_psychic",
+            ability = {
+                extra = {
+                    chips = 150,
+                    req = 5
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(psychic, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_psychic.loc_def(card)
+            return { card.ability.extra.chips, card.ability.extra.req }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_psychic.calculate = function(self, context)
+            if SMODS.end_calculate_context(context) and context.full_hand then
+                -- Destroy if less cards than required are played
+                if #context.full_hand < self.ability.extra.req then
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('tarot1')
+                            self:start_dissolve()
+                            return true
+                        end
+                    }))
+                else
+                    return {
+                        message = localize {
+                            type = 'variable',
+                            key = 'a_chips',
+                            vars = { self.ability.extra.chips }
+                        },
+                        chip_mod = self.ability.extra.chips
+                    }
+                end
+            end
+        end
+    end
+
+    if config.cheatJoker then
+        -- Create Joker
+        local cheat = {
+            loc = {
+                name = "Cheat",
+                text = {
+                    "Retrigger all cards",
+                    "if played hand",
+                    "contains a {C:attention}Straight{}",
+                }
+            },
+            ability_name = "MMC Cheat",
+            slug = "mmc_cheat",
+            ability = {
+                extra = {
+                    repetitions = 1
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = false,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(cheat, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_cheat.loc_def(card)
+            return {}
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_cheat.calculate = function(self, context)
+            -- Retrigger hand if it contains a straight
+            if context.repetition and context.cardarea == G.play then
+                if context.other_card and context.poker_hands and next(context.poker_hands["Straight"]) then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = self.ability.extra.repetitions,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
+
+    if config.plusOneJoker then
+        -- Create Joker
+        local plus_one = {
+            loc = {
+                name = "Plus One",
+                text = {
+                    "Increases rank",
+                    "of scored cards by",
+                    "{C:attention}#1#{} on the {C:attention}first",
+                    "{C:attention}hand{} of round"
+                }
+            },
+            ability_name = "MMC Plus One",
+            slug = "mmc_plus_one",
+            ability = {
+                extra = {
+                    increase = 1
+                }
+            },
+            rarity = 3,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(plus_one, true)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_plus_one.loc_def(card)
+            return { card.ability.extra.increase }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_plus_one.calculate = function(self, context)
+            -- Upgrade ranks of first hand
+            if context.individual and context.cardarea == G.play then
+                if G.GAME.current_round.hands_played == 0 then
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.0,
+                        func = (function()
+                            -- Increase rank
+                            local card = context.other_card
+                            local suit_prefix = string.sub(card.base.suit, 1, 1) .. '_'
+                            local rank_suffix = card.base.id == 14 and 2 or math.min(card.base.id + 1, 14)
+                            if rank_suffix < 10 then
+                                rank_suffix = tostring(rank_suffix)
+                            elseif rank_suffix == 10 then
+                                rank_suffix = 'T'
+                            elseif rank_suffix == 11 then
+                                rank_suffix = 'J'
+                            elseif rank_suffix == 12 then
+                                rank_suffix = 'Q'
+                            elseif rank_suffix == 13 then
+                                rank_suffix = 'K'
+                            elseif rank_suffix == 14 then
+                                rank_suffix = 'A'
+                            end
+                            card:set_base(G.P_CARDS[suit_prefix .. rank_suffix])
+                            -- Show message
+                            card_eval_status_text(self, 'extra', nil, nil, nil, {
+                                message = localize('k_upgrade_ex'),
+                                instant = true
+                            })
+                            return true
+                        end)
+                    }))
+                end
+            end
+        end
+    end
 end
 
 -- Stretch card back of odd shaped Jokers
@@ -5065,7 +5289,7 @@ function Card:add_to_deck(from_debuff)
         end
 
         if self.ability.name == 'MMC Student Loans' then
-            -- Lower bankrupt limit
+            -- Lower bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at - self.ability.extra.negative_bal
         end
 
@@ -5170,10 +5394,8 @@ function Card:remove_from_deck(from_debuff)
         if self.ability.name == 'MMC Student Loans' then
             -- Reset bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
-            if self.ability.extra.discards > 0 then
-                ease_discard(-self.ability.extra.discards)
-                G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
-            end
+            ease_discard(-self.ability.extra.discards)
+            G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
         end
 
         if self.ability.name == 'MMC Shackles' then
@@ -5332,6 +5554,25 @@ function Card.update(self, dt)
                 end
             end
         end
+
+        if self.ability.name == 'MMC Student Loans' then
+            -- Decrease discards based on negative balance
+            local negative_bal = G.GAME.dollars
+            if negative_bal < 0 then
+                local debuffs = math.floor(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
+                if debuffs ~= self.ability.extra.discards then
+                    debuffs = debuffs - self.ability.extra.discards
+                    ease_discard(debuffs)
+                    G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
+                    self.ability.extra.discards = self.ability.extra.discards + debuffs
+                end
+            elseif self.ability.extra.discards ~= 0 then
+                -- Reset discards
+                ease_discard(1)
+                G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
+                self.ability.extra.discards = 0
+            end
+        end
     end
     card_updateref(self, dt)
 end
@@ -5481,7 +5722,7 @@ end
 
 local generate_card_ui_ref = generate_card_ui
 function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
-    if not full_UI_table then 
+    if not full_UI_table then
         full_UI_table = {
             main = {},
             info = {},
@@ -5493,8 +5734,8 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
 
     local desc_nodes = (not full_UI_table.name and full_UI_table.main) or full_UI_table.info
 
-    if main_start then 
-        desc_nodes[#desc_nodes+1] = main_start 
+    if main_start then
+        desc_nodes[#desc_nodes + 1] = main_start
     end
 
     if specific_vars and specific_vars.bonus_mult then

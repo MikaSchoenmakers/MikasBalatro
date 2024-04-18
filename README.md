@@ -7,11 +7,6 @@
 # Mika's Balatro Mod Collection
 This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 55 Jokers, 2 Tarots, 1 Spectral and 7 Decks.
 
-# Mod Incompatibility
-### JellyMod
-This mod is partially incompatible with JellyMod, but there is a partial workaround. As long as you extract JellyMod into a seperate subfolder and keep MikasModCollection inside of the Mods folder, they should be mostly compatible. Your final Mods folder should look something like this: `Appdata/Balatro/Mods` will have `MikasModCollection.lua` and the `assets` folder. Put the JellyMod zip in a new folder `Appdata/Balatro/Mods/JellyMod`, and then extract `JellyMod.zip` there. The Scout Joker from JellyMod breaks things again, but things should be more compatible than before.\
-_Thanks to `@Mastahcheech` and `@Cr4zZyBipBiip` for figuring this out_
-
 # Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/) version 0.9.5 or higher.
 - Download the whole mod as a .zip file, then unzip it in `Appdata/Balatro/Mods`.
