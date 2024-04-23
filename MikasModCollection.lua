@@ -1998,7 +1998,8 @@ function SMODS.INIT.MikasModCollection()
         local bomb = {
             loc = {
                 name = "Bomb",
-                text = { "Gains {C:mult}+#2#{} Mult per round",
+                text = { 
+                    "Gains {C:mult}+#2#{} Mult per round",
                     "self destructs after {C:attention}#3#{} rounds",
                     "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
                     "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
@@ -3140,7 +3141,7 @@ function SMODS.INIT.MikasModCollection()
             slug = "mmc_blue_moon",
             ability = {
                 extra = {
-                    req = 4,
+                    req = 3,
                     lucky_tally = 0
                 }
             },
@@ -4021,7 +4022,7 @@ function SMODS.INIT.MikasModCollection()
             slug = "mmc_mountain_climber",
             ability = { extra = { mult = 1 } },
             rarity = 2,
-            cost = 5,
+            cost = 7,
             unlocked = true,
             discovered = true,
             blueprint_compat = true,
@@ -4029,7 +4030,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(mountain_climber, true)
+        init_joker(mountain_climber)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_mountain_climber.loc_def(card)
@@ -4867,7 +4868,7 @@ function SMODS.INIT.MikasModCollection()
             cost = 10,
             unlocked = true,
             discovered = true,
-            blueprint_compat = false,
+            blueprint_compat = true,
             eternal_compat = true
         }
 
@@ -4981,7 +4982,7 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(cheapskate, true)
+        init_joker(cheapskate)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_cheapskate.loc_def(card)
@@ -5012,7 +5013,7 @@ function SMODS.INIT.MikasModCollection()
                 name = "Psychic Joker",
                 text = {
                     "{C:chips}+#1#{} Chips, destroyed",
-                    "if you play more",
+                    "if you play less",
                     "than {C:attention}#2#{} cards",
                     "in one hand"
                 }
@@ -5029,12 +5030,12 @@ function SMODS.INIT.MikasModCollection()
             cost = 5,
             unlocked = true,
             discovered = true,
-            blueprint_compat = false,
+            blueprint_compat = true,
             eternal_compat = true
         }
 
         -- Initialize Joker
-        init_joker(psychic, true)
+        init_joker(psychic)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_psychic.loc_def(card)
@@ -5085,16 +5086,16 @@ function SMODS.INIT.MikasModCollection()
                     repetitions = 1
                 }
             },
-            rarity = 1,
-            cost = 5,
+            rarity = 2,
+            cost = 6,
             unlocked = true,
             discovered = true,
-            blueprint_compat = false,
+            blueprint_compat = true,
             eternal_compat = true
         }
 
         -- Initialize Joker
-        init_joker(cheat, true)
+        init_joker(cheat)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_cheat.loc_def(card)
@@ -5139,12 +5140,12 @@ function SMODS.INIT.MikasModCollection()
             cost = 8,
             unlocked = true,
             discovered = true,
-            blueprint_compat = true,
+            blueprint_compat = false,
             eternal_compat = true
         }
 
         -- Initialize Joker
-        init_joker(plus_one, true)
+        init_joker(plus_one)
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_plus_one.loc_def(card)
@@ -5258,6 +5259,7 @@ function Card:add_to_deck(from_debuff)
                 end
             end
         end
+
         if self.ability.name == 'MMC Incomplete Joker' then
             -- Check for Glue  Joker
             for _, v in pairs(G.jokers.cards) do
@@ -5271,6 +5273,7 @@ function Card:add_to_deck(from_debuff)
                 end
             end
         end
+
         if self.ability.name == 'MMC Glue' then
             -- Check for Half and Incomplete Jokers
             for _, v in pairs(G.jokers.cards) do
@@ -5365,6 +5368,7 @@ function Card:remove_from_deck(from_debuff)
                 end
             end
         end
+
         if self.ability.name == 'MMC Incomplete Joker' then
             -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
@@ -5378,6 +5382,7 @@ function Card:remove_from_deck(from_debuff)
                 end
             end
         end
+
         if self.ability.name == 'MMC Glue' then
             -- Reset Glue variables
             if self.ability.extra.triggered then
@@ -5641,108 +5646,6 @@ function Card.get_end_of_round_effect(self, context)
 
     -- Call base function and return result
     return get_end_of_round_effectref(self, context)
-end
-
--- Add Bonus Mult to card description
-local generate_UIBox_ability_table_ref = Card.generate_UIBox_ability_table
-function Card:generate_UIBox_ability_table()
-    if self.ability.perma_mult and self.ability.perma_mult > 0 then
-        local card_type, hide_desc = self.ability.set or "None", nil
-        local loc_vars = nil
-        local main_start, main_end = nil, nil
-        local no_badge = nil
-
-        if not self.bypass_lock and self.config.center.unlocked ~= false and
-            (self.ability.set == 'Joker' or self.ability.set == 'Edition' or self.ability.consumeable or self.ability.set == 'Voucher' or self.ability.set == 'Booster') and
-            not self.config.center.discovered and
-            ((self.area ~= G.jokers and self.area ~= G.consumeables and self.area) or not self.area) then
-            card_type = 'Undiscovered'
-        end
-        if self.config.center.unlocked == false and not self.bypass_lock then --For everyting that is locked
-            card_type = "Locked"
-            if self.area and self.area == G.shop_demo then
-                loc_vars = {}; no_badge = true
-            end
-        elseif card_type == 'Undiscovered' and not self.bypass_discovery_ui then -- Any Joker or tarot/planet/voucher that is not yet discovered
-            hide_desc = true
-        elseif self.debuff then
-            loc_vars = {
-                debuffed = true,
-                playing_card = not not self.base.colour,
-                value = self.base.value,
-                suit = self.base
-                    .suit,
-                colour = self.base.colour
-            }
-        elseif card_type == 'Default' or card_type == 'Enhanced' then
-            loc_vars = {
-                playing_card = not not self.base.colour,
-                value = self.base.value,
-                suit = self.base.suit,
-                colour = self.base.colour,
-                nominal_chips = self.base.nominal > 0 and self.base.nominal or nil,
-                bonus_chips = (self.ability.bonus + (self.ability.perma_bonus or 0)) > 0 and
-                    (self.ability.bonus + (self.ability.perma_bonus or 0)) or nil,
-                bonus_mult = (self.ability.mult + (self.ability.perma_mult or 0)) > 0 and
-                    (self.ability.mult + (self.ability.perma_mult or 0)) or nil
-            }
-        end
-        local badges = {}
-        if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
-            badges.card_type = card_type
-        end
-        if self.ability.set == 'Joker' and self.bypass_discovery_ui and (not no_badge) then
-            badges.force_rarity = true
-        end
-        if self.edition then
-            if self.edition.type == 'negative' and self.ability.consumeable then
-                badges[#badges + 1] = 'negative_consumable'
-            else
-                badges[#badges + 1] = (self.edition.type == 'holo' and 'holographic' or self.edition.type)
-            end
-        end
-        if self.seal then badges[#badges + 1] = string.lower(self.seal) .. '_seal' end
-        if self.ability.eternal then badges[#badges + 1] = 'eternal' end
-        if self.ability.perishable then
-            loc_vars = loc_vars or {}; loc_vars.perish_tally = self.ability.perish_tally
-            badges[#badges + 1] = 'perishable'
-        end
-        if self.ability.rental then badges[#badges + 1] = 'rental' end
-        if self.pinned then badges[#badges + 1] = 'pinned_left' end
-
-        if self.sticker then
-            loc_vars = loc_vars or {}; loc_vars.sticker = self.sticker
-        end
-
-        return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, hide_desc, main_start, main_end)
-    end
-
-    return generate_UIBox_ability_table_ref(self)
-end
-
-local generate_card_ui_ref = generate_card_ui
-function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
-    if not full_UI_table then
-        full_UI_table = {
-            main = {},
-            info = {},
-            type = {},
-            name = nil,
-            badges = badges or {}
-        }
-    end
-
-    local desc_nodes = (not full_UI_table.name and full_UI_table.main) or full_UI_table.info
-
-    if main_start then
-        desc_nodes[#desc_nodes + 1] = main_start
-    end
-
-    if specific_vars and specific_vars.bonus_mult then
-        localize { type = 'other', key = 'card_extra_mult', nodes = desc_nodes, vars = { specific_vars.bonus_mult } }
-    end
-
-    return generate_card_ui_ref(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
 end
 
 local get_chip_mult_ref = Card.get_chip_mult
