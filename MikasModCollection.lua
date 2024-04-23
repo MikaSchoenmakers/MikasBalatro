@@ -4151,8 +4151,7 @@ function SMODS.INIT.MikasModCollection()
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if #G.jokers.cards < G.jokers.config.card_limit then
-                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.jokers:emplace(card)
                                     card:start_materialize()
@@ -4174,8 +4173,7 @@ function SMODS.INIT.MikasModCollection()
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4196,8 +4194,7 @@ function SMODS.INIT.MikasModCollection()
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4217,8 +4214,7 @@ function SMODS.INIT.MikasModCollection()
                             -- Give extra Planet card
                             func = (function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -5399,8 +5395,10 @@ function Card:remove_from_deck(from_debuff)
         if self.ability.name == 'MMC Student Loans' then
             -- Reset bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
-            ease_discard(-self.ability.extra.discards)
-            G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+            if self.ability.extra.discards > 0 then
+                ease_discard(-self.ability.extra.discards)
+                G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
+            end
         end
 
         if self.ability.name == 'MMC Shackles' then
@@ -5560,24 +5558,24 @@ function Card.update(self, dt)
             end
         end
 
-        if self.ability.name == 'MMC Student Loans' then
-            -- Decrease discards based on negative balance
-            local negative_bal = G.GAME.dollars
-            if negative_bal < 0 then
-                local debuffs = math.floor(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
-                if debuffs ~= self.ability.extra.discards then
-                    debuffs = debuffs - self.ability.extra.discards
-                    ease_discard(debuffs)
-                    G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
-                    self.ability.extra.discards = self.ability.extra.discards + debuffs
-                end
-            elseif self.ability.extra.discards ~= 0 then
-                -- Reset discards
-                ease_discard(1)
-                G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
-                self.ability.extra.discards = 0
-            end
-        end
+        -- if self.ability.name == 'MMC Student Loans' then
+        --     -- Decrease discards based on negative balance
+        --     local negative_bal = G.GAME.dollars
+        --     if negative_bal < 0 then
+        --         local debuffs = math.floor(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
+        --         if debuffs ~= self.ability.extra.discards then
+        --             debuffs = debuffs - self.ability.extra.discards
+        --             ease_discard(debuffs)
+        --             G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
+        --             self.ability.extra.discards = self.ability.extra.discards + debuffs
+        --         end
+        --     elseif self.ability.extra.discards ~= 0 then
+        --         -- Reset discards
+        --         ease_discard(1)
+        --         G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
+        --         self.ability.extra.discards = 0
+        --     end
+        -- end
     end
     card_updateref(self, dt)
 end
