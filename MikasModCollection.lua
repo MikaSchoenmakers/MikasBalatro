@@ -1998,7 +1998,7 @@ function SMODS.INIT.MikasModCollection()
         local bomb = {
             loc = {
                 name = "Bomb",
-                text = { 
+                text = {
                     "Gains {C:mult}+#2#{} Mult per round",
                     "self destructs after {C:attention}#3#{} rounds",
                     "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)",
@@ -4151,7 +4151,8 @@ function SMODS.INIT.MikasModCollection()
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if #G.jokers.cards < G.jokers.config.card_limit then
-                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'buy_one_get_one')
+                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.jokers:emplace(card)
                                     card:start_materialize()
@@ -4173,7 +4174,8 @@ function SMODS.INIT.MikasModCollection()
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
+                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4194,7 +4196,8 @@ function SMODS.INIT.MikasModCollection()
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
                                     play_sound('timpani')
-                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
+                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -4214,7 +4217,8 @@ function SMODS.INIT.MikasModCollection()
                             -- Give extra Planet card
                             func = (function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'buy_one_get_one')
+                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil,
+                                        'buy_one_get_one')
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
                                     card_eval_status_text(self, 'extra', nil, nil, nil, {
@@ -5462,7 +5466,7 @@ end
 -- Card updates
 local card_updateref = Card.update
 function Card.update(self, dt)
-    if G.STAGE == G.STAGES.RUN and self.added_to_deck then
+    if G.STAGE == G.STAGES.RUN then
         if self.ability.name == 'MMC Seal Collector' then
             self.ability.extra.current_chips = self.ability.extra.base
             -- Count all seal cards
@@ -5528,6 +5532,7 @@ function Card.update(self, dt)
                 -- Increase Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req * 2
+                if self.added_to_deck then
                     -- Show message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
                         message = localize {
@@ -5537,11 +5542,13 @@ function Card.update(self, dt)
                         },
                         colour = G.C.MULT
                     })
+                end
             elseif self.ability.extra.req ~= self.ability.extra.base and
                 bal < (self.ability.extra.req / 2) then
                 -- Decrease Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req / 2
+                if self.added_to_deck then
                     -- Show message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
                         message = localize {
@@ -5551,6 +5558,7 @@ function Card.update(self, dt)
                         },
                         colour = G.C.MULT
                     })
+                end
             end
         end
 
@@ -5561,14 +5569,18 @@ function Card.update(self, dt)
                 local debuffs = math.floor(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
                 if debuffs ~= self.ability.extra.discards then
                     debuffs = debuffs - self.ability.extra.discards
-                    ease_discard(debuffs)
-                    G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
+                    if self.added_to_deck then
+                        ease_discard(debuffs)
+                        G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
+                    end
                     self.ability.extra.discards = self.ability.extra.discards + debuffs
                 end
             elseif self.ability.extra.discards ~= 0 then
                 -- Reset discards
-                ease_discard(1)
-                G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
+                if self.added_to_deck then
+                    ease_discard(1)
+                    G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
+                end
                 self.ability.extra.discards = 0
             end
         end
