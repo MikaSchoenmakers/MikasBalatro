@@ -5462,7 +5462,7 @@ end
 -- Card updates
 local card_updateref = Card.update
 function Card.update(self, dt)
-    if G.STAGE == G.STAGES.RUN then
+    if G.STAGE == G.STAGES.RUN and self.added_to_deck then
         if self.ability.name == 'MMC Seal Collector' then
             self.ability.extra.current_chips = self.ability.extra.base
             -- Count all seal cards
@@ -5528,7 +5528,6 @@ function Card.update(self, dt)
                 -- Increase Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req * 2
-                if self.added_to_deck then
                     -- Show message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
                         message = localize {
@@ -5538,13 +5537,11 @@ function Card.update(self, dt)
                         },
                         colour = G.C.MULT
                     })
-                end
             elseif self.ability.extra.req ~= self.ability.extra.base and
                 bal < (self.ability.extra.req / 2) then
                 -- Decrease Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra.Xmult_mod
                 self.ability.extra.req = self.ability.extra.req / 2
-                if self.added_to_deck then
                     -- Show message
                     card_eval_status_text(self, 'extra', nil, nil, nil, {
                         message = localize {
@@ -5554,28 +5551,27 @@ function Card.update(self, dt)
                         },
                         colour = G.C.MULT
                     })
-                end
             end
         end
 
-        -- if self.ability.name == 'MMC Student Loans' then
-        --     -- Decrease discards based on negative balance
-        --     local negative_bal = G.GAME.dollars
-        --     if negative_bal < 0 then
-        --         local debuffs = math.floor(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
-        --         if debuffs ~= self.ability.extra.discards then
-        --             debuffs = debuffs - self.ability.extra.discards
-        --             ease_discard(debuffs)
-        --             G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
-        --             self.ability.extra.discards = self.ability.extra.discards + debuffs
-        --         end
-        --     elseif self.ability.extra.discards ~= 0 then
-        --         -- Reset discards
-        --         ease_discard(1)
-        --         G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
-        --         self.ability.extra.discards = 0
-        --     end
-        -- end
+        if self.ability.name == 'MMC Student Loans' then
+            -- Decrease discards based on negative balance
+            local negative_bal = G.GAME.dollars
+            if negative_bal < 0 then
+                local debuffs = math.floor(negative_bal / self.ability.extra.every) * self.ability.extra.discard_sub
+                if debuffs ~= self.ability.extra.discards then
+                    debuffs = debuffs - self.ability.extra.discards
+                    ease_discard(debuffs)
+                    G.GAME.round_resets.discards = G.GAME.round_resets.discards + debuffs
+                    self.ability.extra.discards = self.ability.extra.discards + debuffs
+                end
+            elseif self.ability.extra.discards ~= 0 then
+                -- Reset discards
+                ease_discard(1)
+                G.GAME.round_resets.discards = G.GAME.round_resets.discards + 1
+                self.ability.extra.discards = 0
+            end
+        end
     end
     card_updateref(self, dt)
 end
