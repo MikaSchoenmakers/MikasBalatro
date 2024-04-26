@@ -85,7 +85,7 @@ let jokers = [
       "with {C:attention}excess Chips{} from",
       "last round. Caps at {C:attention}25%",
       "of current blind's Chips",
-      "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+      "{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)"
     ],
     image_url: "assets/2x/j_mmc_grudgeful.png",
     rarity: "Rare"
