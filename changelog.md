@@ -1,3 +1,27 @@
+## Update V0.13.0
+### New Jokers
+* Mountain Climber: Every scored card permanently gains +1 Mult.
+* Cheapskate: If a Booster Pack is skipped, earn half of it's cost.
+   _If you have the possiblity to take 2 cards, you can still take one. Cost get's rounded down_
+* Psychic Joker: +150 Chips, destroyed if you play less than 5 cards in one hand.
+* Cheat: Retrigger all cards if played hand contains a straight.
+* Plus One: Increases rank of scored cards by 1 on the first hand of round.
+### Balance Changes
+* Student loans now gives -1 discard as soon as the balance is negative, so it's not just a strictly better credit card.
+* Blue Moon now requires 3 Lucky Cards to be triggered instead of 4.
+* Historical Joker and Grudgeful Joker now lower the blind requirement by the amount of chips they have, instead of giving chips directly.   This means that they will no longer get affected by mult (and will hopefully make them much less op). They both cap at 25% of the current blinds chips.
+### Bugfixes
+* Fixed Rigged Joker not increasing probabilities.
+* Fixed Monopolist updating it's Mult value while in the collection tab.
+* Fixed Student Loans giving -1 discard from the collection tab.
+* Delayed Joker no longer triggers when cards are discarded by The Hook.
+* All starting jokers from any of the modded decks no longer get a random edition. (Thank you SDM!)
+### Other
+* Added localization message to Pack A Punch.
+* Student loans now updates discards in real time.
+* Commander is now compatible with Dagonet, allowing you to upgrade 2 cards instead of 1.
+* Created a [website](https://mikaschoenmakers.github.io/MikasBalatro/) to show off all Jokers and Consumables based off of the template by `@notmario`.
+* The mod now **REQUIRES** lovely to be installed.
 ## Update V0.12.0
 ### New Jokers
 * Dawn: Retrigger all played cards in first hand of round.

@@ -81,11 +81,11 @@ let jokers = [
   {
     name: "Grudgeful Joker",
     text: [
-      "Adds {C:attention}excess Chips{} from last",
-      "blind to the first hand",
-      "of the current round. Caps",
-      "at {C:attention}10%{} of current blind's Chips",
-      "{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)"
+      "Lowers blind requirement",
+      "with {C:attention}excess Chips{} from",
+      "last round. Caps at {C:attention}25%",
+      "of current blind's Chips",
+      "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
     ],
     image_url: "assets/2x/j_mmc_grudgeful.png",
     rarity: "Rare"
@@ -95,9 +95,9 @@ let jokers = [
     text: [
       "If scored cards have the same",
       "{C:attention}ranks{} and {C:attention}order{} as previous",
-      "hand, add previous hands {C:chips}Chips{}",
-      "to the current hand. Caps at",
-      "{C:attention}10%{} of current blind's Chips",
+      "hand, reduce blind requirement",
+      "by previous hands {C:chips}Chips{}. Caps at",
+      "{C:attention}25%{} of current blind's Chips",
       "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
     ],
     image_url: "assets/2x/j_mmc_historical.png",
