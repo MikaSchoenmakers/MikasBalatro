@@ -1,9 +1,10 @@
 {
     "name": "MikasModCollection",
-    "version_number": "0.10.1",
+    "version_number": "0.13.0",
     "website_url": "https://github.com/MikaSchoenmakers/MikasBalatro",
-    "description": "A content mod adding 45 Jokers and 7 Decks.",
+    "description": "A content mod adding 60 Jokers and more!",
     "dependencies": [
-        "Steamopollys-Steamodded-0.9.2"
+        "Steamopollys-Steamodded-0.9.5",
+        "Thunderstore-lovely-0.4.0"
     ]
 }
