@@ -174,10 +174,10 @@ let jokers = [
   {
     name: "Straight Nate",
     text: [
-      "{X:mult,C:white} X#1# {} Mult if played hand",
+      "{X:mult,C:white}X4{} Mult if played hand",
       "contains a {C:attention}Straight{} and you have",
       "both {C:attention}Odd Todd{} and {C:attention}Even Steven{}",
-      "Gives {C:dark_edition}+#2#{} Joker slot"
+      "Gives {C:dark_edition}+1{} Joker slot"
     ],
     image_url: "assets/2x/j_mmc_straight_nate.png",
     rarity: "Rare"
