@@ -131,7 +131,7 @@ let jokers = [
     text: [
       "Increases rank",
       "of scored cards by",
-      "{C:attention}#1#{} on the {C:attention}first",
+      "{C:attention}1{} on the {C:attention}first",
       "{C:attention}hand{} of round"
     ],
     image_url: "assets/2x/j_mmc_plus_one.png",
