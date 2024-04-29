@@ -21,6 +21,15 @@ local config = {
     -- Tarot Cards
     aceOfPentaclesTarot = true,
     pageOfPentaclesTarot = true,
+    kingOfCupsTarot = false, -- In Development, do not enable
+    commonTarot = false, -- In Development, do not enable
+    uncommonTarot = false, -- In Development, do not enable
+    chipsTarot = false, -- In Development, do not enable
+    multTarot = false, -- In Development, do not enable
+    moneyTarot = false, -- In Development, do not enable
+    supportTarot = false, -- In Development, do not enable
+    cardChipsTarot = false, -- In Development, do not enable
+    cardMultTarot = false, -- In Development, do not enable
     -- Spectral Cards
     incenseSpectral = true,
     -- Jokers
@@ -187,10 +196,10 @@ local function create_tarot(joker, seed)
         -- Add card
         G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
         G.E_MANAGER:add_event(Event({
-            trigger = 'before',
+            trigger = "before",
             delay = 0.0,
             func = (function()
-                local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, seed)
+                local card = create_card("Tarot", G.consumeables, nil, nil, nil, nil, nil, seed)
                 card:add_to_deck()
                 G.consumeables:emplace(card)
                 G.GAME.consumeable_buffer = 0
@@ -198,23 +207,23 @@ local function create_tarot(joker, seed)
             end)
         }))
         -- Show message
-        card_eval_status_text(joker, 'extra', nil, nil, nil, {
-            message = localize('k_plus_tarot'),
+        card_eval_status_text(joker, "extra", nil, nil, nil, {
+            message = localize("k_plus_tarot"),
             colour = G.C.PURPLE
         })
     else
-        card_eval_status_text(joker, 'extra', nil, nil, nil, {
-            message = localize('k_no_space_ex')
+        card_eval_status_text(joker, "extra", nil, nil, nil, {
+            message = localize("k_no_space_ex")
         })
     end
 end
 
 local function create_planet(joker, seed, planet, other_joker)
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-        local card_type = 'Planet'
+        local card_type = "Planet"
         G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
         G.E_MANAGER:add_event(Event({
-            trigger = 'before',
+            trigger = "before",
             delay = 0.0,
             func = (function()
                 local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, seed)
@@ -229,13 +238,13 @@ local function create_planet(joker, seed, planet, other_joker)
         }))
 
         -- Show message
-        card_eval_status_text(joker, 'extra', nil, nil, nil, {
-            message = localize('k_plus_planet'),
+        card_eval_status_text(joker, "extra", nil, nil, nil, {
+            message = localize("k_plus_planet"),
             colour = G.C.SECONDARY_SET.Planet
         })
     else
-        card_eval_status_text(joker, 'extra', nil, nil, nil, {
-            message = localize('k_no_space_ex')
+        card_eval_status_text(joker, "extra", nil, nil, nil, {
+            message = localize("k_no_space_ex")
         })
     end
 end
@@ -318,138 +327,138 @@ end
 -- Save attributes
 local attributes = {
     mult = {
-        key = 'mult_dagonet',
-        prev_key = 'prev_mult_dagonet',
+        key = "mult_dagonet",
+        prev_key = "prev_mult_dagonet",
         min = 0
     },
     mult_mod = {
-        key = 'mult_mod_dagonet',
-        prev_key = 'prev_mult_mod_dagonet',
+        key = "mult_mod_dagonet",
+        prev_key = "prev_mult_mod_dagonet",
         min = 0
     },
     chips = {
-        key = 'chips_dagonet',
-        prev_key = 'prev_chips_dagonet',
+        key = "chips_dagonet",
+        prev_key = "prev_chips_dagonet",
         min = 0
     },
     chip_mod = {
-        key = 'chip_mod_dagonet',
-        prev_key = 'prev_chips_mod_dagonet',
+        key = "chip_mod_dagonet",
+        prev_key = "prev_chips_mod_dagonet",
         min = 0
     },
     Xmult = {
-        key = 'Xmult_dagonet',
-        prev_key = 'prev_Xmult_dagonet',
+        key = "Xmult_dagonet",
+        prev_key = "prev_Xmult_dagonet",
         min = 1
     },
     Xmult_mod = {
-        key = 'Xmult_mod_dagonet',
-        prev_key = 'prev_Xmult_mod_dagonet',
+        key = "Xmult_mod_dagonet",
+        prev_key = "prev_Xmult_mod_dagonet",
         min = 0
     },
     x_mult = {
-        key = 'x_mult_dagonet',
-        prev_key = 'prev_x_mult_dagonet',
+        key = "x_mult_dagonet",
+        prev_key = "prev_x_mult_dagonet",
         min = 1
     },
     t_mult = {
-        key = 't_mult_dagonet',
-        prev_key = 'prev_t_mult_dagonet',
+        key = "t_mult_dagonet",
+        prev_key = "prev_t_mult_dagonet",
         min = 0
     },
     t_chips = {
-        key = 't_chips_dagonet',
-        prev_key = 'prev_t_chips_dagonet',
+        key = "t_chips_dagonet",
+        prev_key = "prev_t_chips_dagonet",
         min = 0
     },
     s_mult = {
-        key = 's_mult_dagonet',
-        prev_key = 'prev_s_mult_dagonet',
+        key = "s_mult_dagonet",
+        prev_key = "prev_s_mult_dagonet",
         min = 0
     },
     dollars = {
-        key = 'dollars_dagonet',
-        prev_key = 'prev_dollars_dagonet',
+        key = "dollars_dagonet",
+        prev_key = "prev_dollars_dagonet",
         min = 0
     },
     hand_add = {
-        key = 'hand_add_dagonet',
-        prev_key = 'prev_hand_add_dagonet',
+        key = "hand_add_dagonet",
+        prev_key = "prev_hand_add_dagonet",
         min = 0
     },
     discard_sub = {
-        key = 'discard_sub_dagonet',
-        prev_key = 'prev_discard_sub_dagonet',
+        key = "discard_sub_dagonet",
+        prev_key = "prev_discard_sub_dagonet",
         min = 0
     },
     odds = {
-        key = 'odds_dagonet',
-        prev_key = 'prev_odds_dagonet',
+        key = "odds_dagonet",
+        prev_key = "prev_odds_dagonet",
         min = 0
     },
     faces = {
-        key = 'faces_dagonet',
-        prev_key = 'prev_faces_dagonet',
+        key = "faces_dagonet",
+        prev_key = "prev_faces_dagonet",
         min = 0
     },
     max = {
-        key = 'max_dagonet',
-        prev_key = 'prev_max_dagonet',
+        key = "max_dagonet",
+        prev_key = "prev_max_dagonet",
         min = 0
     },
     min = {
-        key = 'min_dagonet',
-        prev_key = 'prev_min_dagonet',
+        key = "min_dagonet",
+        prev_key = "prev_min_dagonet",
         min = 0
     },
     every = {
-        key = 'every_dagonet',
-        prev_key = 'prev_every_dagonet',
+        key = "every_dagonet",
+        prev_key = "prev_every_dagonet",
         min = 0
     },
     increase = {
-        key = 'increase_dagonet',
-        prev_key = 'prev_increase_dagonet',
+        key = "increase_dagonet",
+        prev_key = "prev_increase_dagonet",
         min = 0
     },
     d_size = {
-        key = 'd_size_dagonet',
-        prev_key = 'prev_d_size_dagonet',
+        key = "d_size_dagonet",
+        prev_key = "prev_d_size_dagonet",
         min = 0
     },
     h_mod = {
-        key = 'h_mod_dagonet',
-        prev_key = 'prev_h_mod_dagonet',
+        key = "h_mod_dagonet",
+        prev_key = "prev_h_mod_dagonet",
         min = 0
     },
     h_plays = {
-        key = 'h_plays_dagonet',
-        prev_key = 'prev_h_plays_dagonet',
+        key = "h_plays_dagonet",
+        prev_key = "prev_h_plays_dagonet",
         min = 0
     },
     discards = {
-        key = 'discards_dagonet',
-        prev_key = 'prev_discards_dagonet',
+        key = "discards_dagonet",
+        prev_key = "prev_discards_dagonet",
         min = 0
     },
     req = {
-        key = 'req_dagonet',
-        prev_key = 'prev_req_dagonet',
+        key = "req_dagonet",
+        prev_key = "prev_req_dagonet",
         min = 0
     },
     percentage = {
-        key = 'percentage_dagonet',
-        prev_key = 'prev_percentage_dagonet',
+        key = "percentage_dagonet",
+        prev_key = "prev_percentage_dagonet",
         min = 0
     },
     base = {
-        key = 'base_dagonet',
-        prev_key = 'prev_base_dagonet',
+        key = "base_dagonet",
+        prev_key = "prev_base_dagonet",
         min = 0
     },
     extra = {
-        key = 'extra_dagonet',
-        prev_key = 'prev_extra_dagonet',
+        key = "extra_dagonet",
+        prev_key = "prev_extra_dagonet",
         min = 0
     }
 }
@@ -521,6 +530,130 @@ local cicero_whitelist = {
     "Mr. Bones",
     "Printer",
 }
+
+-- Initialize joker type lists
+local mikas_jokers = {}
+local chips_jokers = {}
+local mult_jokers = {}
+local xmult_jokers = {}
+local money_jokers = {}
+local support_jokers = {}
+
+-- Get lists of different joker types
+local function get_mikas_jokers()
+    if next(mikas_jokers) ~= nil then
+        return mikas_jokers
+    end
+
+    for k, v in pairs(G.P_CENTERS) do
+        if string.find(k, "j_mmc") and v.rarity ~= 4 then
+            table.insert(mikas_jokers, k)
+        end
+    end
+
+    return mikas_jokers
+end
+
+local function get_chips_jokers()
+    if next(chips_jokers) ~= nil then
+        return chips_jokers
+    end
+
+    for k, v in pairs(G.P_CENTERS) do
+        if string.find(k, "j_") and v.rarity ~= 4 then
+            local chips = false
+            for _, v2 in ipairs(G.localization.descriptions.Joker[k].text) do
+                chips = chips or string.find(v2:lower(), "chips")
+            end
+            if chips and v.rarity ~= 4 then
+                table.insert(chips_jokers, k)
+            end
+        end
+    end
+
+    return chips_jokers
+end
+
+local function get_mult_jokers()
+    if next(mult_jokers) ~= nil then
+        return mult_jokers
+    end
+
+    for k, v in pairs(G.P_CENTERS) do
+        if string.find(k, "j_") and v.rarity ~= 4 then
+            local mult = false
+            for _, v2 in ipairs(G.localization.descriptions.Joker[k].text) do
+                mult = mult or (string.find(v2:lower(), "mult") and not string.find(v2:lower(), "x"))
+            end
+            if mult or v.name == "Misprint" then
+                table.insert(mult_jokers, k)
+            end
+        end
+    end
+
+    return mult_jokers
+end
+
+local function get_xmult_jokers()
+    if next(xmult_jokers) ~= nil then
+        return xmult_jokers
+    end
+
+    for k, v in pairs(G.P_CENTERS) do
+        if string.find(k, "j_") and v.rarity ~= 4 then
+            local xmult = false
+            for _, v2 in ipairs(G.localization.descriptions.Joker[k].text) do
+                xmult = xmult or (string.find(v2:lower(), "mult") and string.find(v2:lower(), "x"))
+            end
+            if xmult then
+                table.insert(xmult_jokers, k)
+            end
+        end
+    end
+
+    return xmult_jokers
+end
+
+local function get_money_jokers()
+    if next(money_jokers) ~= nil then
+        return money_jokers
+    end
+
+    for k, v in pairs(G.P_CENTERS) do
+        if string.find(k, "j_") and v.rarity ~= 4 then
+            local money = false
+            for _, v2 in ipairs(G.localization.descriptions.Joker[k].text) do
+                money = money or string.find(v2:lower(), "$")
+            end
+            if money then
+                table.insert(money_jokers, k)
+            end
+        end
+    end
+
+    return money_jokers
+end
+
+local function get_support_jokers()
+    if next(support_jokers) ~= nil then
+        return support_jokers
+    end
+
+    for k, v in pairs(G.P_CENTERS) do
+        if string.find(k, "j_") and v.rarity ~= 4 then
+            local support = true
+            for _, v2 in ipairs(G.localization.descriptions.Joker[k].text) do
+                support = support and
+                    not (string.find(v2:lower(), "chips") or string.find(v2:lower(), "mult" or string.find(v2:lower(), "$")))
+            end
+            if cicero_whitelist[v.name] ~= nil or (support and not cicero_blacklist[v.name] ~= nil) then
+                table.insert(money_jokers, k)
+            end
+        end
+    end
+
+    return support_jokers
+end
 
 -- Create Decks
 local decks = {
@@ -679,7 +812,7 @@ function Back.apply_to_run(arg_56_0)
                 end
 
                 -- Add Even Steven Joker
-                add_joker('j_even_steven', nil, true, false)
+                add_joker("j_even_steven", nil, true, false)
 
                 -- Return
                 G.GAME.starting_deck_size = 20
@@ -700,7 +833,7 @@ function Back.apply_to_run(arg_56_0)
                 end
 
                 -- Add Odd Todd Joker
-                add_joker('j_odd_todd', nil, true, false)
+                add_joker("j_odd_todd", nil, true, false)
 
                 -- Return
                 G.GAME.starting_deck_size = 20
@@ -721,7 +854,7 @@ function Back.apply_to_run(arg_56_0)
                 end
 
                 -- Add Fibonacci Joker
-                add_joker('j_fibonacci', nil, true, false)
+                add_joker("j_fibonacci", nil, true, false)
 
                 -- Return
                 G.GAME.starting_deck_size = 20
@@ -742,7 +875,7 @@ function Back.apply_to_run(arg_56_0)
                 end
 
                 -- Add Prime Joker
-                add_joker('j_mmc_prime_time', nil, true, false)
+                add_joker("j_mmc_prime_time", nil, true, false)
 
                 -- Return
                 G.GAME.starting_deck_size = 20
@@ -766,7 +899,7 @@ function Back.apply_to_run(arg_56_0)
                 end
 
                 -- Add Midas Mask Joker
-                add_joker('j_midas_mask', nil, true, false)
+                add_joker("j_midas_mask", nil, true, false)
 
                 -- Return
                 G.GAME.starting_deck_size = 12
@@ -795,7 +928,7 @@ function Back.apply_to_run(arg_56_0)
         G.E_MANAGER:add_event(Event({
             func = function()
                 -- Add The Sniper Joker
-                add_joker('j_mmc_sniper', 'negative', true, false)
+                add_joker("j_mmc_sniper", "negative", true, false)
                 return true
             end
         }))
@@ -851,7 +984,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Tarots.c_mmc_ace_of_pentacles.loc_def(card)
-            return { card.config.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
+            return { card.config.extra.odds, "" .. (G.GAME and G.GAME.probabilities.normal or 1) }
         end
 
         -- Set can_use
@@ -861,33 +994,33 @@ function SMODS.INIT.MikasModCollection()
 
         -- Use effect
         function SMODS.Tarots.c_mmc_ace_of_pentacles.use(card, area, copier)
-            if pseudorandom('ace_of_pentacles') < G.GAME.probabilities.normal / card.ability.extra.odds then
+            if pseudorandom("ace_of_pentacles") < G.GAME.probabilities.normal / card.ability.extra.odds then
                 -- Nope!
                 G.E_MANAGER:add_event(Event({
-                    trigger = 'after',
+                    trigger = "after",
                     delay = 0.4,
                     func = function()
                         attention_text({
-                            text = localize('k_nope_ex'),
+                            text = localize("k_nope_ex"),
                             scale = 1.3,
                             hold = 1.4,
                             major = card,
                             backdrop_colour = G.C.SECONDARY_SET.Tarot,
-                            align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and 'tm' or
-                                'cm',
+                            align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and "tm" or
+                                "cm",
                             offset = { x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and -0.2 or 0 },
                             silent = true
                         })
                         G.E_MANAGER:add_event(Event({
-                            trigger = 'after',
+                            trigger = "after",
                             delay = 0.06 * G.SETTINGS.GAMESPEED,
                             blockable = false,
                             blocking = false,
                             func = function()
-                                play_sound('tarot2', 0.76, 0.4); return true
+                                play_sound("tarot2", 0.76, 0.4); return true
                             end
                         }))
-                        play_sound('tarot2', 1, 0.4)
+                        play_sound("tarot2", 1, 0.4)
                         card:juice_up(0.3, 0.5)
                         ease_dollars(-G.GAME.dollars)
                         return true
@@ -937,8 +1070,269 @@ function SMODS.INIT.MikasModCollection()
         -- Use effect
         function SMODS.Tarots.c_mmc_page_of_pentacles.use(card, area, copier)
             -- Turn money into negative
-            delay(0.6)
-            ease_dollars(-G.GAME.dollars * 2)
+            if G.GAME.dollars ~= 0 then
+                delay(0.6)
+                ease_dollars(-G.GAME.dollars * 2)
+            end
+        end
+    end
+
+    if config.kingOfCupsTarot then
+        -- Create Tarot
+        local king_of_cups = {
+            loc = {
+                name = "King Of Cups",
+                text = {
+                    "Create a random",
+                    "{X:mikas,C:white}Mika's-Mod{} Joker"
+                }
+            },
+            ability_name = "MMC King Of Cups",
+            slug = "mmc_king_of_cups",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(king_of_cups, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_king_of_cups.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_king_of_cups.can_use(card)
+            return G.jokers.config.card_limit > #G.jokers.cards
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_king_of_cups.use(card, area, copier)
+            -- Add random Mika's Mod Joker
+            local joker_list = get_mikas_jokers()
+            local joker = pseudorandom_element(joker_list, pseudoseed("king_of_cups"))
+            add_joker(joker, nil, true, false)
+        end
+    end
+
+    if config.chipsTarot then
+        -- Create Tarot
+        local chips = {
+            loc = {
+                name = "Chips",
+                text = {
+                    "Temp"
+                }
+            },
+            ability_name = "MMC Chips",
+            slug = "mmc_chips",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(chips, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_chips.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_chips.can_use(card)
+            return G.jokers.config.card_limit > #G.jokers.cards
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_chips.use(card, area, copier)
+            -- Add random Chips Joker
+            local joker_list = get_chips_jokers()
+            local joker = pseudorandom_element(joker_list, pseudoseed("chips"))
+            add_joker(joker, nil, true, false)
+        end
+    end
+
+    if config.multTarot then
+        -- Create Tarot
+        local temp = {
+            loc = {
+                name = "Temp",
+                text = {
+                    "Temp"
+                }
+            },
+            ability_name = "MMC Temp",
+            slug = "mmc_temp",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(temp, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_temp.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+
+        end
+    end
+
+    if config.moneyTarot then
+        -- Create Tarot
+        local temp = {
+            loc = {
+                name = "Temp",
+                text = {
+                    "Temp"
+                }
+            },
+            ability_name = "MMC Temp",
+            slug = "mmc_temp",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(temp, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_temp.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+
+        end
+    end
+
+    if config.supportTarot then
+        -- Create Tarot
+        local temp = {
+            loc = {
+                name = "Temp",
+                text = {
+                    "Temp"
+                }
+            },
+            ability_name = "MMC Temp",
+            slug = "mmc_temp",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(temp, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_temp.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+
+        end
+    end
+
+    if config.cardChipsTarot then
+        -- Create Tarot
+        local temp = {
+            loc = {
+                name = "Temp",
+                text = {
+                    "Temp"
+                }
+            },
+            ability_name = "MMC Temp",
+            slug = "mmc_temp",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(temp, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_temp.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+
+        end
+    end
+
+    if config.cardMultTarot then
+        -- Create Tarot
+        local temp = {
+            loc = {
+                name = "Temp",
+                text = {
+                    "Temp"
+                }
+            },
+            ability_name = "MMC Temp",
+            slug = "mmc_temp",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(temp, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_temp.can_use(card)
+            return true
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+
         end
     end
 
@@ -975,7 +1369,7 @@ function SMODS.INIT.MikasModCollection()
         -- Set can_use
         function SMODS.Spectrals.c_mmc_incense.can_use(card)
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.set == 'Joker' and (not v.edition) then
+                if v.ability.set == "Joker" and (not v.edition) then
                     return true
                 end
             end
@@ -989,18 +1383,18 @@ function SMODS.INIT.MikasModCollection()
             -- Get editionless Jokers
             local editionless_jokers = {}
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.set == 'Joker' and (not v.edition) then
+                if v.ability.set == "Joker" and (not v.edition) then
                     table.insert(editionless_jokers, v)
                 end
             end
             -- Add negative to random Joker
             if #editionless_jokers > 0 then
                 G.E_MANAGER:add_event(Event({
-                    trigger = 'after',
+                    trigger = "after",
                     delay = 0.4,
                     func = function()
                         -- Set joker edition
-                        local joker = pseudorandom_element(editionless_jokers, pseudoseed('incense'))
+                        local joker = pseudorandom_element(editionless_jokers, pseudoseed("incense"))
                         ease_dollars(-G.GAME.mmc_incense_cost)
                         card:juice_up(0.3, 0.5)
                         joker:set_edition({ negative = true }, true)
@@ -1058,8 +1452,8 @@ function SMODS.INIT.MikasModCollection()
                     5 or context.other_card:get_id() == 7 or context.other_card:get_id() == 14) then
                 return {
                     message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
+                        type = "variable",
+                        key = "a_xmult",
                         vars = { self.ability.extra.Xmult }
                     },
                     x_mult = self.ability.extra.Xmult,
@@ -1126,8 +1520,8 @@ function SMODS.INIT.MikasModCollection()
                     if todd and steven then
                         return {
                             message = localize {
-                                type = 'variable',
-                                key = 'a_xmult',
+                                type = "variable",
+                                key = "a_xmult",
                                 vars = { self.ability.extra.Xmult }
                             },
                             Xmult_mod = self.ability.extra.Xmult
@@ -1183,8 +1577,8 @@ function SMODS.INIT.MikasModCollection()
                         self.ability.extra.h_mod)
                     G.hand:change_size(-self.ability.extra.h_mod)
                     -- Decrease message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_hand_down')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_mmc_hand_down")
                     })
                 end
             end
@@ -1194,8 +1588,8 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.current_h_size = self.ability.extra.current_h_size + self.ability.extra.h_mod
                 G.hand:change_size(self.ability.extra.h_mod)
                 -- Increase message
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize('k_mmc_hand_up')
+                card_eval_status_text(self, "extra", nil, nil, nil, {
+                    message = localize("k_mmc_hand_up")
                 })
             end
 
@@ -1205,8 +1599,8 @@ function SMODS.INIT.MikasModCollection()
                     G.hand:change_size(-self.ability.extra.current_h_size)
                     self.ability.extra.current_h_size = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_reset')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_reset")
                     })
                 end
             end
@@ -1255,8 +1649,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_mult > 0 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_mult',
+                            type = "variable",
+                            key = "a_mult",
                             vars = { self.ability.extra.current_mult }
                         },
                         mult_mod = self.ability.extra.current_mult,
@@ -1270,8 +1664,8 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
                 return {
                     message = localize {
-                        type = 'variable',
-                        key = 'a_mult',
+                        type = "variable",
+                        key = "a_mult",
                         vars = { self.ability.extra.mult_mod }
                     },
                     colour = G.C.RED,
@@ -1284,8 +1678,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_mult ~= 0 then
                     self.ability.extra.current_mult = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_reset')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_reset")
                     })
                 end
             end
@@ -1342,8 +1736,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.old > 1 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.old }
                         },
                         Xmult_mod = self.ability.extra.old,
@@ -1357,8 +1751,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_Xmult ~= 1 then
                     self.ability.extra.current_Xmult = 1
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_reset')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_reset")
                     })
                 end
             end
@@ -1407,8 +1801,8 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 return {
                     message = localize {
-                        type = 'variable',
-                        key = 'a_chips',
+                        type = "variable",
+                        key = "a_chips",
                         vars = { self.ability.extra.current_chips }
                     },
                     chip_mod = self.ability.extra.current_chips,
@@ -1461,7 +1855,7 @@ function SMODS.INIT.MikasModCollection()
                 context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus +
                     self.ability.extra.chip_mod
                 return {
-                    message = localize('k_upgrade_ex'),
+                    message = localize("k_upgrade_ex"),
                     colour = G.C.CHIPS,
                     card = self
                 }
@@ -1534,7 +1928,7 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.seven_tally >= 1 then
                     ease_dollars(self.ability.extra.dollars)
                     return {
-                        message = localize('$') .. self.ability.extra.dollars,
+                        message = localize("$") .. self.ability.extra.dollars,
                         dollars = self.ability.extra.dollars,
                         colour = G.C.MONEY
                     }
@@ -1604,13 +1998,13 @@ function SMODS.INIT.MikasModCollection()
                         mult_mod = self.ability.extra.mult,
                         chip_mod = self.ability.extra.chips,
                         Xmult_mod = self.ability.extra.Xmult,
-                        message = localize('k_mmc_bonus'),
+                        message = localize("k_mmc_bonus"),
                         card = self
                     }
                 elseif not context.blueprint then
                     -- Return charging message
                     return {
-                        message = localize('k_mmc_charging'),
+                        message = localize("k_mmc_charging"),
                         colour = G.C.JOKER_GREY,
                         card = self
                     }
@@ -1629,13 +2023,13 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.action_tally = (self.ability.extra.action_tally % self.ability.extra.every) + 1
                 if self.ability.extra.action_tally == 1 then
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_reset')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_reset")
                     })
                 else
                     -- Charging message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_charging'),
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_mmc_charging"),
                         colour = G.C.JOKER_GREY
                     })
                 end
@@ -1688,8 +2082,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_Xmult > 1 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.current_Xmult }
                         },
                         Xmult_mod = self.ability.extra.current_Xmult,
@@ -1708,8 +2102,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.total_chips > (self.ability.extra.req * G.GAME.blind.chips) then
                     self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
 
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_upgrade_ex'),
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_upgrade_ex"),
                         colour = G.C.RED
                     })
                 end
@@ -1737,8 +2131,8 @@ function SMODS.INIT.MikasModCollection()
             ability = {
                 extra = {
                     current_Xmult = 1,
-                    Xmult_mod = 4,
-                    percentage = 5,
+                    Xmult_mod = 2,
+                    percentage = 10,
                     total_chips = 0
                 }
             },
@@ -1765,8 +2159,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_Xmult > 1 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.current_Xmult }
                         },
                         Xmult_mod = self.ability.extra.current_Xmult,
@@ -1785,8 +2179,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.total_chips <= G.GAME.blind.chips * (1 + self.ability.extra.percentage / 100) then
                     self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
 
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_upgrade_ex'),
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_upgrade_ex"),
                         colour = G.C.RED
                     })
                 end
@@ -1886,8 +2280,8 @@ function SMODS.INIT.MikasModCollection()
                 if Xmult > 1 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { Xmult }
                         },
                         Xmult_mod = Xmult,
@@ -1949,8 +2343,8 @@ function SMODS.INIT.MikasModCollection()
                 -- Apply mult
                 return {
                     message = localize {
-                        type = 'variable',
-                        key = 'a_mult',
+                        type = "variable",
+                        key = "a_mult",
                         vars = { self.ability.extra.current_mult }
                     },
                     mult_mod = self.ability.extra.current_mult
@@ -2017,8 +2411,8 @@ function SMODS.INIT.MikasModCollection()
             if SMODS.end_calculate_context(context) then
                 return {
                     message = localize {
-                        type = 'variable',
-                        key = 'a_mult',
+                        type = "variable",
+                        key = "a_mult",
                         vars = { self.ability.extra.current_mult }
                     },
                     mult_mod = self.ability.extra.current_mult,
@@ -2033,7 +2427,7 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra._every <= 0 then
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            play_sound('tarot1')
+                            play_sound("tarot1")
                             self:start_dissolve()
                             return true
                         end
@@ -2041,8 +2435,8 @@ function SMODS.INIT.MikasModCollection()
                 else
                     -- Increase mult
                     self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_tick'),
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_mmc_tick"),
                         colour = G.C.RED
                     })
                 end
@@ -2067,7 +2461,7 @@ function SMODS.INIT.MikasModCollection()
             ability = {
                 extra = {
                     chips = 20,
-                    letter = 'A'
+                    letter = "A"
                 }
             },
             rarity = 1,
@@ -2089,14 +2483,14 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_eye_chart.calculate = function(self, context)
             -- Check if Joker name contains letter and apply chips
-            if context.other_joker and context.other_joker.ability.set == 'Joker' then
+            if context.other_joker and context.other_joker.ability.set == "Joker" then
                 -- FOR OTHER MODS:
                 -- If your mod uses ability names with a prefix and you want it to be compatible with this Joker,
                 -- Send me a message on Discord and I will add your prefix here so that it will work correctly!
 
                 -- Remove prefix from ability names
                 local ability_name = context.other_joker.ability.name:lower()
-                ability_name = remove_prefix(ability_name, 'mmc')
+                ability_name = remove_prefix(ability_name, "mmc")
 
                 -- Count letters
                 local letter_tally = count_letters(ability_name, self.ability.extra.letter:lower())
@@ -2113,8 +2507,8 @@ function SMODS.INIT.MikasModCollection()
                     -- Apply chips
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.chips * letter_tally }
                         },
                         chip_mod = self.ability.extra.chips * letter_tally
@@ -2173,10 +2567,10 @@ function SMODS.INIT.MikasModCollection()
             -- Apply chips
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.current_chips > 0 then
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.current_chips }
                         },
                         colour = G.C.CHIPS
@@ -2210,10 +2604,10 @@ function SMODS.INIT.MikasModCollection()
                         self.ability.extra.percentage / 100,
                         self.ability.extra.current_chips))
                     -- Return message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.current_chips }
                         },
                         colour = G.C.CHIPS
@@ -2262,8 +2656,8 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_finishing_blow.calculate = function(self, context)
             -- Check for high card and set card reference
             if context.cardarea == G.play and not context.repetition then
-                if context.scoring_name == 'High Card' then
-                    if context.other_card.ability.effect == 'Base' then
+                if context.scoring_name == "High Card" then
+                    if context.other_card.ability.effect == "Base" then
                         self.ability.extra.high_card = true
                         table.insert(self.ability.extra.card_refs, context.other_card)
                     end
@@ -2276,9 +2670,9 @@ function SMODS.INIT.MikasModCollection()
             if context.end_of_round and not context.individual and not context.repetition then
                 if self.ability.extra.high_card then
                     for _, v in ipairs(self.ability.extra.card_refs) do
-                        v:set_ability(pseudorandom_element(enhancements, pseudoseed('finishing_blow')), nil, true)
-                        card_eval_status_text(self, 'extra', nil, nil, nil, {
-                            message = localize('k_upgrade_ex'),
+                        v:set_ability(pseudorandom_element(enhancements, pseudoseed("finishing_blow")), nil, true)
+                        card_eval_status_text(self, "extra", nil, nil, nil, {
+                            message = localize("k_upgrade_ex"),
                             delay = 0.45
                         })
                     end
@@ -2394,10 +2788,10 @@ function SMODS.INIT.MikasModCollection()
             -- Apply chips if previous cards are the same as the current cards
             if SMODS.end_calculate_context(context) then
                 if tables_equal(self.ability.extra.prev_cards, self.ability.extra.current_cards) then
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.current_chips }
                         },
                         colour = G.C.CHIPS
@@ -2467,11 +2861,11 @@ function SMODS.INIT.MikasModCollection()
             if context.cardarea == G.play and not context.repetition then
                 local mult = 0
                 local chips = 0
-                if context.other_card:is_suit('Diamonds') or context.other_card:is_suit('Clubs') then
+                if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
                     -- Add chips if suit is Diamonds or Clubs
                     chips = self.ability.extra.chips
                 end
-                if context.other_card:is_suit('Hearts') or context.other_card:is_suit('Spades') then
+                if context.other_card:is_suit("Hearts") or context.other_card:is_suit("Spades") then
                     -- Add mult if Hearts or Spades
                     mult = self.ability.extra.mult
                 end
@@ -2561,8 +2955,8 @@ function SMODS.INIT.MikasModCollection()
                             end
                         }))
                         -- Show message
-                        card_eval_status_text(self, 'extra', nil, nil, nil, {
-                            message = localize('k_copied_ex'),
+                        card_eval_status_text(self, "extra", nil, nil, nil, {
+                            message = localize("k_copied_ex"),
                             colour = G.C.CHIPS,
                             card = self,
                             playing_cards_created = { true }
@@ -2581,9 +2975,9 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Training Wheels",
                 text = {
-                    "{X:mult,C:white}X#1#{} Mult,",
-                    "gains {X:mult,C:white}X#2#{} Mult",
-                    "per {C:attention}card{} scored",
+                    "{X:mult,C:white}X#1#{} Mult, gains {X:mult,C:white}X#2#{}",
+                    "Mult per {C:attention}#4# cards{} scored",
+                    "{C:inactive}Currently {C:attention}#3# {C:inactive}cards scored",
                     "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
@@ -2592,7 +2986,9 @@ function SMODS.INIT.MikasModCollection()
             ability = {
                 extra = {
                     current_Xmult = 1,
-                    Xmult_mod = 0.01
+                    Xmult_mod = 0.1,
+                    card_count = 0,
+                    req = 10
                 }
             },
             rarity = 2,
@@ -2608,35 +3004,42 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_training_wheels.loc_def(card)
-            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod }
+            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.card_count,
+                card.ability.extra.req }
         end
 
         -- Calculate
         SMODS.Jokers.j_mmc_training_wheels.calculate = function(self, context)
             -- Add xmult for every played card
             if context.individual and context.cardarea == G.play and not context.blueprint then
-                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.current_Xmult }
-                    },
-                    colour = G.C.MULT
-                })
+                self.ability.extra.card_count = self.ability.extra.card_count + 1
+                if self.ability.extra.card_count >= 10 then
+                    self.ability.extra.card_count = 0
+                    self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize {
+                            type = "variable",
+                            key = "a_xmult",
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        colour = G.C.MULT
+                    })
+                end
             end
 
             -- Apply xmult
             if SMODS.end_calculate_context(context) then
-                return {
-                    message = localize {
-                        type = 'variable',
-                        key = 'a_xmult',
-                        vars = { self.ability.extra.current_Xmult }
-                    },
-                    Xmult_mod = self.ability.extra.current_Xmult,
-                    card = self
-                }
+                if self.ability.extra.current_Xmult > 1 then
+                    return {
+                        message = localize {
+                            type = "variable",
+                            key = "a_xmult",
+                            vars = { self.ability.extra.current_Xmult }
+                        },
+                        Xmult_mod = self.ability.extra.current_Xmult,
+                        card = self
+                    }
+                end
             end
         end
     end
@@ -2679,7 +3082,7 @@ function SMODS.INIT.MikasModCollection()
             if context.repetition and context.cardarea == G.play then
                 if context.other_card.ability.effect == "Lucky Card" then
                     return {
-                        message = localize('k_again_ex'),
+                        message = localize("k_again_ex"),
                         repetitions = self.ability.extra,
                         card = self
                     }
@@ -2730,8 +3133,8 @@ function SMODS.INIT.MikasModCollection()
                 if #context.full_hand <= self.ability.extra.req then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.chips }
                         },
                         chip_mod = self.ability.extra.chips
@@ -2758,7 +3161,7 @@ function SMODS.INIT.MikasModCollection()
             ability = {
                 extra = {
                     Xmult = 4,
-                    req = 4,
+                    req = 5,
                     hand_equal_count = {},
                     should_trigger = false
                 }
@@ -2812,8 +3215,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.should_trigger then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.Xmult }
                         },
                         Xmult_mod = self.ability.extra.Xmult,
@@ -2860,8 +3263,8 @@ function SMODS.INIT.MikasModCollection()
                     "Stone Card" then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { context.other_card.ability.bonus }
                         },
                         chips = context.other_card.ability.bonus,
@@ -2870,8 +3273,8 @@ function SMODS.INIT.MikasModCollection()
                 elseif context.other_card.ability.effect == "Mult Card" then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_mult',
+                            type = "variable",
+                            key = "a_mult",
                             vars = { context.other_card.ability.mult }
                         },
                         mult = context.other_card.ability.mult,
@@ -2880,28 +3283,28 @@ function SMODS.INIT.MikasModCollection()
                 elseif context.other_card.ability.effect == "Glass Card" then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'Xmult',
+                            type = "variable",
+                            key = "Xmult",
                             vars = { context.other_card.ability.Xmult }
                         },
                         Xmult = context.other_card.ability.Xmult,
                         card = self
                     }
                 elseif context.other_card.ability.effect == "Lucky Card" then
-                    if pseudorandom('lucky_money') < G.GAME.probabilities.normal / 15 then
+                    if pseudorandom("lucky_money") < G.GAME.probabilities.normal / 15 then
                         ease_dollars(context.other_card.ability.p_dollars)
-                        card_eval_status_text(self, 'extra', nil, nil, nil, {
-                            message = localize('$') .. context.other_card.ability.p_dollars,
+                        card_eval_status_text(self, "extra", nil, nil, nil, {
+                            message = localize("$") .. context.other_card.ability.p_dollars,
                             dollars = context.other_card.ability.p_dollars,
                             colour = G.C.MONEY,
                             delay = 0.45
                         })
                     end
-                    if pseudorandom('lucky_mult') < G.GAME.probabilities.normal / 5 then
+                    if pseudorandom("lucky_mult") < G.GAME.probabilities.normal / 5 then
                         return {
                             message = localize {
-                                type = 'variable',
-                                key = 'a_mult',
+                                type = "variable",
+                                key = "a_mult",
                                 vars = { context.other_card.ability.mult }
                             },
                             mult = context.other_card.ability.mult,
@@ -2954,10 +3357,10 @@ function SMODS.INIT.MikasModCollection()
                 local gold_tally = 0
                 -- Count all Gold Cards and Gold Seals
                 for _, v in pairs(G.playing_cards) do
-                    if v.ability.name == 'Gold Card' then
+                    if v.ability.name == "Gold Card" then
                         gold_tally = gold_tally + 1
                     end
-                    if v.seal == 'Gold' then
+                    if v.seal == "Gold" then
                         gold_tally = gold_tally + 1
                     end
                 end
@@ -2966,7 +3369,7 @@ function SMODS.INIT.MikasModCollection()
                 if gold_tally > 0 then
                     ease_dollars(gold_tally * self.ability.extra.dollars)
                     return {
-                        message = localize('$') .. gold_tally * self.ability.extra.dollars,
+                        message = localize("$") .. gold_tally * self.ability.extra.dollars,
                         dollars = gold_tally * self.ability.extra.dollars,
                         colour = G.C.MONEY
                     }
@@ -3025,8 +3428,8 @@ function SMODS.INIT.MikasModCollection()
             -- Increase probabilities and reset has_triggered
             if SMODS.end_calculate_context(context) then
                 if self.ability.extra.has_triggered then
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_mmc_luck'),
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_mmc_luck"),
                         colour = G.C.GREEN
                     })
                     self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.increase
@@ -3045,8 +3448,8 @@ function SMODS.INIT.MikasModCollection()
                     end
                     self.ability.extra.probability = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_reset')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_reset")
                     })
                 end
             end
@@ -3106,10 +3509,10 @@ function SMODS.INIT.MikasModCollection()
                                     card:juice_up(0.3, 0.5)
                                     -- Add seal and edition
                                     if card.ability.seal == nil then
-                                        card:set_seal(pseudorandom_element(seals, pseudoseed('commander')), nil, true)
+                                        card:set_seal(pseudorandom_element(seals, pseudoseed("commander")), nil, true)
                                     end
                                     if card.edition == nil then
-                                        local edition = poll_edition('commander', nil, true, true)
+                                        local edition = poll_edition("commander", nil, true, true)
                                         card:set_edition(edition)
                                     end
                                     return true
@@ -3117,13 +3520,13 @@ function SMODS.INIT.MikasModCollection()
                             }))
 
                             -- Add enhancement, outside of animate because this has a delay for some reason
-                            if card.ability.effect == 'Base' then
-                                card:set_ability(pseudorandom_element(enhancements, pseudoseed('commander')), nil, true)
+                            if card.ability.effect == "Base" then
+                                card:set_ability(pseudorandom_element(enhancements, pseudoseed("commander")), nil, true)
                             end
 
                             -- Return message
-                            card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                message = localize('k_upgrade_ex')
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize("k_upgrade_ex")
                             })
                         end
                     end
@@ -3185,7 +3588,7 @@ function SMODS.INIT.MikasModCollection()
                     -- Create new negative Joker
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'blue_moon')
+                            local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "blue_moon")
                             card:set_edition({
                                 negative = true
                             })
@@ -3197,13 +3600,13 @@ function SMODS.INIT.MikasModCollection()
                     }))
                     -- Return message
                     return {
-                        message = localize('k_plus_joker'),
+                        message = localize("k_plus_joker"),
                         colour = G.C.BLUE
                     }
                 else
                     -- Nope!
                     return {
-                        message = localize('k_nope_ex'),
+                        message = localize("k_nope_ex"),
                         colour = G.C.SECONDARY_SET.Tarot
                     }
                 end
@@ -3333,8 +3736,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.half and self.ability.extra.incomplete then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.Xmult }
                         },
                         Xmult_mod = self.ability.extra.Xmult
@@ -3378,10 +3781,10 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_harp_seal.calculate = function(self, context)
             -- Give $3 for each Gold Seal
             if context.individual and context.cardarea == G.play and not context.repetition then
-                if context.other_card.seal == 'Gold' and not context.other_card.debuff then
+                if context.other_card.seal == "Gold" and not context.other_card.debuff then
                     ease_dollars(3)
                     return {
-                        message = localize('$') .. 3,
+                        message = localize("$") .. 3,
                         dollars = 3,
                         colour = G.C.MONEY,
                         card = self
@@ -3391,18 +3794,18 @@ function SMODS.INIT.MikasModCollection()
 
             -- Repeat Red Seals
             if context.repetition and context.cardarea == G.play then
-                if context.other_card.seal == 'Red' and not context.other_card.debuff then
+                if context.other_card.seal == "Red" and not context.other_card.debuff then
                     return {
-                        message = localize('k_again_ex'),
+                        message = localize("k_again_ex"),
                         repetitions = 1,
                         card = self
                     }
                 end
             end
             if context.repetition and context.cardarea == G.hand then
-                if context.other_card.seal == 'Red' and (next(context.card_effects[1]) or #context.card_effects > 1) and not context.other_card.debuff then
+                if context.other_card.seal == "Red" and (next(context.card_effects[1]) or #context.card_effects > 1) and not context.other_card.debuff then
                     return {
-                        message = localize('k_again_ex'),
+                        message = localize("k_again_ex"),
                         repetitions = 1,
                         card = self
                     }
@@ -3411,9 +3814,9 @@ function SMODS.INIT.MikasModCollection()
 
             -- Create tarot card for each Purple Seal
             if context.discard then
-                if context.other_card.seal == 'Purple' and not context.other_card.debuff then
+                if context.other_card.seal == "Purple" and not context.other_card.debuff then
                     -- Check consumeable space
-                    create_tarot(self, 'harp_seal')
+                    create_tarot(self, "harp_seal")
                 end
             end
         end
@@ -3466,8 +3869,8 @@ function SMODS.INIT.MikasModCollection()
                     -- Apply chips
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.chips }
                         },
                         chip_mod = self.ability.extra.chips
@@ -3529,7 +3932,7 @@ function SMODS.INIT.MikasModCollection()
                         mult_mod = self.ability.extra.current_mult,
                         chip_mod = self.ability.extra.current_chips,
                         Xmult_mod = self.ability.extra.current_Xmult,
-                        message = localize('k_mmc_bonus'),
+                        message = localize("k_mmc_bonus"),
                         card = self
                     }
                 end
@@ -3682,8 +4085,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_mult > 0 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_mult',
+                            type = "variable",
+                            key = "a_mult",
                             vars = { self.ability.extra.current_mult }
                         },
                         mult_mod = self.ability.extra.current_mult,
@@ -3737,8 +4140,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_chips > 0 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.current_chips }
                         },
                         chip_mod = self.ability.extra.current_chips,
@@ -3791,8 +4194,8 @@ function SMODS.INIT.MikasModCollection()
                 if G.GAME.dollars <= -1 * self.ability.extra.req then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.Xmult }
                         },
                         Xmult_mod = self.ability.extra.Xmult
@@ -3835,7 +4238,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_checklist.loc_def(card)
-            return { localize(card.ability.extra.poker_hand, 'poker_hands'), card.ability.extra.increase }
+            return { localize(card.ability.extra.poker_hand, "poker_hands"), card.ability.extra.increase }
         end
 
         -- Set ability
@@ -3848,7 +4251,7 @@ function SMODS.INIT.MikasModCollection()
             card.ability.extra.poker_hand = nil
             while not card.ability.extra.poker_hand do
                 card.ability.extra.poker_hand = pseudorandom_element(_poker_hands,
-                    pseudoseed((card.area and card.area.config.type == 'title') and 'false_checklist' or 'checklist'))
+                    pseudoseed((card.area and card.area.config.type == "title") and "false_checklist" or "checklist"))
                 if card.ability.extra.poker_hand == old_hand then card.ability.extra.poker_hand = nil end
             end
         end
@@ -3857,8 +4260,8 @@ function SMODS.INIT.MikasModCollection()
         SMODS.Jokers.j_mmc_checklist.calculate = function(self, context)
             -- Level up poker hand
             if context.before and context.scoring_name == self.ability.extra.poker_hand then
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize('k_upgrade_ex')
+                card_eval_status_text(self, "extra", nil, nil, nil, {
+                    message = localize("k_upgrade_ex")
                 })
                 level_up_hand(self, context.scoring_name, false, self.ability.extra.increase)
             end
@@ -3870,9 +4273,9 @@ function SMODS.INIT.MikasModCollection()
                 for k, v in pairs(G.GAME.hands) do
                     if v.visible and k ~= self.ability.extra.poker_hand then _poker_hands[#_poker_hands + 1] = k end
                 end
-                self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('checklist'))
+                self.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed("checklist"))
                 return {
-                    message = localize('k_reset')
+                    message = localize("k_reset")
                 }
             end
         end
@@ -3929,14 +4332,14 @@ function SMODS.INIT.MikasModCollection()
                     -- Get editionless Jokers
                     local editionless_jokers = {}
                     for _, v in pairs(G.jokers.cards) do
-                        if v.ability.set == 'Joker' and (not v.edition) then
+                        if v.ability.set == "Joker" and (not v.edition) then
                             table.insert(editionless_jokers, v)
                         end
                     end
                     -- Add edition to random Joker
                     if #editionless_jokers > 0 then
-                        local joker = pseudorandom_element(editionless_jokers, pseudoseed('one_of_us'))
-                        local edition = poll_edition('one_of_us', nil, false, true)
+                        local joker = pseudorandom_element(editionless_jokers, pseudoseed("one_of_us"))
+                        local edition = poll_edition("one_of_us", nil, false, true)
                         -- Animate card
                         G.E_MANAGER:add_event(Event({
                             delay = 0.5,
@@ -3948,7 +4351,7 @@ function SMODS.INIT.MikasModCollection()
                         }))
                         -- Return message
                         return {
-                            message = localize('k_upgrade_ex'),
+                            message = localize("k_upgrade_ex"),
                             colour = G.C.SECONDARY_SET.Tarot
                         }
                     end
@@ -3990,7 +4393,7 @@ function SMODS.INIT.MikasModCollection()
         -- Set local variables
         function SMODS.Jokers.j_mmc_investor.loc_def(card)
             return { card.ability.extra.dollars, card.ability.extra.odds,
-                '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
+                "" .. (G.GAME and G.GAME.probabilities.normal or 1) }
         end
 
         -- Calculate
@@ -3998,13 +4401,13 @@ function SMODS.INIT.MikasModCollection()
             if context.end_of_round and not context.individual and not context.repetition then
                 -- Give money between min and max
                 local dollars = self.ability.extra.dollars
-                if pseudorandom('investor') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                if pseudorandom("investor") < G.GAME.probabilities.normal / self.ability.extra.odds then
                     dollars = dollars * -1
                 end
                 ease_dollars(dollars)
                 -- Return message
                 return {
-                    message = localize('$') .. dollars,
+                    message = localize("$") .. dollars,
                     dollars = dollars,
                     colour = G.C.MONEY
                 }
@@ -4047,8 +4450,8 @@ function SMODS.INIT.MikasModCollection()
             if context.individual and context.cardarea == G.play then
                 context.other_card.ability.perma_mult = context.other_card.ability.perma_mult or 0
                 context.other_card.ability.perma_mult = context.other_card.ability.perma_mult + self.ability.extra.mult
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize('k_upgrade_ex'),
+                card_eval_status_text(self, "extra", nil, nil, nil, {
+                    message = localize("k_upgrade_ex"),
                     colour = G.C.MULT,
                 })
             end
@@ -4101,7 +4504,7 @@ function SMODS.INIT.MikasModCollection()
                 if #context.full_hand > self.ability.extra.req then
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            play_sound('tarot1')
+                            play_sound("tarot1")
                             self:start_dissolve()
                             return true
                         end
@@ -4143,113 +4546,113 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_buy_one_get_one.loc_def(card)
-            return { card.ability.extra.odds, '' .. (G.GAME and G.GAME.probabilities.normal or 1) }
+            return { card.ability.extra.odds, "" .. (G.GAME and G.GAME.probabilities.normal or 1) }
         end
 
         -- Calculate
         SMODS.Jokers.j_mmc_buy_one_get_one.calculate = function(self, context)
             if context.buying_card then
                 -- Calculate odds
-                if pseudorandom('buy_one_get_one') < G.GAME.probabilities.normal / self.ability.extra.odds then
-                    if context.card.ability.set == 'Joker' then
+                if pseudorandom("buy_one_get_one") < G.GAME.probabilities.normal / self.ability.extra.odds then
+                    if context.card.ability.set == "Joker" then
                         -- Give extra Joker
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if #G.jokers.cards < G.jokers.config.card_limit then
-                                    local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil,
+                                        "buy_one_get_one")
                                     card:add_to_deck()
                                     G.jokers:emplace(card)
                                     card:start_materialize()
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_plus_joker'),
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_plus_joker"),
                                         colour = G.C.BLUE
                                     })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex')
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_no_space_ex")
                                     })
                                 end
                                 return true
                             end
                         }))
-                    elseif context.card.ability.set == 'Tarot' then
+                    elseif context.card.ability.set == "Tarot" then
                         -- Give extra Tarot card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    play_sound('timpani')
-                                    local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    play_sound("timpani")
+                                    local card = create_card("Tarot", G.consumeables, nil, nil, nil, nil, nil,
+                                        "buy_one_get_one")
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_plus_tarot'),
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_plus_tarot"),
                                         colour = G.C.SECONDARY_SET.Tarot
                                     })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex')
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_no_space_ex")
                                     })
                                 end
                                 return true
                             end
                         }))
-                    elseif context.card.ability.set == 'Spectral' then
+                    elseif context.card.ability.set == "Spectral" then
                         -- Give extra Spectral card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    play_sound('timpani')
-                                    local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    play_sound("timpani")
+                                    local card = create_card("Spectral", G.consumeables, nil, nil, nil, nil, nil,
+                                        "buy_one_get_one")
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_plus_spectral'),
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_plus_spectral"),
                                         colour = G.C.SECONDARY_SET.Spectral
                                     })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex')
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_no_space_ex")
                                     })
                                 end
                                 return true
                             end
                         }))
-                    elseif context.card.ability.set == 'Planet' then
+                    elseif context.card.ability.set == "Planet" then
                         G.E_MANAGER:add_event(Event({
                             -- Give extra Planet card
                             func = (function()
                                 if G.consumeables.config.card_limit > #G.consumeables.cards then
-                                    local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil,
-                                        'buy_one_get_one')
+                                    local card = create_card("Planet", G.consumeables, nil, nil, nil, nil, nil,
+                                        "buy_one_get_one")
                                     card:add_to_deck()
                                     G.consumeables:emplace(card)
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_plus_planet'),
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_plus_planet"),
                                         colour = G.C.SECONDARY_SET.Planet
                                     })
                                 else
-                                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                        message = localize('k_no_space_ex')
+                                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                                        message = localize("k_no_space_ex")
                                     })
                                 end
                                 return true
                             end)
                         }))
-                    elseif context.card.ability.set == 'Default' then
+                    elseif context.card.ability.set == "Default" then
                         -- Give extra Playing Card
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 local _card = create_playing_card({
-                                    front = pseudorandom_element(G.P_CARDS, pseudoseed('buy_one_get_one')),
+                                    front = pseudorandom_element(G.P_CARDS, pseudoseed("buy_one_get_one")),
                                     center = G.P_CENTERS.c_base
                                 }, G.deck, nil, nil, { G.C.SECONDARY_SET.Enhanced })
                                 _card:add_to_deck()
                                 G.deck.config.card_limit = G.deck.config.card_limit + 1
-                                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                    message = localize('k_mmc_plus_card'),
+                                card_eval_status_text(self, "extra", nil, nil, nil, {
+                                    message = localize("k_mmc_plus_card"),
                                     colour = G.C.Blue
                                 })
                                 return true
@@ -4258,8 +4661,8 @@ function SMODS.INIT.MikasModCollection()
                     end
                 else
                     -- Nope!
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_nope_ex'),
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_nope_ex"),
                         colour = G.C.SECONDARY_SET.Tarot
                     })
                 end
@@ -4309,7 +4712,7 @@ function SMODS.INIT.MikasModCollection()
                 local joker = G.jokers.cards[1]
                 if joker then
                     ease_dollars(-self.ability.extra.dollars)
-                    local edition = poll_edition('pack_a_punch', nil, false, true)
+                    local edition = poll_edition("pack_a_punch", nil, false, true)
                     -- Animate card
                     G.E_MANAGER:add_event(Event({
                         delay = 0.5,
@@ -4321,14 +4724,14 @@ function SMODS.INIT.MikasModCollection()
                             end
                             joker:set_edition(edition, true)
                             -- Show message
-                            card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                message = localize('k_upgrade_ex')
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize("k_upgrade_ex")
                             })
                             -- Delete self if over Joker limit
                             if G.jokers.config.card_limit < #G.jokers.cards then
                                 G.E_MANAGER:add_event(Event({
                                     func = function()
-                                        play_sound('tarot1')
+                                        play_sound("tarot1")
                                         self:start_dissolve()
                                         return true
                                     end
@@ -4339,7 +4742,7 @@ function SMODS.INIT.MikasModCollection()
                     }))
                     -- Return message
                     return {
-                        message = localize('k_upgrade_ex'),
+                        message = localize("k_upgrade_ex"),
                         colour = G.C.SECONDARY_SET.Tarot
                     }
                 end
@@ -4380,23 +4783,23 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_seal_steal.calculate = function(self, context)
             if context.individual and context.cardarea == G.play then
-                if context.other_card.seal == 'Purple' and not context.other_card.debuff then
+                if context.other_card.seal == "Purple" and not context.other_card.debuff then
                     -- Check for Harp Seal
                     local harp_seal
                     for _, v in ipairs(find_joker("MMC Harp Seal")) do
                         harp_seal = v
                         break
                     end
-                    create_tarot(self, 'seal_steal')
+                    create_tarot(self, "seal_steal")
                     -- Repeat for Harp Seal
                     if harp_seal then
                         -- Show Harp Seal message
-                        card_eval_status_text(harp_seal, 'extra', nil, nil, nil, {
-                            message = localize('k_again_ex')
+                        card_eval_status_text(harp_seal, "extra", nil, nil, nil, {
+                            message = localize("k_again_ex")
                         })
-                        create_tarot(self, 'seal_steal')
+                        create_tarot(self, "seal_steal")
                     end
-                elseif context.other_card.seal == 'Blue' and not context.other_card.debuff then
+                elseif context.other_card.seal == "Blue" and not context.other_card.debuff then
                     -- Check for Harp Seal and Aurora Borealis
                     local harp_seal
                     local aurora_borealis
@@ -4429,20 +4832,20 @@ function SMODS.INIT.MikasModCollection()
                     end
                     -- Create planet
                     if _planet ~= nil then
-                        create_planet(self, 'seal_steal', _planet, aurora_borealis)
+                        create_planet(self, "seal_steal", _planet, aurora_borealis)
                     end
-                    create_planet(self, 'seal_steal')
+                    create_planet(self, "seal_steal")
                     -- Repeat for harp seal
                     if harp_seal then
                         -- Show Harp Seal message
-                        card_eval_status_text(harp_seal, 'extra', nil, nil, nil, {
-                            message = localize('k_again_ex')
+                        card_eval_status_text(harp_seal, "extra", nil, nil, nil, {
+                            message = localize("k_again_ex")
                         })
                         -- Add card
                         if _planet ~= nil then
-                            create_planet(self, 'seal_steal', _planet, aurora_borealis)
+                            create_planet(self, "seal_steal", _planet, aurora_borealis)
                         end
-                        create_planet(self, 'seal_steal')
+                        create_planet(self, "seal_steal")
                     end
                 end
             end
@@ -4491,7 +4894,7 @@ function SMODS.INIT.MikasModCollection()
                     -- Give dollars for every Joker, based on their rarity
                     if v ~= self and v.config.center.rarity > 1 then
                         G.E_MANAGER:add_event(Event({
-                            trigger = 'after',
+                            trigger = "after",
                             delay = 0.7,
                             func = (function()
                                 -- Give dollars
@@ -4501,8 +4904,8 @@ function SMODS.INIT.MikasModCollection()
                                 end
                                 ease_dollars(dollars, true)
                                 -- Show message
-                                card_eval_status_text(v, 'extra', nil, nil, nil, {
-                                    message = localize('$') .. dollars,
+                                card_eval_status_text(v, "extra", nil, nil, nil, {
+                                    message = localize("$") .. dollars,
                                     dollars = dollars,
                                     colour = G.C.MONEY,
                                     instant = true
@@ -4562,7 +4965,7 @@ function SMODS.INIT.MikasModCollection()
             if context.repetition and context.cardarea == G.play then
                 if context.other_card.ability.effect == "Glass Card" then
                     return {
-                        message = localize('k_again_ex'),
+                        message = localize("k_again_ex"),
                         repetitions = self.ability.extra.repetitions,
                         card = self
                     }
@@ -4581,11 +4984,11 @@ function SMODS.INIT.MikasModCollection()
                 for _, v in ipairs(context.full_hand) do
                     if v.played then
                         G.E_MANAGER:add_event(Event({
-                            trigger = 'before',
+                            trigger = "before",
                             delay = 0.9,
                             func = (function()
-                                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                    message = localize('k_mmc_destroy'),
+                                card_eval_status_text(self, "extra", nil, nil, nil, {
+                                    message = localize("k_mmc_destroy"),
                                     colour = G.C.RED,
                                     instant = true
                                 })
@@ -4660,11 +5063,11 @@ function SMODS.INIT.MikasModCollection()
                     -- Destroy played hand if it's less than 1% of blind requirement
                     for _, v in ipairs(self.ability.extra.played_hand) do
                         G.E_MANAGER:add_event(Event({
-                            trigger = 'before',
+                            trigger = "before",
                             delay = 0.9,
                             func = (function()
-                                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                    message = localize('k_mmc_destroy'),
+                                card_eval_status_text(self, "extra", nil, nil, nil, {
+                                    message = localize("k_mmc_destroy"),
                                     colour = G.C.RED,
                                     instant = true
                                 })
@@ -4756,7 +5159,7 @@ function SMODS.INIT.MikasModCollection()
             if context.repetition and context.cardarea == G.play then
                 if context.other_card and G.GAME.current_round.hands_played == 0 then
                     return {
-                        message = localize('k_again_ex'),
+                        message = localize("k_again_ex"),
                         repetitions = self.ability.extra.repetitions,
                         card = self
                     }
@@ -4808,8 +5211,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_mult ~= 0 then
                     self.ability.extra.current_mult = 0
                     -- Reset message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
-                        message = localize('k_reset')
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_reset")
                     })
                 end
             end
@@ -4819,8 +5222,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_mult > 0 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_mult',
+                            type = "variable",
+                            key = "a_mult",
                             vars = { self.ability.extra.current_mult }
                         },
                         mult_mod = self.ability.extra.current_mult,
@@ -4835,8 +5238,8 @@ function SMODS.INIT.MikasModCollection()
                 self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
                 return {
                     message = localize {
-                        type = 'variable',
-                        key = 'a_mult',
+                        type = "variable",
+                        key = "a_mult",
                         vars = { self.ability.extra.mult_mod }
                     },
                     colour = G.C.RED,
@@ -4863,9 +5266,9 @@ function SMODS.INIT.MikasModCollection()
             ability = {
                 extra = {
                     current_Xmult = 1,
-                    Xmult_mod = 0.5,
-                    req = 25,
-                    base = 25,
+                    _Xmult_mod = 0.5,
+                    _req = 10,
+                    _base = 10,
                 }
             },
             rarity = 3,
@@ -4881,7 +5284,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_monopolist.loc_def(card)
-            return { card.ability.extra.current_Xmult, card.ability.extra.Xmult_mod, card.ability.extra.req }
+            return { card.ability.extra.current_Xmult, card.ability.extra._Xmult_mod, card.ability.extra._req }
         end
 
         -- Calculate
@@ -4891,8 +5294,8 @@ function SMODS.INIT.MikasModCollection()
                 if self.ability.extra.current_Xmult > 1 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.current_Xmult }
                         },
                         Xmult_mod = self.ability.extra.current_Xmult,
@@ -4947,8 +5350,8 @@ function SMODS.INIT.MikasModCollection()
                 if _tally > 0 then
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_mult',
+                            type = "variable",
+                            key = "a_mult",
                             vars = { _tally }
                         },
                         mult_mod = _tally,
@@ -5001,8 +5404,8 @@ function SMODS.INIT.MikasModCollection()
 
             if context.skipping_booster then
                 ease_dollars(self.ability.extra.cost)
-                card_eval_status_text(self, 'extra', nil, nil, nil, {
-                    message = localize('$') .. self.ability.extra.cost,
+                card_eval_status_text(self, "extra", nil, nil, nil, {
+                    message = localize("$") .. self.ability.extra.cost,
                     dollars = self.ability.extra.cost,
                     colour = G.C.MONEY
                 })
@@ -5053,7 +5456,7 @@ function SMODS.INIT.MikasModCollection()
                 if #context.full_hand < self.ability.extra.req then
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            play_sound('tarot1')
+                            play_sound("tarot1")
                             self:start_dissolve()
                             return true
                         end
@@ -5061,8 +5464,8 @@ function SMODS.INIT.MikasModCollection()
                 else
                     return {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_chips',
+                            type = "variable",
+                            key = "a_chips",
                             vars = { self.ability.extra.chips }
                         },
                         chip_mod = self.ability.extra.chips
@@ -5112,7 +5515,7 @@ function SMODS.INIT.MikasModCollection()
             if context.repetition and context.cardarea == G.play then
                 if context.other_card and context.poker_hands and next(context.poker_hands["Straight"]) then
                     return {
-                        message = localize('k_again_ex'),
+                        message = localize("k_again_ex"),
                         repetitions = self.ability.extra.repetitions,
                         card = self
                     }
@@ -5162,30 +5565,30 @@ function SMODS.INIT.MikasModCollection()
             if context.individual and context.cardarea == G.play then
                 if G.GAME.current_round.hands_played == 0 then
                     G.E_MANAGER:add_event(Event({
-                        trigger = 'after',
+                        trigger = "after",
                         delay = 0.0,
                         func = (function()
                             -- Increase rank
                             local card = context.other_card
-                            local suit_prefix = string.sub(card.base.suit, 1, 1) .. '_'
+                            local suit_prefix = string.sub(card.base.suit, 1, 1) .. "_"
                             local rank_suffix = card.base.id == 14 and 2 or math.min(card.base.id + 1, 14)
                             if rank_suffix < 10 then
                                 rank_suffix = tostring(rank_suffix)
                             elseif rank_suffix == 10 then
-                                rank_suffix = 'T'
+                                rank_suffix = "T"
                             elseif rank_suffix == 11 then
-                                rank_suffix = 'J'
+                                rank_suffix = "J"
                             elseif rank_suffix == 12 then
-                                rank_suffix = 'Q'
+                                rank_suffix = "Q"
                             elseif rank_suffix == 13 then
-                                rank_suffix = 'K'
+                                rank_suffix = "K"
                             elseif rank_suffix == 14 then
-                                rank_suffix = 'A'
+                                rank_suffix = "A"
                             end
                             card:set_base(G.P_CARDS[suit_prefix .. rank_suffix])
                             -- Show message
-                            card_eval_status_text(self, 'extra', nil, nil, nil, {
-                                message = localize('k_upgrade_ex'),
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize("k_upgrade_ex"),
                                 instant = true
                             })
                             return true
@@ -5205,7 +5608,7 @@ function Card:flip()
     local W = G.CARD_W
 
     if self.ability.name == "MMC Historical Joker" then
-        if self.facing == 'front' then
+        if self.facing == "front" then
             self.T.h = H * scale
             self.T.w = W * scale / 1.5 * scale
         else
@@ -5226,7 +5629,7 @@ function Card:set_sprites(_center, _front)
 
     if _center then
         if _center.set then
-            if _center.name == 'MMC Incomplete Joker' and (_center.discovered or self.bypass_discovery_center) then
+            if _center.name == "MMC Incomplete Joker" and (_center.discovered or self.bypass_discovery_center) then
                 self.children.center.scale.y = self.children.center.scale.y / 1.7
                 H = H / 1.7
                 self.T.h = H
@@ -5239,21 +5642,21 @@ end
 local add_to_deckref = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
     if not self.added_to_deck then
-        if self.ability.name == 'MMC Straight Nate' then
+        if self.ability.name == "MMC Straight Nate" then
             -- Add Joker slot
             G.jokers.config.card_limit = G.jokers.config.card_limit + self.ability.extra.j_slots
         end
 
-        if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
+        if G.GAME.starting_params.mmc_for_hire and self.ability.set == "Joker" then
             -- Add Joker slot and increment counter
             G.jokers.config.card_limit = G.jokers.config.card_limit + 1
             for_hire_counter = for_hire_counter + 1
         end
 
-        if self.ability.name == 'Half Joker' then
+        if self.ability.name == "Half Joker" then
             -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'MMC Glue' then
+                if v.ability.name == "MMC Glue" then
                     -- Update Glue variables
                     v.ability.extra.half = true
                     if v.ability.extra.incomplete then
@@ -5264,10 +5667,10 @@ function Card:add_to_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Incomplete Joker' then
+        if self.ability.name == "MMC Incomplete Joker" then
             -- Check for Glue  Joker
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'MMC Glue' then
+                if v.ability.name == "MMC Glue" then
                     -- Update Glue variables
                     v.ability.extra.incomplete = true
                     if v.ability.extra.half then
@@ -5278,13 +5681,13 @@ function Card:add_to_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Glue' then
+        if self.ability.name == "MMC Glue" then
             -- Check for Half and Incomplete Jokers
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'Half Joker' then
+                if v.ability.name == "Half Joker" then
                     self.ability.extra.half = true
                 end
-                if v.ability.name == 'MMC Incomplete Joker' then
+                if v.ability.name == "MMC Incomplete Joker" then
                     self.ability.extra.incomplete = true
                 end
             end
@@ -5295,12 +5698,12 @@ function Card:add_to_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Student Loans' then
+        if self.ability.name == "MMC Student Loans" then
             -- Lower bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at - self.ability.extra.negative_bal
         end
 
-        if self.ability.name == 'MMC Shackles' then
+        if self.ability.name == "MMC Shackles" then
             -- Add hands, discards and hand size
             ease_hands_played(self.ability.extra._hand_add)
             G.GAME.round_resets.hands = G.GAME.round_resets.hands + self.ability.extra._hand_add
@@ -5316,18 +5719,18 @@ end
 local remove_from_deckref = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
     if self.added_to_deck then
-        if self.ability.name == 'MMC Straight Nate' then
+        if self.ability.name == "MMC Straight Nate" then
             -- Remove Joker slot
             G.jokers.config.card_limit = G.jokers.config.card_limit - self.ability.extra.j_slots
         end
 
-        if G.GAME.starting_params.mmc_for_hire and self.ability.set == 'Joker' then
+        if G.GAME.starting_params.mmc_for_hire and self.ability.set == "Joker" then
             -- Remove Joker slot and decrement counter
             G.jokers.config.card_limit = G.jokers.config.card_limit - 1
             for_hire_counter = for_hire_counter - 1
         end
 
-        if self.ability.name == 'MMC The Fisherman' then
+        if self.ability.name == "MMC The Fisherman" then
             -- Reset hand size
             if self.ability.extra.current_h_size ~= 0 then
                 G.hand:change_size(-self.ability.extra.current_h_size)
@@ -5335,7 +5738,7 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Rigged Joker' then
+        if self.ability.name == "MMC Rigged Joker" then
             -- Reset probabilities
             if self.ability.extra.probability > 0 then
                 for k, v in pairs(G.GAME.probabilities) do
@@ -5345,11 +5748,11 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Dagonet' then
+        if self.ability.name == "MMC Dagonet" then
             -- Return attributes to defaults
-            for _, v in find_joker('MMC Dagonet') do
+            for _, v in ipairs(G.jokers.cards) do
                 if v ~= self then
-                    if v.ability.extra._mult ~= 2 then
+                    if v.ability.name == 'MMC Dagonet' and v.ability.extra._mult ~= 2 then
                         v.ability.extra._mult = v.ability.extra._mult / 2
                     end
                     for k2, v2 in pairs(v.ability) do
@@ -5359,10 +5762,10 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'Half Joker' then
+        if self.ability.name == "Half Joker" then
             -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'MMC Glue' then
+                if v.ability.name == "MMC Glue" then
                     -- Reset Glue variables
                     v.ability.extra.half = false
                     if v.ability.extra.triggered then
@@ -5373,10 +5776,10 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Incomplete Joker' then
+        if self.ability.name == "MMC Incomplete Joker" then
             -- Check for Glue Joker
             for _, v in pairs(G.jokers.cards) do
-                if v.ability.name == 'MMC Glue' then
+                if v.ability.name == "MMC Glue" then
                     -- Reset Glue variables
                     v.ability.extra.incomplete = false
                     if v.ability.extra.triggered then
@@ -5387,7 +5790,7 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC Glue' then
+        if self.ability.name == "MMC Glue" then
             -- Reset Glue variables
             if self.ability.extra.triggered then
                 self.ability.extra.triggered = false
@@ -5395,19 +5798,19 @@ function Card:remove_from_deck(from_debuff)
             end
         end
 
-        if self.ability.name == 'MMC The Stockpiler' then
+        if self.ability.name == "MMC The Stockpiler" then
             -- Reset hand size
             G.hand:change_size(-self.ability.extra.current_h_size)
         end
 
-        if self.ability.name == 'MMC Student Loans' then
+        if self.ability.name == "MMC Student Loans" then
             -- Reset bankrupt limit and discards
             G.GAME.bankrupt_at = G.GAME.bankrupt_at + self.ability.extra.negative_bal
             ease_discard(-self.ability.extra.discards)
             G.GAME.round_resets.discards = G.GAME.round_resets.discards - self.ability.extra.discards
         end
 
-        if self.ability.name == 'MMC Shackles' then
+        if self.ability.name == "MMC Shackles" then
             -- Remove hands, discards and hand size
             ease_hands_played(-self.ability.extra._hand_add)
             G.GAME.round_resets.hands = G.GAME.round_resets.hands - self.ability.extra._hand_add
@@ -5425,17 +5828,17 @@ local set_costref = Card.set_cost
 function Card.set_cost(self)
     set_costref(self)
 
-    if self.ability.name == 'MMC Eye Chart' and not self.added_to_deck then
+    if self.ability.name == "MMC Eye Chart" and not self.added_to_deck then
         -- Generate new letter
-        self.ability.extra.letter = string.upper(pseudorandom_element(letters, pseudoseed('eye_chart')))
+        self.ability.extra.letter = string.upper(pseudorandom_element(letters, pseudoseed("eye_chart")))
     end
 
     if G.GAME.starting_params.mmc_for_hire and
-        (self.ability.set == 'Joker' or string.find(self.ability.name, 'Buffoon')) then
+        (self.ability.set == "Joker" or string.find(self.ability.name, "Buffoon")) then
         -- Multiply cost linearly with counter
         self.cost = self.cost * for_hire_counter
 
-        if self.ability.name == 'Riff-raff' then
+        if self.ability.name == "Riff-raff" then
             -- No fun allowed
             self.cost = 1000000000
         end
@@ -5447,12 +5850,12 @@ local set_edition_ref = Card.set_edition
 function Card.set_edition(self, edition, immediate, silent)
     set_edition_ref(self, edition, immediate, silent)
     if G.jokers then
-        if not self.added_to_deck and self.ability.set == 'Joker' and (self.edition == nil or not edition.negative) then
+        if not self.added_to_deck and self.ability.set == "Joker" and (self.edition == nil or not edition.negative) then
             if next(find_joker("MMC Cicero")) then
                 local support = true
-                for _, v2 in ipairs(G.localization.descriptions.Joker[self.config.center.key].text) do
+                for _, v in ipairs(G.localization.descriptions.Joker[self.config.center.key].text) do
                     support = support and
-                        not (string.find(v2:lower(), 'mult') or string.find(v2:lower(), 'chips') or string.find(v2:lower(), 'retrigger'))
+                        not (string.find(v:lower(), "mult") or string.find(v:lower(), "chips") or string.find(v:lower(), "retrigger"))
                 end
                 if (support or not not_in_table(cicero_whitelist, self.ability.name)) and not_in_table(cicero_blacklist, self.ability.name) then
                     self:set_edition({ negative = true })
@@ -5466,7 +5869,7 @@ end
 local card_updateref = Card.update
 function Card.update(self, dt)
     if G.STAGE == G.STAGES.RUN then
-        if self.ability.name == 'MMC Seal Collector' then
+        if self.ability.name == "MMC Seal Collector" then
             self.ability.extra.current_chips = self.ability.extra.base
             -- Count all seal cards
             for _, v in pairs(G.playing_cards) do
@@ -5477,18 +5880,18 @@ function Card.update(self, dt)
             end
         end
 
-        if self.ability.name == 'MMC Batman' then
+        if self.ability.name == "MMC Batman" then
             self.ability.extra.mult_mod = self.ability.extra.base
-            -- Count all jokers with 'Joker' in the name
+            -- Count all jokers with "Joker" in the name
             for _, v in pairs(G.jokers.cards) do
-                if string.find(v.ability.name, 'Joker') then
+                if string.find(v.ability.name, "Joker") then
                     -- Increase mult gain
                     self.ability.extra.mult_mod = self.ability.extra.mult_mod + 1
                 end
             end
         end
 
-        if self.ability.name == 'MMC Special Edition Joker' then
+        if self.ability.name == "MMC Special Edition Joker" then
             -- Reset defaults
             self.ability.extra.current_mult = 0
             self.ability.extra.current_chips = 0
@@ -5498,25 +5901,50 @@ function Card.update(self, dt)
                 if v.seal ~= nil then
                     self.ability.extra.current_mult = self.ability.extra.current_mult + self.ability.extra.mult_mod
                 end
-                if v.ability.set == 'Enhanced' then
+                if v.ability.set == "Enhanced" then
                     self.ability.extra.current_chips = self.ability.extra.current_chips + self.ability.extra.chip_mod
                 end
                 if v.edition ~= nil then
-                    self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
+                    self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra._Xmult_mod
                 end
             end
         end
 
-        if self.ability.name == 'MMC Broke Joker' then
+        if self.ability.name == "MMC Broke Joker" then
             -- Update mult based on negative balance
             local negative_bal = G.GAME.dollars
             if negative_bal < 0 then
-                self.ability.extra.current_mult = -1 * math.ceil(negative_bal / self.ability.extra.every) *
+                local new_mult = -1 * math.ceil(negative_bal / self.ability.extra.every) *
                     self.ability.extra.mult_mod
+                if self.ability.extra.current_mult ~= new_mult then
+                    self.ability.extra.current_mult = new_mult
+                    if self.added_to_deck then
+                        card_eval_status_text(self, "extra", nil, nil, nil, {
+                            message = localize {
+                                type = "variable",
+                                key = "a_mult",
+                                vars = { self.ability.extra.current_mult }
+                            },
+                            colour = G.C.MULT
+                        })
+                    end
+                end
+            elseif self.ability.extra.current_mult ~= 0 then
+                self.ability.extra.current_mult = 0
+                if self.added_to_deck then
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize {
+                            type = "variable",
+                            key = "a_mult",
+                            vars = { self.ability.extra.current_mult }
+                        },
+                        colour = G.C.MULT
+                    })
+                end
             end
         end
 
-        if self.ability.name == 'MMC Go For Broke' then
+        if self.ability.name == "MMC Go For Broke" then
             -- Update mult based on negative balance
             local negative_bal = G.GAME.dollars
             if negative_bal < 0 then
@@ -5525,34 +5953,34 @@ function Card.update(self, dt)
             end
         end
 
-        if self.ability.name == 'MMC Monopolist' then
+        if self.ability.name == "MMC Monopolist" then
             local bal = G.GAME.dollars
-            if bal >= self.ability.extra.req then
+            if bal >= self.ability.extra._req then
                 -- Increase Xmult and req
-                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
-                self.ability.extra.req = self.ability.extra.req * 2
+                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra._Xmult_mod
+                self.ability.extra._req = self.ability.extra._req * 2
                 if self.added_to_deck then
                     -- Show message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.current_Xmult }
                         },
                         colour = G.C.MULT
                     })
                 end
-            elseif self.ability.extra.req ~= self.ability.extra.base and
-                bal < (self.ability.extra.req / 2) then
+            elseif self.ability.extra._req ~= self.ability.extra._base and
+                bal < (self.ability.extra._req / 2) then
                 -- Decrease Xmult and req
-                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra.Xmult_mod
-                self.ability.extra.req = self.ability.extra.req / 2
+                self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra._Xmult_mod
+                self.ability.extra._req = self.ability.extra._req / 2
                 if self.added_to_deck then
                     -- Show message
-                    card_eval_status_text(self, 'extra', nil, nil, nil, {
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
                         message = localize {
-                            type = 'variable',
-                            key = 'a_xmult',
+                            type = "variable",
+                            key = "a_xmult",
                             vars = { self.ability.extra.current_Xmult }
                         },
                         colour = G.C.MULT
@@ -5561,7 +5989,7 @@ function Card.update(self, dt)
             end
         end
 
-        if self.ability.name == 'MMC Student Loans' then
+        if self.ability.name == "MMC Student Loans" and self.added_to_deck then
             -- Decrease discards based on negative balance
             local negative_bal = G.GAME.dollars
             if negative_bal < 0 then
@@ -5595,7 +6023,7 @@ function G.FUNCS.evaluate_play(self, e)
             mmc_scored_chips = hand_chips * mult
         })
         if effects.jokers then
-            card_eval_status_text(G.jokers.cards[i], 'jokers', nil, 0.3, nil, effects.jokers)
+            card_eval_status_text(G.jokers.cards[i], "jokers", nil, 0.3, nil, effects.jokers)
         end
     end
 end
@@ -5603,10 +6031,10 @@ end
 -- Handle end of round card effects
 local get_end_of_round_effectref = Card.get_end_of_round_effect
 function Card.get_end_of_round_effect(self, context)
-    if self.seal == 'Blue' and not self.debuff then
+    if self.seal == "Blue" and not self.debuff then
         for _, v in pairs(G.jokers.cards) do
             -- Check for Aurora Borealis Joker and consumeable space
-            if v.ability.name == 'MMC Aurora Borealis' and v.ability.extra.round % v.ability.extra.every == 0 then
+            if v.ability.name == "MMC Aurora Borealis" and v.ability.extra.round % v.ability.extra.every == 0 then
                 -- Get most played hand
                 local _planet, _hand, _tally = nil, nil, 0
                 for _, v in ipairs(G.handlist) do
@@ -5625,22 +6053,22 @@ function Card.get_end_of_round_effect(self, context)
                 end
 
                 -- Add card
-                create_planet(v, _planet, 'aurora_borealis')
+                create_planet(v, _planet, "aurora_borealis")
 
                 for _, v2 in pairs(G.jokers.cards) do
                     if v2.ability.name == "MMC Harp Seal" then
-                        create_planet(self, 'aurora_borealis')
-                        card_eval_status_text(v2, 'extra', nil, nil, nil, {
-                            message = localize('k_again_ex')
+                        create_planet(self, "aurora_borealis")
+                        card_eval_status_text(v2, "extra", nil, nil, nil, {
+                            message = localize("k_again_ex")
                         })
-                        create_planet(v, _planet, 'aurora_borealis')
+                        create_planet(v, _planet, "aurora_borealis")
                     end
                 end
             end
 
             -- Create planet for each Blue Seal
-            if v.ability.name == 'MMC Harp Seal' then
-                create_planet(v, 'harp_seal')
+            if v.ability.name == "MMC Harp Seal" then
+                create_planet(v, "harp_seal")
             end
         end
     end
@@ -5655,6 +6083,13 @@ function Card:get_chip_mult()
         return self.ability.mult + self.ability.perma_mult
     end
     return get_chip_mult_ref(self)
+end
+
+local loc_colour_ref = loc_colour
+function loc_colour(_c, _default)
+    loc_colour_ref(_c, _default)
+    G.ARGS.LOC_COLOURS["mikas"] = HEX("FD5DA8")
+    return G.ARGS.LOC_COLOURS[_c] or _default or G.C.UI.TEXT_DARK
 end
 
 ----------------------------------------------
