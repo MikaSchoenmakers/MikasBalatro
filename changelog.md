@@ -1,3 +1,21 @@
+## Update V0.13.1
+### Balance Changes
+* Monopolist first bonus starts at $10 instead of $25.
+* The Sniper now gains X2 Mult instead of X4 Mult, but the score need to be within 10% instead of 5%.
+* Abbey Road now requires 5 hands to be played the same amount of times instead of 4.
+* Seal Collector now starts at 0 chips instead of 25.
+### Bugfixes
+* Fixed Monopolist not working with Dagonet, it now no longer gets affected by Dagonet at all.
+* Fixed crash that happened when selling Dagonet.
+* Fixed Student Loans applying discards from the collection tab.
+* Training Wheels now gains 0.1X Mult per 10 scored cards, instead of 0.01 per card, to hopefully fix a floating point error that was happening.
+* Fixed Broke Joker and Go For Broke not setting Mult/Chips correctly when using Page Of Pentacles to go back to positive balance.
+* Mountain Climber now works correctly with Lucky Cards.
+### Other
+* Added localization messages to Broke Joker and Go For Broke when their Mult/Chips values change.
+* Simplified Aurora Borealis so Blue Seals now give an extra negative Planet Card.
+* All Blue Seal related Jokers now function correctly since the new Blue Seal change.
+* Printer no longer adds duplicated cards to hand.
 ## Update V0.13.0
 ### New Jokers
 * Mountain Climber: Every scored card permanently gains +1 Mult.
