@@ -513,15 +513,6 @@ local function increase_attributes(k, v, place, multiplier)
     end
 end
 
-local function not_in_table(table, value)
-    for _, v in ipairs(table) do
-        if v == value then
-            return false
-        end
-    end
-    return true
-end
-
 local cicero_blacklist = {
     "Misprint",
 }
@@ -1123,7 +1114,7 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Chips",
                 text = {
-                    "Temp"
+                    "Get a random Chips Joker"
                 }
             },
             ability_name = "MMC Chips",
@@ -1158,15 +1149,15 @@ function SMODS.INIT.MikasModCollection()
 
     if config.multTarot then
         -- Create Tarot
-        local temp = {
+        local mult = {
             loc = {
-                name = "Temp",
+                name = "Mult",
                 text = {
-                    "Temp"
+                    "Get a random Mult Joker"
                 }
             },
-            ability_name = "MMC Temp",
-            slug = "mmc_temp",
+            ability_name = "MMC Mult",
+            slug = "mmc_mult",
             config = {},
             cost = 1,
             cost_mult = 1,
@@ -1174,35 +1165,38 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(temp, true)
+        init_tarot(mult, true)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+        function SMODS.Tarots.c_mmc_mult.loc_def(card)
             return {}
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_temp.can_use(card)
-            return true
+        function SMODS.Tarots.c_mmc_mult.can_use(card)
+            return G.jokers.config.card_limit > #G.jokers.cards
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
-
+        function SMODS.Tarots.c_mmc_mult.use(card, area, copier)
+            -- Add random Mult Joker
+            local joker_list = get_mult_jokers()
+            local joker = pseudorandom_element(joker_list, pseudoseed("mult"))
+            add_joker(joker, nil, true, false)
         end
     end
 
     if config.moneyTarot then
         -- Create Tarot
-        local temp = {
+        local xmult = {
             loc = {
-                name = "Temp",
+                name = "XMult",
                 text = {
-                    "Temp"
+                    "Get a random XMult Joker"
                 }
             },
-            ability_name = "MMC Temp",
-            slug = "mmc_temp",
+            ability_name = "MMC Xmult",
+            slug = "mmc_xmult",
             config = {},
             cost = 1,
             cost_mult = 1,
@@ -1210,35 +1204,78 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(temp, true)
+        init_tarot(xmult, true)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+        function SMODS.Tarots.c_mmc_xmult.loc_def(card)
             return {}
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_temp.can_use(card)
-            return true
+        function SMODS.Tarots.c_mmc_xmult.can_use(card)
+            return G.jokers.config.card_limit > #G.jokers.cards
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+        function SMODS.Tarots.c_mmc_xmult.use(card, area, copier)
+            -- Add random XMult Joker
+            local joker_list = get_xmult_jokers()
+            local joker = pseudorandom_element(joker_list, pseudoseed("xmult"))
+            add_joker(joker, nil, true, false)
+        end
+    end
 
+    if config.moneyTarot then
+        -- Create Tarot
+        local money = {
+            loc = {
+                name = "Money",
+                text = {
+                    "Get a random Money Joker"
+                }
+            },
+            ability_name = "MMC Money",
+            slug = "mmc_money",
+            config = {},
+            cost = 1,
+            cost_mult = 1,
+            discovered = true
+        }
+
+        -- Initialize Tarot
+        init_tarot(money, true)
+
+        -- Set local variables
+        function SMODS.Tarots.c_mmc_money.loc_def(card)
+            return {}
+        end
+
+        -- Set can_use
+        function SMODS.Tarots.c_mmc_money.can_use(card)
+            return G.jokers.config.card_limit > #G.jokers.cards
+        end
+
+        -- Use effect
+        function SMODS.Tarots.c_mmc_money.use(card, area, copier)
+            -- Add random money Joker
+            local joker_list = get_money_jokers()
+            local joker = pseudorandom_element(joker_list, pseudoseed("money"))
+            add_joker(joker, nil, true, false)
         end
     end
 
     if config.supportTarot then
         -- Create Tarot
-        local temp = {
+        local support = {
             loc = {
-                name = "Temp",
+                name = "Support",
                 text = {
-                    "Temp"
+                    "Get a random Support Joker",
+                    "(Not Chips, Mult or Money)"
                 }
             },
-            ability_name = "MMC Temp",
-            slug = "mmc_temp",
+            ability_name = "MMC Support",
+            slug = "mmc_support",
             config = {},
             cost = 1,
             cost_mult = 1,
@@ -1246,35 +1283,39 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(temp, true)
+        init_tarot(support, true)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+        function SMODS.Tarots.c_mmc_support.loc_def(card)
             return {}
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_temp.can_use(card)
-            return true
+        function SMODS.Tarots.c_mmc_support.can_use(card)
+            return G.jokers.config.card_limit > #G.jokers.cards
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
-
+        function SMODS.Tarots.c_mmc_support.use(card, area, copier)
+            -- Add random support Joker
+            local joker_list = get_support_jokers()
+            local joker = pseudorandom_element(joker_list, pseudoseed("support"))
+            add_joker(joker, nil, true, false)
         end
     end
 
     if config.cardChipsTarot then
         -- Create Tarot
-        local temp = {
+        local card_chips = {
             loc = {
-                name = "Temp",
+                name = "Card Chips",
                 text = {
-                    "Temp"
+                    "3 Random cards gain",
+                    "+25 chips permenantly"
                 }
             },
-            ability_name = "MMC Temp",
-            slug = "mmc_temp",
+            ability_name = "MMC Card Chips",
+            slug = "mmc_card_chips",
             config = {},
             cost = 1,
             cost_mult = 1,
@@ -1282,35 +1323,36 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(temp, true)
+        init_tarot(card_chips, true)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+        function SMODS.Tarots.c_mmc_card_chips.loc_def(card)
             return {}
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_temp.can_use(card)
+        function SMODS.Tarots.c_mmc_card_chips.can_use(card)
             return true
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+        function SMODS.Tarots.c_mmc_card_chips.use(card, area, copier)
 
         end
     end
 
     if config.cardMultTarot then
         -- Create Tarot
-        local temp = {
+        local card_mult = {
             loc = {
-                name = "Temp",
+                name = "Card Mult",
                 text = {
-                    "Temp"
+                    "3 Random cards gain",
+                    "+5 Mult permenantly"
                 }
             },
-            ability_name = "MMC Temp",
-            slug = "mmc_temp",
+            ability_name = "MMC Card Mult",
+            slug = "mmc_card_mult",
             config = {},
             cost = 1,
             cost_mult = 1,
@@ -1318,20 +1360,20 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Tarot
-        init_tarot(temp, true)
+        init_tarot(card_mult, true)
 
         -- Set local variables
-        function SMODS.Tarots.c_mmc_temp.loc_def(card)
+        function SMODS.Tarots.c_mmc_card_mult.loc_def(card)
             return {}
         end
 
         -- Set can_use
-        function SMODS.Tarots.c_mmc_temp.can_use(card)
+        function SMODS.Tarots.c_mmc_card_mult.can_use(card)
             return true
         end
 
         -- Use effect
-        function SMODS.Tarots.c_mmc_temp.use(card, area, copier)
+        function SMODS.Tarots.c_mmc_card_mult.use(card, area, copier)
 
         end
     end
@@ -3678,7 +3720,7 @@ function SMODS.INIT.MikasModCollection()
                 if not other_dagonet_trigger then
                     self.ability.extra.triggered = true
                     for _, v in ipairs(G.jokers.cards) do
-                        if v ~= self and not_in_table(dagonet_blacklist, v.ability.name) then
+                        if v ~= self and dagonet_blacklist[v.ability.name] ~= nil then
                             for k2, v2 in pairs(v.ability) do
                                 -- Increase attributes
                                 increase_attributes(k2, v2, v.ability, self.ability.extra._mult)
@@ -5857,7 +5899,7 @@ function Card.set_edition(self, edition, immediate, silent)
                     support = support and
                         not (string.find(v:lower(), "mult") or string.find(v:lower(), "chips") or string.find(v:lower(), "retrigger"))
                 end
-                if (support or not not_in_table(cicero_whitelist, self.ability.name)) and not_in_table(cicero_blacklist, self.ability.name) then
+                if (support or cicero_whitelist[self.ability.name] ~= nil) and cicero_blacklist[self.ability.name] == nil then
                     self:set_edition({ negative = true })
                 end
             end
