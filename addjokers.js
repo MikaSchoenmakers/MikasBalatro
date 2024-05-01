@@ -107,7 +107,7 @@ let jokers = [
     name: "Monopolist",
     text: [
       "{X:mult,C:white}X1{} Mult, gains",
-      "{X:mult,C:white}X0.5{} Mult at {C:money}$25{},",
+      "{X:mult,C:white}X0.5{} Mult at {C:money}$10{},",
       "requirement doubles",
       "when met"
     ],
@@ -142,8 +142,7 @@ let jokers = [
     text: [
       "If hand scores more than",
       "blind's Chips, {C:attention}duplicate{}",
-      "your hand and add duplicated",
-      "cards to your hand"
+      "played cards"
     ],
     image_url: "assets/2x/j_mmc_printer.png",
     rarity: "Rare"
@@ -162,8 +161,8 @@ let jokers = [
   {
     name: "The Sniper",
     text: [
-      "Gains {X:mult,C:white}X4{} Mult when a",
-      "blind is finished within {C:attention}5%{} of",
+      "Gains {X:mult,C:white}X2{} Mult when a",
+      "blind is finished within {C:attention}10%{} of",
       "the {C:attention}exact{} chip requirement",
       "{C:inactive}(Currently {X:mult,C:white}X1{C:inactive} Mult)",
       "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
@@ -186,7 +185,7 @@ let jokers = [
   {
     name: "Abbey Road",
     text: [
-      "If at least {C:attention}4{} poker hands",
+      "If at least {C:attention}5{} poker hands",
       "have been played the same",
       "amount of times, give {X:mult,C:white}X4{} Mult",
       "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
@@ -406,9 +405,9 @@ let jokers = [
   {
     name: "Training Wheels",
     text: [
-      "{X:mult,C:white}X1{} Mult,",
-      "gains {X:mult,C:white}X0.01{} Mult",
-      "per {C:attention}card{} scored",
+      "{X:mult,C:white}X1{} Mult, gains {X:mult,C:white}X0.1",
+      "Mult per {C:attention}10 card{} scored",
+      "{C:inactive}Currently {C:attention}0 {C:inactive}cards scored",
       "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
     ],
     image_url: "assets/2x/j_mmc_training_wheels.png",
@@ -418,10 +417,8 @@ let jokers = [
   {
     name: "Aurora Borealis",
     text: [
-      "Once every 2 rounds",
-      "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
-      "one of them will be for your",
-      "most played {C:attention}poker hand{}",
+      "{C:attention}Blue Seals{} give an",
+      "extra {C:dark_edition}negative {C:planet}Planet{} card",
       "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
     ],
     image_url: "assets/2x/j_mmc_aurora_borealis.png",
@@ -593,7 +590,7 @@ let jokers = [
     text: [
       "Gains {C:chips}+25{} Chips for",
       "every card with a {C:attention}seal",
-      "{C:inactive}(Currently {C:chips}+25{C:inactive} Chips)"
+      "{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)"
     ],
     image_url: "assets/2x/j_mmc_seal_collector.png",
     rarity: "Common"

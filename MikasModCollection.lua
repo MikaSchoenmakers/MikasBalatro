@@ -219,11 +219,7 @@ local function create_tarot(joker, seed)
 end
 
 local function create_planet(joker, seed, edition, other_joker)
-    sendDebugMessage("#Consumeables" .. #G.consumeables.cards, "MikasModCollection")
-    sendDebugMessage("Buffer" .. G.GAME.consumeable_buffer, "MikasModCollection")
-    sendDebugMessage("Limit" .. G.consumeables.config.card_limit, "MikasModCollection")
     if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit or (edition and edition["negative"]) then
-        sendDebugMessage("Creating Card", "MikasModCollection")
         local card_type = "Planet"
         if not (edition and edition["negative"]) then
             G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
@@ -239,6 +235,7 @@ local function create_planet(joker, seed, edition, other_joker)
                             _planet = v.key
                         end
                     end
+
                     local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, _planet, seed)
                     if edition then
                         card:set_edition(edition, true)
@@ -263,7 +260,6 @@ local function create_planet(joker, seed, edition, other_joker)
             colour = G.C.SECONDARY_SET.Planet
         })
     else
-        sendDebugMessage("Mission Failed", "MikasModCollection")
         card_eval_status_text(joker, "extra", nil, nil, nil, {
             message = localize("k_no_space_ex")
         })
@@ -2946,8 +2942,7 @@ function SMODS.INIT.MikasModCollection()
                 text = {
                     "If hand scores more than",
                     "blind's Chips, {C:attention}duplicate{}",
-                    "your hand and add duplicated",
-                    "cards to your hand"
+                    "played cards"
                 }
             },
             ability_name = "MMC The Printer",
@@ -2992,7 +2987,7 @@ function SMODS.INIT.MikasModCollection()
                         _card:add_to_deck()
                         G.deck.config.card_limit = G.deck.config.card_limit + 1
                         table.insert(G.playing_cards, _card)
-                        G.hand:emplace(_card)
+                        G.deck:emplace(_card)
                         _card.states.visible = nil
 
                         G.E_MANAGER:add_event(Event({

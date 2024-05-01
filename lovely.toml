@@ -29,6 +29,18 @@ if _c.effect == 'Mult Card' then loc_vars = {((specific_vars and specific_vars.b
 match_indent = true
 overwrite = true
 
+# Add card mult localization to lucky cards specifically
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''elseif _c.effect == 'Lucky Card' then loc_vars = {G.GAME.probabilities.normal, _c.config.mult, 5, _c.config.p_dollars, 15}'''
+position = "at"
+payload = '''
+elseif _c.effect == 'Lucky Card' then loc_vars = {G.GAME.probabilities.normal, ((specific_vars and specific_vars.bonus_mult) or _c.config.mult), 5, _c.config.p_dollars, 15}
+'''
+match_indent = true
+overwrite = true
+
 # Add card mult localization for non-mult enhanced cards
 [[patches]]
 [patches.pattern]
@@ -36,7 +48,7 @@ target = "functions/common_events.lua"
 pattern = '''elseif _c.set == 'Booster' then'''
 position = "before"
 payload = '''
-    if _c.effect ~= 'Mult Card' and ((specific_vars and specific_vars.bonus_mult) or _c.config.mult) then
+    if (_c.effect ~= 'Mult Card' and _c.effect ~= 'Lucky Card') and ((specific_vars and specific_vars.bonus_mult) or _c.config.mult) then
         localize{type = 'other', key = 'card_extra_mult', nodes = desc_nodes, vars = {((specific_vars and specific_vars.bonus_mult) or _c.config.mult)}}
     end
 '''
