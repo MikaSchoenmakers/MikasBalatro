@@ -22,14 +22,14 @@ local config = {
     aceOfPentaclesTarot = true,
     pageOfPentaclesTarot = true,
     kingOfCupsTarot = false, -- In Development, do not enable
-    commonTarot = false, -- In Development, do not enable
-    uncommonTarot = false, -- In Development, do not enable
-    chipsTarot = false, -- In Development, do not enable
-    multTarot = false, -- In Development, do not enable
-    moneyTarot = false, -- In Development, do not enable
-    supportTarot = false, -- In Development, do not enable
-    cardChipsTarot = false, -- In Development, do not enable
-    cardMultTarot = false, -- In Development, do not enable
+    commonTarot = false,     -- In Development, do not enable
+    uncommonTarot = false,   -- In Development, do not enable
+    chipsTarot = false,      -- In Development, do not enable
+    multTarot = false,       -- In Development, do not enable
+    moneyTarot = false,      -- In Development, do not enable
+    supportTarot = false,    -- In Development, do not enable
+    cardChipsTarot = false,  -- In Development, do not enable
+    cardMultTarot = false,   -- In Development, do not enable
     -- Spectral Cards
     incenseSpectral = true,
     -- Jokers
@@ -218,20 +218,40 @@ local function create_tarot(joker, seed)
     end
 end
 
-local function create_planet(joker, seed, planet, other_joker)
-    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+local function create_planet(joker, seed, edition, other_joker)
+    sendDebugMessage("#Consumeables" .. #G.consumeables.cards, "MikasModCollection")
+    sendDebugMessage("Buffer" .. G.GAME.consumeable_buffer, "MikasModCollection")
+    sendDebugMessage("Limit" .. G.consumeables.config.card_limit, "MikasModCollection")
+    if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit or (edition and edition["negative"]) then
+        sendDebugMessage("Creating Card", "MikasModCollection")
         local card_type = "Planet"
-        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+        if not (edition and edition["negative"]) then
+            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+        end
         G.E_MANAGER:add_event(Event({
             trigger = "before",
             delay = 0.0,
             func = (function()
-                local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, planet, seed)
-                card:add_to_deck()
-                G.consumeables:emplace(card)
-                G.GAME.consumeable_buffer = 0
-                if other_joker then
-                    other_joker:juice_up(0.5, 0.5)
+                if G.GAME.last_hand_played then
+                    local _planet = 0
+                    for _, v in pairs(G.P_CENTER_POOLS.Planet) do
+                        if v.config.hand_type == G.GAME.last_hand_played then
+                            _planet = v.key
+                        end
+                    end
+                    local card = create_card(card_type, G.consumeables, nil, nil, nil, nil, _planet, seed)
+                    if edition then
+                        card:set_edition(edition, true)
+                    end
+                    card:add_to_deck()
+                    G.consumeables:emplace(card)
+                    if not (edition and edition["negative"]) then
+                        G.GAME.consumeable_buffer = 0
+                    end
+
+                    if other_joker then
+                        other_joker:juice_up(0.5, 0.5)
+                    end
                 end
                 return true
             end)
@@ -243,6 +263,7 @@ local function create_planet(joker, seed, planet, other_joker)
             colour = G.C.SECONDARY_SET.Planet
         })
     else
+        sendDebugMessage("Mission Failed", "MikasModCollection")
         card_eval_status_text(joker, "extra", nil, nil, nil, {
             message = localize("k_no_space_ex")
         })
@@ -1817,8 +1838,7 @@ function SMODS.INIT.MikasModCollection()
             ability = {
                 extra = {
                     current_chips = 25,
-                    chip_mod = 25,
-                    base = 25
+                    chip_mod = 25
                 }
             },
             rarity = 1,
@@ -2731,21 +2751,14 @@ function SMODS.INIT.MikasModCollection()
             loc = {
                 name = "Aurora Borealis",
                 text = {
-                    "Once every #1# rounds",
-                    "{C:attention}Blue Seals{} give 2 {C:planet}Planet{} cards,",
-                    "one of them will be for your",
-                    "most played {C:attention}poker hand{}",
+                    "{C:attention}Blue Seals{} give an",
+                    "extra {C:dark_edition}negative {C:planet}Planet{} card",
                     "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
             ability_name = "MMC Aurora Borealis",
             slug = "mmc_aurora_borealis",
-            ability = {
-                extra = {
-                    round = 0,
-                    every = 2
-                }
-            },
+            ability = {},
             rarity = 1,
             cost = 6,
             unlocked = true,
@@ -2759,15 +2772,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Set local variables
         function SMODS.Jokers.j_mmc_aurora_borealis.loc_def(card)
-            return { card.ability.extra.every }
-        end
-
-        -- Calculate
-        SMODS.Jokers.j_mmc_aurora_borealis.calculate = function(self, context)
-            -- Update round counter
-            if context.end_of_round and not context.individual and not context.repetition then
-                self.ability.extra.round = self.ability.extra.round + 1
-            end
+            return {}
         end
     end
 
@@ -4833,6 +4838,7 @@ function SMODS.INIT.MikasModCollection()
                         break
                     end
                     create_tarot(self, "seal_steal")
+
                     -- Repeat for Harp Seal
                     if harp_seal then
                         -- Show Harp Seal message
@@ -4852,42 +4858,25 @@ function SMODS.INIT.MikasModCollection()
                             aurora_borealis = v
                         end
                     end
-                    -- Get planet based on most played hand
-                    local _planet
-                    if aurora_borealis and aurora_borealis.ability.extra.round % aurora_borealis.ability.extra.every == 0 then
-                        -- Get most played hand
-                        local _hand, _tally = nil, 0
-                        for _, v in ipairs(G.handlist) do
-                            if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
-                                _hand = v
-                                _tally = G.GAME.hands[v].played
-                            end
-                        end
-                        -- Get planet based on most played hand
-                        if _hand then
-                            for _, v in pairs(G.P_CENTER_POOLS.Planet) do
-                                if v.config.hand_type == _hand then
-                                    _planet = v.key
-                                end
-                            end
-                        end
-                    end
-                    -- Create planet
-                    if _planet ~= nil then
-                        create_planet(self, "seal_steal", _planet, aurora_borealis)
-                    end
+
+                    -- Add card
                     create_planet(self, "seal_steal")
+                    if aurora_borealis then
+                        create_planet(aurora_borealis, "seal_steal", { negative = true }, self)
+                    end
+
                     -- Repeat for harp seal
                     if harp_seal then
                         -- Show Harp Seal message
                         card_eval_status_text(harp_seal, "extra", nil, nil, nil, {
                             message = localize("k_again_ex")
                         })
+
                         -- Add card
-                        if _planet ~= nil then
-                            create_planet(self, "seal_steal", _planet, aurora_borealis)
-                        end
                         create_planet(self, "seal_steal")
+                        if aurora_borealis then
+                            create_planet(aurora_borealis, "seal_steal", { negative = true }, self)
+                        end
                     end
                 end
             end
@@ -4945,6 +4934,7 @@ function SMODS.INIT.MikasModCollection()
                                     dollars = dollars + 1
                                 end
                                 ease_dollars(dollars, true)
+
                                 -- Show message
                                 card_eval_status_text(v, "extra", nil, nil, nil, {
                                     message = localize("$") .. dollars,
@@ -4952,6 +4942,7 @@ function SMODS.INIT.MikasModCollection()
                                     colour = G.C.MONEY,
                                     instant = true
                                 })
+
                                 -- Animate cards
                                 if v ~= self then
                                     v:juice_up(0.5, 0.5)
@@ -5912,7 +5903,7 @@ local card_updateref = Card.update
 function Card.update(self, dt)
     if G.STAGE == G.STAGES.RUN then
         if self.ability.name == "MMC Seal Collector" then
-            self.ability.extra.current_chips = self.ability.extra.base
+            self.ability.extra.current_chips = 0
             -- Count all seal cards
             for _, v in pairs(G.playing_cards) do
                 if v.seal ~= nil then
@@ -5972,6 +5963,7 @@ function Card.update(self, dt)
                     end
                 end
             elseif self.ability.extra.current_mult ~= 0 then
+                -- Reset mult
                 self.ability.extra.current_mult = 0
                 if self.added_to_deck then
                     card_eval_status_text(self, "extra", nil, nil, nil, {
@@ -5987,11 +5979,38 @@ function Card.update(self, dt)
         end
 
         if self.ability.name == "MMC Go For Broke" then
-            -- Update mult based on negative balance
+            -- Update chips based on negative balance
             local negative_bal = G.GAME.dollars
             if negative_bal < 0 then
+                local new_chips = 0
                 self.ability.extra.current_chips = -1 * math.ceil(negative_bal / self.ability.extra.every) *
                     self.ability.extra.chip_mod
+                if self.ability.extra.current_chips ~= new_chips then
+                    self.ability.extra.current_chips = new_chips
+                    if self.added_to_deck then
+                        card_eval_status_text(self, "extra", nil, nil, nil, {
+                            message = localize {
+                                type = "variable",
+                                key = "a_chips",
+                                vars = { self.ability.extra.current_chips }
+                            },
+                            colour = G.C.CHIPS
+                        })
+                    end
+                end
+            elseif self.ability.extra.current_chips ~= 0 then
+                -- Reset chips
+                self.ability.extra.current_chips = 0
+                if self.added_to_deck then
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize {
+                            type = "variable",
+                            key = "a_chips",
+                            vars = { self.ability.extra.current_chips }
+                        },
+                        colour = G.C.CHIPS
+                    })
+                end
             end
         end
 
@@ -6073,37 +6092,19 @@ end
 -- Handle end of round card effects
 local get_end_of_round_effectref = Card.get_end_of_round_effect
 function Card.get_end_of_round_effect(self, context)
+    -- Call base function
+    local ret = get_end_of_round_effectref(self, context)
+
     if self.seal == "Blue" and not self.debuff then
         for _, v in pairs(G.jokers.cards) do
             -- Check for Aurora Borealis Joker and consumeable space
-            if v.ability.name == "MMC Aurora Borealis" and v.ability.extra.round % v.ability.extra.every == 0 then
-                -- Get most played hand
-                local _planet, _hand, _tally = nil, nil, 0
-                for _, v in ipairs(G.handlist) do
-                    if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
-                        _hand = v
-                        _tally = G.GAME.hands[v].played
-                    end
-                end
-                -- Get planet based on most played hand
-                if _hand then
-                    for _, v in pairs(G.P_CENTER_POOLS.Planet) do
-                        if v.config.hand_type == _hand then
-                            _planet = v.key
-                        end
-                    end
-                end
-
+            if v.ability.name == "MMC Aurora Borealis" then
                 -- Add card
-                create_planet(v, _planet, "aurora_borealis")
+                create_planet(v, "aurora_borealis", { negative = true })
 
                 for _, v2 in pairs(G.jokers.cards) do
                     if v2.ability.name == "MMC Harp Seal" then
-                        create_planet(self, "aurora_borealis")
-                        card_eval_status_text(v2, "extra", nil, nil, nil, {
-                            message = localize("k_again_ex")
-                        })
-                        create_planet(v, _planet, "aurora_borealis")
+                        create_planet(v, "aurora_borealis", { negative = true }, v2)
                     end
                 end
             end
@@ -6115,8 +6116,8 @@ function Card.get_end_of_round_effect(self, context)
         end
     end
 
-    -- Call base function and return result
-    return get_end_of_round_effectref(self, context)
+    -- Return result
+    return ret
 end
 
 local get_chip_mult_ref = Card.get_chip_mult
