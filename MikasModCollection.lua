@@ -3720,7 +3720,7 @@ function SMODS.INIT.MikasModCollection()
                 if not other_dagonet_trigger then
                     self.ability.extra.triggered = true
                     for _, v in ipairs(G.jokers.cards) do
-                        if v ~= self and dagonet_blacklist[v.ability.name] ~= nil then
+                        if v ~= self and dagonet_blacklist[v.ability.name] == nil then
                             for k2, v2 in pairs(v.ability) do
                                 -- Increase attributes
                                 increase_attributes(k2, v2, v.ability, self.ability.extra._mult)
@@ -5933,7 +5933,7 @@ function Card.update(self, dt)
                     self.ability.extra.current_chips = self.ability.extra.current_chips + self.ability.extra.chip_mod
                 end
                 if v.edition ~= nil then
-                    self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra._Xmult_mod
+                    self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra.Xmult_mod
                 end
             end
         end
