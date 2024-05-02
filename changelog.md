@@ -1,3 +1,7 @@
+## Update V0.13.2
+### Bugfixes
+* Fixed Special Edition Joker crashing.
+* Fixed Dagonet only working on Jokers that it's not supposed to work on.
 ## Update V0.13.1
 ### Balance Changes
 * Monopolist first bonus starts at $10 instead of $25.

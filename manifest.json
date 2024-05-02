@@ -1,6 +1,6 @@
 {
     "name": "MikasModCollection",
-    "version_number": "0.13.0",
+    "version_number": "0.13.2",
     "website_url": "https://github.com/MikaSchoenmakers/MikasBalatro",
     "description": "A content mod adding 60 Jokers and more!",
     "dependencies": [
