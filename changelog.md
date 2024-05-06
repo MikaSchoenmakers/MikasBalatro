@@ -1,3 +1,11 @@
+## Update V0.13.3
+### Bugfixes
+* Fixed Rigged Joker giving more probability than it should on repeating non triggers.
+* Fixed Cicero falsely flagging Jokers that should be negative, and vice versa.
+* Fixed Nebula not working correctly with Dagonet.
+* Fixed Go For Broke spamming the Chips message and softlocking the run.
+* Fixed Broke Joker and Go For Broke displaying message upon being sold.
+* Fixed Grudgeful and Historical Joker setting Blind requirement below 0.
 ## Update V0.13.2
 ### Bugfixes
 * Fixed Special Edition Joker crashing.

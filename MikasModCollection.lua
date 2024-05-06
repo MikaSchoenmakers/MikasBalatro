@@ -531,12 +531,12 @@ local function increase_attributes(k, v, place, multiplier)
 end
 
 local cicero_blacklist = {
-    "Misprint",
+    ["Misprint"] = true,
 }
 
 local cicero_whitelist = {
-    "Mr. Bones",
-    "Printer",
+    ["Mr. Bones"] = true,
+    ["MMC Printer"] = true,
 }
 
 -- Initialize joker type lists
@@ -593,7 +593,7 @@ local function get_mult_jokers()
             for _, v2 in ipairs(G.localization.descriptions.Joker[k].text) do
                 mult = mult or (string.find(v2:lower(), "mult") and not string.find(v2:lower(), "x"))
             end
-            if mult or v.name == "Misprint" then
+            if mult or v.ability.name == "Misprint" then
                 table.insert(mult_jokers, k)
             end
         end
@@ -654,7 +654,7 @@ local function get_support_jokers()
                 support = support and
                     not (string.find(v2:lower(), "chips") or string.find(v2:lower(), "mult" or string.find(v2:lower(), "$")))
             end
-            if cicero_whitelist[v.name] ~= nil or (support and not cicero_blacklist[v.name] ~= nil) then
+            if cicero_whitelist[v.ability.name] ~= nil or (support and cicero_blacklist[v.ability.name] == nil) then
                 table.insert(money_jokers, k)
             end
         end
@@ -2633,8 +2633,8 @@ function SMODS.INIT.MikasModCollection()
                         },
                         colour = G.C.CHIPS
                     })
-                    -- Modified from Codex Arcanum
-                    G.GAME.blind.chips = G.GAME.blind.chips - self.ability.extra.current_chips
+                    -- Special thanks to Codex Arcanum
+                    G.GAME.blind.chips = math.max(G.GAME.blind.chips - self.ability.extra.current_chips, 0)
                     G.E_MANAGER:add_event(Event({
                         delay = 0.0,
                         func = function()
@@ -2840,7 +2840,7 @@ function SMODS.INIT.MikasModCollection()
                         colour = G.C.CHIPS
                     })
                     -- Special thanks to Codex Arcanum
-                    G.GAME.blind.chips = G.GAME.blind.chips - self.ability.extra.current_chips
+                    G.GAME.blind.chips =  math.max(G.GAME.blind.chips - self.ability.extra.current_chips, 0)
                     G.E_MANAGER:add_event(Event({
                         delay = 0.0,
                         func = function()
@@ -3476,7 +3476,7 @@ function SMODS.INIT.MikasModCollection()
                     })
                     self.ability.extra.probability = self.ability.extra.probability + self.ability.extra.increase
                     for k, v in pairs(G.GAME.probabilities) do
-                        G.GAME.probabilities[k] = v + self.ability.extra.probability
+                        G.GAME.probabilities[k] = v + self.ability.extra.increase
                     end
                 end
                 self.ability.extra.has_triggered = false
@@ -5371,7 +5371,7 @@ function SMODS.INIT.MikasModCollection()
                 local _tally = 0
                 for _, v in ipairs(G.handlist) do
                     if G.GAME.hands[v].visible and G.GAME.hands[v].level > self.ability.extra.req then
-                        _tally = _tally + G.GAME.hands[v].level - 1
+                        _tally = _tally + G.GAME.hands[v].level - self.ability.extra.req
                     end
                 end
                 -- Apply mult
@@ -5885,7 +5885,7 @@ function Card.set_edition(self, edition, immediate, silent)
                     support = support and
                         not (string.find(v:lower(), "mult") or string.find(v:lower(), "chips") or string.find(v:lower(), "retrigger"))
                 end
-                if (support or cicero_whitelist[self.ability.name] ~= nil) and cicero_blacklist[self.ability.name] == nil then
+                if (support and cicero_blacklist[self.ability.name] == nil) or cicero_whitelist[self.ability.name] ~= nil then
                     self:set_edition({ negative = true })
                 end
             end
@@ -5946,30 +5946,44 @@ function Card.update(self, dt)
                     self.ability.extra.mult_mod
                 if self.ability.extra.current_mult ~= new_mult then
                     self.ability.extra.current_mult = new_mult
-                    if self.added_to_deck then
-                        card_eval_status_text(self, "extra", nil, nil, nil, {
-                            message = localize {
-                                type = "variable",
-                                key = "a_mult",
-                                vars = { self.ability.extra.current_mult }
-                            },
-                            colour = G.C.MULT
-                        })
-                    end
+                    G.E_MANAGER:add_event(Event({
+                        trigger = "after",
+                        delay = 0.0,
+                        func = (function()
+                            if self.added_to_deck then
+                                card_eval_status_text(self, "extra", nil, nil, nil, {
+                                    message = localize {
+                                        type = "variable",
+                                        key = "a_mult",
+                                        vars = { self.ability.extra.current_mult }
+                                    },
+                                    colour = G.C.MULT
+                                })
+                            end
+                            return true
+                        end)
+                    }))
                 end
             elseif self.ability.extra.current_mult ~= 0 then
                 -- Reset mult
                 self.ability.extra.current_mult = 0
-                if self.added_to_deck then
-                    card_eval_status_text(self, "extra", nil, nil, nil, {
-                        message = localize {
-                            type = "variable",
-                            key = "a_mult",
-                            vars = { self.ability.extra.current_mult }
-                        },
-                        colour = G.C.MULT
-                    })
-                end
+                G.E_MANAGER:add_event(Event({
+                    trigger = "after",
+                    delay = 0.0,
+                    func = (function()
+                        if self.added_to_deck then
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize {
+                                    type = "variable",
+                                    key = "a_mult",
+                                    vars = { self.ability.extra.current_mult }
+                                },
+                                colour = G.C.MULT
+                            })
+                        end
+                        return true
+                    end)
+                }))
             end
         end
 
@@ -5977,35 +5991,50 @@ function Card.update(self, dt)
             -- Update chips based on negative balance
             local negative_bal = G.GAME.dollars
             if negative_bal < 0 then
-                local new_chips = 0
-                self.ability.extra.current_chips = -1 * math.ceil(negative_bal / self.ability.extra.every) *
+                local new_chips = -1 * math.ceil(negative_bal / self.ability.extra.every) *
                     self.ability.extra.chip_mod
                 if self.ability.extra.current_chips ~= new_chips then
                     self.ability.extra.current_chips = new_chips
-                    if self.added_to_deck then
-                        card_eval_status_text(self, "extra", nil, nil, nil, {
-                            message = localize {
-                                type = "variable",
-                                key = "a_chips",
-                                vars = { self.ability.extra.current_chips }
-                            },
-                            colour = G.C.CHIPS
-                        })
-                    end
+                    G.E_MANAGER:add_event(Event({
+                        trigger = "after",
+                        delay = 0.0,
+                        func = (function()
+                            if self.added_to_deck then
+                                card_eval_status_text(self, "extra", nil, nil, nil, {
+                                    message = localize {
+                                        type = "variable",
+                                        key = "a_chips",
+                                        vars = { self.ability.extra.current_chips },
+                                        delay = 0.0
+                                    },
+                                    colour = G.C.CHIPS
+                                })
+                            end
+                            return true
+                        end)
+                    }))
                 end
             elseif self.ability.extra.current_chips ~= 0 then
                 -- Reset chips
                 self.ability.extra.current_chips = 0
-                if self.added_to_deck then
-                    card_eval_status_text(self, "extra", nil, nil, nil, {
-                        message = localize {
-                            type = "variable",
-                            key = "a_chips",
-                            vars = { self.ability.extra.current_chips }
-                        },
-                        colour = G.C.CHIPS
-                    })
-                end
+                G.E_MANAGER:add_event(Event({
+                    trigger = "after",
+                    delay = 0.0,
+                    func = (function()
+                        if self.added_to_deck then
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize {
+                                    type = "variable",
+                                    key = "a_chips",
+                                    vars = { self.ability.extra.current_chips },
+                                    delay = 0.0
+                                },
+                                colour = G.C.CHIPS
+                            })
+                        end
+                        return true
+                    end)
+                }))
             end
         end
 
@@ -6015,33 +6044,45 @@ function Card.update(self, dt)
                 -- Increase Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult + self.ability.extra._Xmult_mod
                 self.ability.extra._req = self.ability.extra._req * 2
-                if self.added_to_deck then
-                    -- Show message
-                    card_eval_status_text(self, "extra", nil, nil, nil, {
-                        message = localize {
-                            type = "variable",
-                            key = "a_xmult",
-                            vars = { self.ability.extra.current_Xmult }
-                        },
-                        colour = G.C.MULT
-                    })
-                end
+                G.E_MANAGER:add_event(Event({
+                    trigger = "after",
+                    delay = 0.0,
+                    func = (function()
+                        if self.added_to_deck then
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize {
+                                    type = "variable",
+                                    key = "a_xmult",
+                                    vars = { self.ability.extra.current_Xmult }
+                                },
+                                colour = G.C.MULT
+                            })
+                        end
+                        return true
+                    end)
+                }))
             elseif self.ability.extra._req ~= self.ability.extra._base and
                 bal < (self.ability.extra._req / 2) then
                 -- Decrease Xmult and req
                 self.ability.extra.current_Xmult = self.ability.extra.current_Xmult - self.ability.extra._Xmult_mod
                 self.ability.extra._req = self.ability.extra._req / 2
-                if self.added_to_deck then
-                    -- Show message
-                    card_eval_status_text(self, "extra", nil, nil, nil, {
-                        message = localize {
-                            type = "variable",
-                            key = "a_xmult",
-                            vars = { self.ability.extra.current_Xmult }
-                        },
-                        colour = G.C.MULT
-                    })
-                end
+                G.E_MANAGER:add_event(Event({
+                    trigger = "after",
+                    delay = 0.0,
+                    func = (function()
+                        if self.added_to_deck then
+                            card_eval_status_text(self, "extra", nil, nil, nil, {
+                                message = localize {
+                                    type = "variable",
+                                    key = "a_xmult",
+                                    vars = { self.ability.extra.current_Xmult }
+                                },
+                                colour = G.C.MULT
+                            })
+                        end
+                        return true
+                    end)
+                }))
             end
         end
 
