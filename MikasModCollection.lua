@@ -58,7 +58,7 @@ local config = {
     horseshoeJoker = true,
     incompleteJoker = true,
     abbeyRoadJoker = true,
-    boatingLicenseJoker = true,
+    fishingLicenseJoker = true,
     goldBarJoker = true,
     riggedJoker = true,
     commanderJoker = true,
@@ -3269,18 +3269,19 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
-    if config.boatingLicenseJoker then
+    if config.fishingLicenseJoker then
         -- Create Joker
-        local boating_license = {
+        local fishing_license = {
             loc = {
-                name = "Boating License",
+                name = "Fishing License",
                 text = {
                     "{C:attention}Copies{} effects of all",
-                    "scored {C:attention}Enhanced{} cards"
+                    "scored {C:attention}Enhanced{} cards",
+                    "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
                 }
             },
-            ability_name = "MMC Boating License",
-            slug = "mmc_boating_license",
+            ability_name = "MMC Fishing License",
+            slug = "mmc_fishing_license",
             ability = {},
             rarity = 3,
             cost = 8,
@@ -3291,15 +3292,15 @@ function SMODS.INIT.MikasModCollection()
         }
 
         -- Initialize Joker
-        init_joker(boating_license)
+        init_joker(fishing_license)
 
         -- Set local variables
-        function SMODS.Jokers.j_mmc_boating_license.loc_def(card)
+        function SMODS.Jokers.j_mmc_fishing_license.loc_def(card)
             return {}
         end
 
         -- Calculate
-        SMODS.Jokers.j_mmc_boating_license.calculate = function(self, context)
+        SMODS.Jokers.j_mmc_fishing_license.calculate = function(self, context)
             if context.individual and context.cardarea == G.play then
                 if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect ==
                     "Stone Card" then

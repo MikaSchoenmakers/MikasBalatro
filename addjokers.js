@@ -37,12 +37,13 @@ let jokers = [
     rarity: "Rare"
   },
   {
-    name: "Boating License",
+    name: "Fishing License",
     text: [
       "{C:attention}Copies{} effects of all",
-      "scored {C:attention}Enhanced{} cards"
+      "scored {C:attention}Enhanced{} cards",
+      "{C:inactive}Art by {C:green,E:1,S:1.1}Grassy"
     ],
-    image_url: "assets/2x/j_mmc_boating_license.png",
+    image_url: "assets/2x/j_mmc_fishing_license.png",
     rarity: "Rare"
   },
   {

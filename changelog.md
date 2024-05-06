@@ -1,4 +1,6 @@
 ## Update V0.13.3
+### Resprites
+* New sprite for Boating License (now Fishing License), done by `@Grassy`.
 ### Bugfixes
 * Fixed Rigged Joker giving more probability than it should on repeating non triggers.
 * Fixed Cicero falsely flagging Jokers that should be negative, and vice versa.
