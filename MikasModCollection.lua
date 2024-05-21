@@ -6112,6 +6112,10 @@ end
 -- Calculate Chips
 local evaluate_playref = G.FUNCS.evaluate_play
 function G.FUNCS.evaluate_play(self, e)
+    if not G.GAME.round_scores['hand'].amt or type(G.GAME.round_scores['hand'].amt) ~= "number" then
+        G.GAME.round_scores['hand'].amt = 0
+    end
+
     evaluate_playref(self, e)
 
     for i = 1, #G.jokers.cards do
