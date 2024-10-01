@@ -62,7 +62,7 @@ target = "card.lua"
 pattern = '''bonus_chips = (self.ability.bonus + (self.ability.perma_bonus or 0)) > 0 and (self.ability.bonus + (self.ability.perma_bonus or 0)) or nil,'''
 position = "after"
 payload = '''
-bonus_mult = (self.ability.mult + (self.ability.perma_mult or 0)) > 0 and (self.ability.mult + (self.ability.perma_mult or 0)) or nil
+bonus_mult = (self.ability.mult + (self.ability.perma_mult or 0)) > 0 and (self.ability.mult + (self.ability.perma_mult or 0)) or nil,
 '''
 match_indent = true
 overwrite = false
