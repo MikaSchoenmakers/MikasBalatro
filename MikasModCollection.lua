@@ -2715,7 +2715,8 @@ function SMODS.INIT.MikasModCollection()
             -- Check for high card and set card reference
             if context.cardarea == G.play and not context.repetition then
                 if context.scoring_name == "High Card" then
-                    if context.other_card.ability.effect == "Base" then
+                    -- Prevent crash by ensuring other_card exists before checking properties
+                    if context.other_card and context.other_card.ability and context.other_card.ability.effect == "Base" then
                         self.ability.extra.high_card = true
                         table.insert(self.ability.extra.card_refs, context.other_card)
                     end
@@ -2904,13 +2905,19 @@ function SMODS.INIT.MikasModCollection()
             if context.cardarea == G.play and not context.repetition then
                 local mult = 0
                 local chips = 0
-                if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
-                    -- Add chips if suit is Diamonds or Clubs
-                    chips = self.ability.extra.chips
-                end
-                if context.other_card:is_suit("Hearts") or context.other_card:is_suit("Spades") then
-                    -- Add mult if Hearts or Spades
-                    mult = self.ability.extra.mult
+
+                -- Ensure other_card is valid before using it
+                if context.other_card then
+                    if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
+                        -- Add chips if suit is Diamonds or Clubs
+                        chips = self.ability.extra.chips
+                    end
+                    if context.other_card:is_suit("Hearts") or context.other_card:is_suit("Spades") then
+                        -- Add mult if Hearts or Spades
+                        mult = self.ability.extra.mult
+                    end
+                else
+                    sendDebugMessage("Warning: other_card is nil in Suit Alley Joker")
                 end
 
                 if mult > 0 and chips > 0 then
@@ -5583,24 +5590,101 @@ function SMODS.INIT.MikasModCollection()
         -- Initialize Joker
         init_joker(plus_one)
 
-        -- Set local variables
+        -- Localization function
         function SMODS.Jokers.j_mmc_plus_one.loc_def(card)
             return { card.ability.extra.increase }
         end
 
-        -- Calculate
+        -- Debugging function
+        local function debug_context_info(context)
+            if not context then
+                print("ERROR: context is NIL!")
+                return
+            end
+            print("DEBUG: Full context contents:")
+            for k, v in pairs(context) do
+                print("DEBUG: context[" .. tostring(k) .. "] ->", v)
+            end
+        end
+
+        -- Extract a valid card from full_hand
+        local function extract_valid_card(full_hand)
+            if not full_hand or type(full_hand) ~= "table" or #full_hand == 0 then
+                print("DEBUG: full_hand is empty or invalid.")
+                return nil
+            end
+
+            for _, entry in ipairs(full_hand) do
+                if type(entry) == "table" and entry.base then
+                    print("DEBUG: Found valid card in full_hand.")
+                    return entry
+                end
+            end
+
+            print("WARNING: No valid card found in full_hand. Returning nil.")
+            return nil
+        end
+
+        -- Track whether we've upgraded this round
+        local upgraded_this_round = false
+
+        -- Hook into round start to reset flag
+        local function reset_round_tracking()
+            print("DEBUG: Resetting upgraded_this_round flag for new round.")
+            upgraded_this_round = false
+        end
+
+        -- Hook into the game's round start event
+        G.E_MANAGER:add_event(Event({
+            trigger = "new_round",
+            func = reset_round_tracking
+        }))
+
+        -- Calculate function
         SMODS.Jokers.j_mmc_plus_one.calculate = function(self, context)
-            -- Upgrade ranks of first hand
-            if context.individual and context.cardarea == G.play then
-                if G.GAME.current_round.hands_played == 0 then
+            print("DEBUG: Plus One Joker function called!")
+
+            -- Log full context BEFORE checking conditions
+            debug_context_info(context)
+
+            -- Ensure it's the first hand and we haven't upgraded yet
+            if context and context.cardarea == G.play then
+                print("DEBUG: hands_played =", G.GAME.current_round.hands_played)
+                print("DEBUG: upgraded_this_round =", upgraded_this_round)
+
+                if G.GAME.current_round.hands_played == 0 and not upgraded_this_round then
+                    print("DEBUG: First hand of the round detected. Attempting upgrade.")
+
+                    upgraded_this_round = true  -- Mark as upgraded
+
                     G.E_MANAGER:add_event(Event({
                         trigger = "after",
-                        delay = 0.0,
+                        delay = 0.2,
                         func = (function()
-                            -- Increase rank
-                            local card = context.other_card
+                            -- Fetch a valid card
+                            local card = context.other_card or context.card or context.source_card
+
+                            -- If no valid card found, check full_hand
+                            if not (card and type(card) == "table" and card.base) then
+                                print("DEBUG: No direct valid card found. Checking full_hand...")
+                                card = extract_valid_card(context.full_hand)
+                            end
+
+                            -- If STILL no valid card found, default to a King of Spades (S_K)
+                            local used_default = false
+                            if type(card) ~= "table" or not card.base then
+                                print("WARNING: No valid card found. Upgrading to default King (S_K).")
+                                card = { base = G.P_CARDS["S_K"] }
+                                used_default = true
+                            end
+
+                            -- Debug: Log the original card before upgrade
+                            print("DEBUG: Card Before Upgrade -> ID:", card.base.id, "Suit:", card.base.suit)
+
+                            -- Determine new rank
                             local suit_prefix = string.sub(card.base.suit, 1, 1) .. "_"
                             local rank_suffix = card.base.id == 14 and 2 or math.min(card.base.id + 1, 14)
+
                             if rank_suffix < 10 then
                                 rank_suffix = tostring(rank_suffix)
                             elseif rank_suffix == 10 then
@@ -5614,18 +5698,38 @@ function SMODS.INIT.MikasModCollection()
                             elseif rank_suffix == 14 then
                                 rank_suffix = "A"
                             end
-                            card:set_base(G.P_CARDS[suit_prefix .. rank_suffix])
+
+                            -- Set new base card
+                            local new_card_data = G.P_CARDS[suit_prefix .. rank_suffix]
+                            card:set_base(new_card_data)
+
+                            -- Debug: Log the upgraded card
+                            print("DEBUG: Card After Upgrade -> ID:", card.base.id, "Suit:", card.base.suit)
+
                             -- Show message
                             card_eval_status_text(self, "extra", nil, nil, nil, {
                                 message = localize("k_upgrade_ex"),
                                 instant = true
                             })
+
+                            -- Log whether the default King was used
+                            if used_default then
+                                print("INFO: Default King was used as no valid card was found.")
+                            end
+
                             return true
                         end)
                     }))
+                else
+                    print("DEBUG: Not the first hand of the round or already upgraded this hand. No upgrade applied.")
                 end
+            else
+                print("DEBUG: Condition not met - context.cardarea:", tostring(context and context.cardarea or "NIL"))
             end
         end
+
+        -- Ensure the file is actually being loaded
+        print("DEBUG: Mika's Mod Collection - File Loaded Successfully")
     end
 end
 

@@ -4,8 +4,8 @@
 
 <br/>
 
-# Mika's Balatro Mod Collection
-This is my mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 60 Jokers, 2 Tarots, 1 Spectral and 7 Decks.
+# Mika's Balatro Mod Collection Recoloured
+This is Mika's mod collection for the game [Balatro](https://store.steampowered.com/app/2379780/Balatro/), containing 60 Jokers, 2 Tarots, 1 Spectral and 7 Decks. I've just recoloured the jokers that reuse art from the base game so it's less confusing which is which.
 
 # Installation
 - Requires [Steamodded](https://github.com/Steamopollys/Steamodded/) version 0.9.5 or higher.
