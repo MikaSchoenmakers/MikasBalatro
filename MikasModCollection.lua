@@ -39,6 +39,7 @@ local config = {
     impatientJoker = true,
     cultistJoker = true,
     sealCollectorJoker = true,
+    sealScholarJoker = true,
     camperJoker = true,
     scratchCardJoker = true,
     delayedJoker = true,
@@ -1870,6 +1871,79 @@ function SMODS.INIT.MikasModCollection()
         end
     end
 
+    if config.sealScholarJoker then
+        -- Create Joker
+        local seal_scholar = {
+            loc = {
+                name = "Seal Scholar",
+                text = {
+                    "Gains {C:chips}+#2#{} Chips for",
+                    "every card with a {C:attention}seal{}.",
+                    "Every {C:attention}2 Seals activated{}",
+                    "grants {C:mult}+#3#{} Mult.",
+                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips, {C:mult}+#4#{C:inactive} Mult)"
+                }
+            },
+            ability_name = "MMC Seal Scholar",
+            slug = "mmc_seal_scholar",
+            ability = {
+                extra = {
+                    current_chips = 25,
+                    chip_mod = 25,
+                    seals_triggered = 0,
+                    current_mult = 0 -- Tracks gained Mult
+                }
+            },
+            rarity = 2, -- Uncommon
+            cost = 6,   -- Slightly more expensive
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+
+        -- Initialize Joker
+        init_joker(seal_scholar)
+
+        -- Set local variables
+        function SMODS.Jokers.j_mmc_seal_scholar.loc_def(card)
+            return {
+                card.ability.extra.current_chips,
+                card.ability.extra.chip_mod,
+                1, -- +1 Mult every 2 Seals
+                card.ability.extra.current_mult
+            }
+        end
+
+        -- Calculate
+        SMODS.Jokers.j_mmc_seal_scholar.calculate = function(self, context)
+            -- Track Seals triggered
+            if context.seal_activated then
+                self.ability.extra.seals_triggered = self.ability.extra.seals_triggered + 1
+            end
+
+            -- Every 2 Seal activations, gain +1 Mult
+            if self.ability.extra.seals_triggered >= 2 then
+                self.ability.extra.current_mult = self.ability.extra.current_mult + 1
+                self.ability.extra.seals_triggered = 0 -- Reset counter
+            end
+
+            -- Apply Chips
+            if SMODS.end_calculate_context(context) then
+                return {
+                    message = localize {
+                        type = "variable",
+                        key = "a_chips",
+                        vars = { self.ability.extra.current_chips }
+                    },
+                    chip_mod = self.ability.extra.current_chips,
+                    mult_mod = self.ability.extra.current_mult, -- Applies Mult
+                    card = self
+                }
+            end
+        end
+    end
+
     if config.camperJoker then
         -- Create Joker
         local camper = {
@@ -2901,15 +2975,14 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_suit_alley.calculate = function(self, context)
-            if context.cardarea == G.play and not context.repetition then
+            if context.cardarea == G.play and not context.repetition and context.other_card then
                 local mult = 0
                 local chips = 0
+
                 if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
-                    -- Add chips if suit is Diamonds or Clubs
                     chips = self.ability.extra.chips
                 end
                 if context.other_card:is_suit("Hearts") or context.other_card:is_suit("Spades") then
-                    -- Add mult if Hearts or Spades
                     mult = self.ability.extra.mult
                 end
 
