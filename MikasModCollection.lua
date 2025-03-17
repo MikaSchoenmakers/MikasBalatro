@@ -2904,13 +2904,19 @@ function SMODS.INIT.MikasModCollection()
             if context.cardarea == G.play and not context.repetition then
                 local mult = 0
                 local chips = 0
-                if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
-                    -- Add chips if suit is Diamonds or Clubs
-                    chips = self.ability.extra.chips
-                end
-                if context.other_card:is_suit("Hearts") or context.other_card:is_suit("Spades") then
-                    -- Add mult if Hearts or Spades
-                    mult = self.ability.extra.mult
+
+                -- Ensure other_card is valid before using it
+                if context.other_card then
+                    if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
+                        -- Add chips if suit is Diamonds or Clubs
+                        chips = self.ability.extra.chips
+                    end
+                    if context.other_card:is_suit("Hearts") or context.other_card:is_suit("Spades") then
+                        -- Add mult if Hearts or Spades
+                        mult = self.ability.extra.mult
+                    end
+                else
+                    sendDebugMessage("Warning: other_card is nil in Suit Alley Joker")
                 end
 
                 if mult > 0 and chips > 0 then
@@ -5554,23 +5560,20 @@ function SMODS.INIT.MikasModCollection()
     end
 
     if config.plusOneJoker then
-        -- Create Joker
         local plus_one = {
             loc = {
                 name = "Plus One",
                 text = {
                     "Increases rank",
-                    "of scored cards by",
-                    "{C:attention}#1#{} on the {C:attention}first",
-                    "{C:attention}hand{} of round"
+                    "of all cards",
+                    "in the first hand by",
+                    "{C:attention}#1#{}"
                 }
             },
             ability_name = "MMC Plus One",
             slug = "mmc_plus_one",
             ability = {
-                extra = {
-                    increase = 1
-                }
+                extra = { increase = 1 }
             },
             rarity = 3,
             cost = 8,
@@ -5580,7 +5583,6 @@ function SMODS.INIT.MikasModCollection()
             eternal_compat = true
         }
 
-        -- Initialize Joker
         init_joker(plus_one)
 
         -- Set local variables
@@ -5590,40 +5592,20 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_plus_one.calculate = function(self, context)
-            -- Upgrade ranks of first hand
-            if context.individual and context.cardarea == G.play then
-                if G.GAME.current_round.hands_played == 0 then
-                    G.E_MANAGER:add_event(Event({
-                        trigger = "after",
-                        delay = 0.0,
-                        func = (function()
-                            -- Increase rank
-                            local card = context.other_card
-                            local suit_prefix = string.sub(card.base.suit, 1, 1) .. "_"
-                            local rank_suffix = card.base.id == 14 and 2 or math.min(card.base.id + 1, 14)
-                            if rank_suffix < 10 then
-                                rank_suffix = tostring(rank_suffix)
-                            elseif rank_suffix == 10 then
-                                rank_suffix = "T"
-                            elseif rank_suffix == 11 then
-                                rank_suffix = "J"
-                            elseif rank_suffix == 12 then
-                                rank_suffix = "Q"
-                            elseif rank_suffix == 13 then
-                                rank_suffix = "K"
-                            elseif rank_suffix == 14 then
-                                rank_suffix = "A"
-                            end
-                            card:set_base(G.P_CARDS[suit_prefix .. rank_suffix])
-                            -- Show message
-                            card_eval_status_text(self, "extra", nil, nil, nil, {
-                                message = localize("k_upgrade_ex"),
-                                instant = true
-                            })
-                            return true
-                        end)
-                    }))
+            if context.individual and context.cardarea == G.play and G.GAME.current_round.hands_played == 0 and context.other_card then
+                local card = context.other_card
+                if card and card.base then
+                    local suit_prefix = string.sub(card.base.suit, 1, 1) .. "_"
+                    local rank_suffix = card.base.id == 14 and 2 or math.min(card.base.id + 1, 14)
+                    local rank_map = { [10] = "T", [11] = "J", [12] = "Q", [13] = "K", [14] = "A" }
+                    rank_suffix = rank_map[rank_suffix] or tostring(rank_suffix)
+                    card:set_base(G.P_CARDS[suit_prefix .. rank_suffix])
+                    card_eval_status_text(self, "extra", nil, nil, nil, {
+                        message = localize("k_upgrade_ex"),
+                        instant = true
+                    })
                 end
+                return { card = self }
             end
         end
     end
