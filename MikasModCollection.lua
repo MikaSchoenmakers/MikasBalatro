@@ -1506,7 +1506,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_prime_time.calculate = function(self, context)
             -- For each played card, if card is prime, add xmult
-            if context.individual and context.cardarea == G.play and
+            if context.individual and context.cardarea == G.play and context.other_card and
                 (context.other_card:get_id() == 2 or context.other_card:get_id() == 3 or context.other_card:get_id() ==
                     5 or context.other_card:get_id() == 7 or context.other_card:get_id() == 14) then
                 return {
@@ -1907,7 +1907,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_camper.calculate = function(self, context)
             -- If discarded
-            if context.discard then
+            if context.discard and context.other_card then
                 -- Add chips to card
                 context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
                 context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus +
@@ -1963,7 +1963,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_scratch_card.calculate = function(self, context)
             -- Count sevens
-            if context.individual and context.cardarea == G.play and context.other_card:get_id() == 7 and
+            if context.individual and context.cardarea == G.play and context.other_card and context.other_card:get_id() == 7 and
                 not context.blueprint then
                 self.ability.extra.seven_tally = self.ability.extra.seven_tally + 1
             end
@@ -2715,7 +2715,7 @@ function SMODS.INIT.MikasModCollection()
             -- Check for high card and set card reference
             if context.cardarea == G.play and not context.repetition then
                 if context.scoring_name == "High Card" then
-                    if context.other_card.ability.effect == "Base" then
+                    if context.other_card and context.other_card.ability.effect == "Base" then
                         self.ability.extra.high_card = true
                         table.insert(self.ability.extra.card_refs, context.other_card)
                     end
@@ -2901,7 +2901,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_suit_alley.calculate = function(self, context)
-            if context.cardarea == G.play and not context.repetition then
+            if context.cardarea == G.play and not context.repetition and context.other_card then
                 local mult = 0
                 local chips = 0
                 if context.other_card:is_suit("Diamonds") or context.other_card:is_suit("Clubs") then
@@ -3121,7 +3121,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_horseshoe.calculate = function(self, context)
             -- Retrigger lucky cards
-            if context.repetition and context.cardarea == G.play then
+            if context.repetition and context.cardarea == G.play and context.other_card then
                 if context.other_card.ability.effect == "Lucky Card" then
                     return {
                         message = localize("k_again_ex"),
@@ -3301,7 +3301,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_fishing_license.calculate = function(self, context)
-            if context.individual and context.cardarea == G.play then
+            if context.individual and context.cardarea == G.play and context.other_card then
                 if context.other_card.ability.effect == "Bonus Card" or context.other_card.ability.effect ==
                     "Stone Card" then
                     return {
@@ -3461,7 +3461,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_rigged.calculate = function(self, context)
             -- Check if lucky card does not trigger
-            if context.individual and context.cardarea == G.play and context.other_card.ability.effect == "Lucky Card" and
+            if context.individual and context.cardarea == G.play and context.other_card and context.other_card.ability.effect == "Lucky Card" and
                 not context.blueprint then
                 if not context.other_card.lucky_trigger and not self.ability.extra.has_triggered then
                     self.ability.extra.has_triggered = true
@@ -3823,7 +3823,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_harp_seal.calculate = function(self, context)
             -- Give $3 for each Gold Seal
-            if context.individual and context.cardarea == G.play and not context.repetition then
+            if context.individual and context.cardarea == G.play and not context.repetition and context.other_card then
                 if context.other_card.seal == "Gold" and not context.other_card.debuff then
                     ease_dollars(3)
                     return {
@@ -3836,7 +3836,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Repeat Red Seals
-            if context.repetition and context.cardarea == G.play then
+            if context.repetition and context.cardarea == G.play and context.other_card then
                 if context.other_card.seal == "Red" and not context.other_card.debuff then
                     return {
                         message = localize("k_again_ex"),
@@ -3845,7 +3845,7 @@ function SMODS.INIT.MikasModCollection()
                     }
                 end
             end
-            if context.repetition and context.cardarea == G.hand then
+            if context.repetition and context.cardarea == G.hand and context.other_card then
                 if context.other_card.seal == "Red" and (next(context.card_effects[1]) or #context.card_effects > 1) and not context.other_card.debuff then
                     return {
                         message = localize("k_again_ex"),
@@ -3856,7 +3856,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Create tarot card for each Purple Seal
-            if context.discard then
+            if context.discard and context.other_card then
                 if context.other_card.seal == "Purple" and not context.other_card.debuff then
                     -- Check consumeable space
                     create_tarot(self, "harp_seal")
@@ -4490,7 +4490,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_mountain_climber.calculate = function(self, context)
-            if context.individual and context.cardarea == G.play then
+            if context.individual and context.cardarea == G.play and context.other_card then
                 context.other_card.ability.perma_mult = context.other_card.ability.perma_mult or 0
                 context.other_card.ability.perma_mult = context.other_card.ability.perma_mult + self.ability.extra.mult
                 card_eval_status_text(self, "extra", nil, nil, nil, {
@@ -4825,7 +4825,7 @@ function SMODS.INIT.MikasModCollection()
 
         -- Calculate
         SMODS.Jokers.j_mmc_seal_steal.calculate = function(self, context)
-            if context.individual and context.cardarea == G.play then
+            if context.individual and context.cardarea == G.play and context.other_card then
                 if context.other_card.seal == "Purple" and not context.other_card.debuff then
                     -- Check for Harp Seal
                     local harp_seal
@@ -4991,7 +4991,7 @@ function SMODS.INIT.MikasModCollection()
         -- Calculate
         SMODS.Jokers.j_mmc_glass_cannon.calculate = function(self, context)
             -- Retrigger glass cards
-            if context.repetition and context.cardarea == G.play then
+            if context.repetition and context.cardarea == G.play and context.other_card then
                 if context.other_card.ability.effect == "Glass Card" then
                     return {
                         message = localize("k_again_ex"),
@@ -5002,7 +5002,7 @@ function SMODS.INIT.MikasModCollection()
             end
 
             -- Mark played glass cards
-            if context.individual and context.cardarea == G.play and not context.repetition then
+            if context.individual and context.cardarea == G.play and not context.repetition and context.other_card then
                 if context.other_card.ability.effect == "Glass Card" then
                     context.other_card.played = true
                 end
