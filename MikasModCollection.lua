@@ -5593,12 +5593,14 @@ function SMODS.INIT.MikasModCollection()
             -- Upgrade ranks of first hand
             if context.individual and context.cardarea == G.play then
                 if G.GAME.current_round.hands_played == 0 then
+                    -- Capture the card before the event to avoid nil issues
+                    local card = context.other_card
+                    if not card then return end
                     G.E_MANAGER:add_event(Event({
                         trigger = "after",
                         delay = 0.0,
                         func = (function()
-                            -- Increase rank
-                            local card = context.other_card
+                            if not card or not card.base then return end
                             local suit_prefix = string.sub(card.base.suit, 1, 1) .. "_"
                             local rank_suffix = card.base.id == 14 and 2 or math.min(card.base.id + 1, 14)
                             if rank_suffix < 10 then
